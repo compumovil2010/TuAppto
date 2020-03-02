@@ -7,11 +7,11 @@
     android:layout_height="match_parent"
     tools:context=".PrincipalActivity">
 
-
     <ImageView
         android:id="@+id/imageView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:contentDescription="@string/principal_image"
         app:srcCompat="@drawable/inicial"
         android:alpha="0.2"/>
 
@@ -19,58 +19,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="center">
-
-        <Button
-            android:id="@+id/button"
-            android:layout_width="265dp"
-            android:layout_height="35dp"
-            android:layout_marginBottom="128dp"
-            android:background="@color/colorBlue"
-            android:text="REGISTRARSE"
-            android:textColor="@color/colorWhite"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.498"
-            app:layout_constraintStart_toStartOf="parent" />
-
-        <Button
-            android:id="@+id/button2"
-            android:layout_width="265dp"
-            android:layout_height="35dp"
-            android:layout_marginBottom="32dp"
-            android:background="@color/colorBlue"
-            android:text="iNGRESAR"
-            android:textColor="@color/colorWhite"
-            app:layout_constraintBottom_toTopOf="@+id/button"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.498"
-            app:layout_constraintStart_toStartOf="parent" />
-
-        <EditText
-            android:id="@+id/editText"
-            android:layout_width="wrap_content"
-            android:layout_height="35dp"
-            android:layout_marginEnd="80dp"
-            android:layout_marginBottom="32dp"
-            android:background="@color/colorBlueTransparent"
-            android:ems="10"
-            android:inputType="textPassword"
-            android:text="Contraseña"
-            app:layout_constraintBottom_toTopOf="@+id/button2"
-            app:layout_constraintEnd_toEndOf="parent" />
-
-        <EditText
-            android:id="@+id/editText2"
-            android:layout_width="wrap_content"
-            android:layout_height="35dp"
-            android:layout_marginEnd="80dp"
-            android:layout_marginBottom="32dp"
-            android:background="@color/colorBlueTransparent"
-            android:ems="10"
-            android:inputType="textPersonName"
-            android:text=" Usuario"
-            app:layout_constraintBottom_toTopOf="@+id/editText"
-            app:layout_constraintEnd_toEndOf="parent" />
 
         <ImageView
             android:layout_width="250dp"
@@ -80,34 +28,68 @@
             app:layout_constraintHorizontal_bias="0.496"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/inicial" />
+            app:srcCompat="@drawable/inicial"
+            android:contentDescription="@string/principal_image" />
 
-        <ImageView
-            android:id="@+id/imageView2"
-            android:layout_width="35dp"
+        <EditText
+            android:id="@+id/editText2"
+            android:layout_width="265dp"
             android:layout_height="35dp"
             android:layout_marginBottom="32dp"
-            android:background="@color/colorBlueTransparent"
+            android:background="@drawable/edit_text"
+            android:drawableLeft="@drawable/user"
+            android:drawablePadding="10dp"
+            android:ems="10"
+            android:hint=" Usuario"
+            android:inputType="textPersonName"
+            android:paddingLeft="10dp"
+            app:layout_constraintBottom_toTopOf="@+id/editText"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <EditText
+            android:id="@+id/editText"
+            android:layout_width="265dp"
+            android:layout_height="35dp"
+            android:layout_marginBottom="32dp"
+            android:background="@drawable/edit_text"
+            android:drawableLeft="@drawable/key"
+            android:drawablePadding="10dp"
+            android:ems="10"
+            android:hint="Contraseña"
+            android:inputType="textPassword"
+            android:paddingLeft="10dp"
             app:layout_constraintBottom_toTopOf="@+id/button2"
-            app:layout_constraintEnd_toStartOf="@+id/editText"
-            app:layout_constraintHorizontal_bias="1.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:srcCompat="@drawable/key" />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
 
-        <ImageView
-            android:id="@+id/imageView3"
-            android:layout_width="35dp"
+        <Button
+            android:id="@+id/button2"
+            android:layout_width="265dp"
             android:layout_height="35dp"
             android:layout_marginBottom="32dp"
-            android:background="@color/colorBlueTransparent"
-            app:layout_constraintBottom_toTopOf="@+id/imageView2"
-            app:layout_constraintEnd_toStartOf="@+id/editText2"
-            app:srcCompat="@drawable/arrow" />
+            android:background="@drawable/button"
+            android:text="INGRESAR"
+            android:textColor="@color/colorWhite"
+            app:layout_constraintBottom_toTopOf="@+id/button"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.498"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <Button
+            android:id="@+id/button"
+            android:layout_width="265dp"
+            android:layout_height="35dp"
+            android:layout_marginBottom="128dp"
+            android:background="@drawable/button"
+            android:text="REGISTRARSE"
+            android:textColor="@color/colorWhite"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.498"
+            app:layout_constraintStart_toStartOf="parent" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-
 
 </FrameLayout>
