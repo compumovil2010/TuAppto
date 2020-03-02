@@ -1,8 +1,14 @@
 <resources>
     <string name="app_name">TuAppto</string>
     <string name="principal_image">its the first prototype of the principal app image</string>
+
     <string name="first_option_buyer">Ver propiedades</string>
     <string name="second_option_buyer">Mis favoritos</string>
     <string name="third_option_buyer">Chats</string>
     <string name="four_option_buyer">Citas</string>
+
+    <string name="first_option_seller">Publicar propiedad</string>
+    <string name="second_option_seller">Lista de mis propiedades</string>
+    <string name="third_option_seller">Lista de interesados</string>
+    <string name="four_option_seller">Citas</string>
 </resources>
