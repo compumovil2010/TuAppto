@@ -167,7 +167,7 @@
                 android:layout_marginBottom="32dp"
                 android:background="@drawable/button"
                 android:paddingLeft="10dp"
-                android:text="PUBLICAR"
+                android:text="GUARDAR"
                 android:textColor="@color/colorWhite"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"

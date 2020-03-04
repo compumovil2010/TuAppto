@@ -27,7 +27,7 @@ public class BuyerMenuActivity extends AppCompatActivity {
         buttonViewProperties.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                startActivity(new Intent(view.getContext(),SearchPropertyActivity.class));
             }
         });
 
