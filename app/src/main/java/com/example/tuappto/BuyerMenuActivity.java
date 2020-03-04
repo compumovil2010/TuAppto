@@ -34,7 +34,7 @@ public class BuyerMenuActivity extends AppCompatActivity {
         buttonMyFavourites.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                startActivity(new Intent(view.getContext(),InterestListActivity.class));
             }
         });
 
