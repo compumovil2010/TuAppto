@@ -48,7 +48,7 @@ public class SellerMenuActivity extends AppCompatActivity {
         buttonDates.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(view.getContext(),SellerDatesActivity.class));
+                startActivity(new Intent(view.getContext(), SellerDatesActivity.class));
             }
         });
 

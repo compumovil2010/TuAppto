@@ -41,14 +41,14 @@ public class BuyerMenuActivity extends AppCompatActivity {
         buttonChats.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                startActivity(new Intent(view.getContext(),ChatListActivity.class));
             }
         });
 
         buttonDates.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(view.getContext(),BuyerDatesActivity.class));
+                startActivity(new Intent(view.getContext(),SellerDatesActivity.class));
             }
         });
 
