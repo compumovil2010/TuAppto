@@ -47,7 +47,7 @@ public class BuyerMenuActivity extends AppCompatActivity {
         buttonDates.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                
+
             }
         });
 

@@ -9,7 +9,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".PublishPropertyActivity"></activity>
+        <activity android:name=".SellerDatesActivity"></activity>
+        <activity android:name=".BuyerDatesActivity" />
+        <activity android:name=".PublishPropertyActivity" />
         <activity android:name=".RegistryActivity" />
         <activity android:name=".InterestedActivity" />
         <activity android:name=".EditActivity" />
