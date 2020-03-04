@@ -11,4 +11,14 @@
     <string name="second_option_seller">Lista de mis propiedades</string>
     <string name="third_option_seller">Lista de interesados</string>
     <string name="four_option_seller">Citas</string>
+
+    <string-array name="userType">
+        <item>Dueño</item>
+        <item>Cliente</item>
+    </string-array>
+
+    <string-array name="propertyType">
+        <item>Venta</item>
+        <item>Arriendo</item>
+    </string-array>
 </resources>

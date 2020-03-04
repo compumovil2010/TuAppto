@@ -22,9 +22,11 @@
 
         <TextView
             android:id="@+id/textView"
-            android:layout_width="400dp"
-            android:layout_height="45dp"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
             android:layout_marginTop="16dp"
+            android:layout_marginEnd="8dp"
             android:background="@drawable/text_view"
             android:text="REGISTRO"
             android:textAlignment="center"
@@ -36,7 +38,7 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/constraintLayout"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginTop="32dp"
@@ -71,7 +73,6 @@
                 android:layout_marginBottom="8dp"
                 android:background="@drawable/text_view_transparent"
                 android:clickable="true"
-                android:contentDescription="@string/descripcionBotonCamara"
                 android:focusable="true"
                 android:scaleType="centerCrop"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -88,7 +89,6 @@
                 android:layout_marginEnd="30dp"
                 android:layout_marginBottom="8dp"
                 android:background="@drawable/text_view_transparent"
-                android:contentDescription="@string/descripcionBotonGaleria"
                 android:scaleType="centerCrop"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -98,13 +98,71 @@
 
         <ImageView
             android:id="@+id/imageView5"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
             android:layout_marginTop="24dp"
+            android:visibility="visible"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/constraintLayout"
-            tools:srcCompat="@tools:sample/avatars[10]" />
+            tools:srcCompat="@drawable/gallery"/>
+
+        <EditText
+            android:id="@+id/editText2"
+            android:layout_width="285dp"
+            android:layout_height="35dp"
+            android:layout_marginTop="32dp"
+            android:background="@drawable/edit_text"
+            android:drawableLeft="@drawable/user"
+            android:drawablePadding="10dp"
+            android:ems="10"
+            android:hint=" Usuario"
+            android:inputType="textPersonName"
+            android:paddingLeft="10dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/imageView5" />
+
+        <EditText
+            android:id="@+id/editText"
+            android:layout_width="285dp"
+            android:layout_height="35dp"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/edit_text"
+            android:drawableLeft="@drawable/key"
+            android:drawablePadding="10dp"
+            android:ems="10"
+            android:hint="Contraseña"
+            android:inputType="textPassword"
+            android:paddingLeft="10dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/editText2" />
+
+        <Spinner
+            android:id="@+id/spinner"
+            android:layout_width="285dp"
+            android:layout_height="35dp"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/text_view_transparent"
+            android:drawablePadding="10dp"
+            android:drawableStart="@drawable/kind"
+            android:entries="@array/userType"
+            android:paddingStart="10dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/editText" />
+
+        <Button
+            android:id="@+id/button7"
+            android:layout_width="285dp"
+            android:layout_height="35dp"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/button"
+            android:text="CONTINUAR"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/spinner" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

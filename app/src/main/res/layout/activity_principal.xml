@@ -59,25 +59,25 @@
             android:hint="Contraseña"
             android:inputType="textPassword"
             android:paddingLeft="10dp"
-            app:layout_constraintBottom_toTopOf="@+id/button2"
+            app:layout_constraintBottom_toTopOf="@+id/buttonEnter"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 
         <Button
-            android:id="@+id/button2"
+            android:id="@+id/buttonEnter"
             android:layout_width="265dp"
             android:layout_height="35dp"
             android:layout_marginBottom="32dp"
             android:background="@drawable/button"
             android:text="INGRESAR"
             android:textColor="@color/colorWhite"
-            app:layout_constraintBottom_toTopOf="@+id/button"
+            app:layout_constraintBottom_toTopOf="@+id/buttonRegister"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.498"
             app:layout_constraintStart_toStartOf="parent" />
 
         <Button
-            android:id="@+id/button"
+            android:id="@+id/buttonRegister"
             android:layout_width="265dp"
             android:layout_height="35dp"
             android:layout_marginBottom="128dp"
@@ -88,6 +88,16 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.498"
             app:layout_constraintStart_toStartOf="parent" />
+
+        <Button
+            android:id="@+id/buttonTemporal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="33dp"
+            android:text="TEMPORAL"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/buttonRegister" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
