@@ -137,32 +137,67 @@
             android:paddingLeft="10dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/editText2" />
-
-        <Spinner
-            android:id="@+id/spinner"
-            android:layout_width="285dp"
-            android:layout_height="35dp"
-            android:layout_marginTop="16dp"
-            android:background="@drawable/text_view_transparent"
-            android:drawablePadding="10dp"
-            android:drawableStart="@drawable/kind"
-            android:entries="@array/userType"
-            android:paddingStart="10dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/editText" />
+            app:layout_constraintTop_toBottomOf="@+id/editText5" />
 
         <Button
-            android:id="@+id/button7"
+            android:id="@+id/buttonContinue"
             android:layout_width="285dp"
             android:layout_height="35dp"
             android:layout_marginTop="16dp"
             android:background="@drawable/button"
             android:text="CONTINUAR"
+            android:textColor="@color/colorWhite"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/spinner" />
+            app:layout_constraintTop_toBottomOf="@+id/editText" />
+
+        <EditText
+            android:id="@+id/editText3"
+            android:layout_width="285dp"
+            android:layout_height="35dp"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/edit_text"
+            android:drawableLeft="@drawable/user"
+            android:drawablePadding="10dp"
+            android:ems="10"
+            android:hint="Nombre"
+            android:inputType="textPersonName"
+            android:paddingLeft="10dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/editText2" />
+
+        <EditText
+            android:id="@+id/editText4"
+            android:layout_width="285dp"
+            android:layout_height="35dp"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/edit_text"
+            android:drawableLeft="@drawable/user"
+            android:drawablePadding="10dp"
+            android:ems="10"
+            android:hint="Apellido"
+            android:inputType="textPersonName"
+            android:paddingLeft="10dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/editText3" />
+
+        <EditText
+            android:id="@+id/editText5"
+            android:layout_width="285dp"
+            android:layout_height="35dp"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/edit_text"
+            android:drawableLeft="@drawable/phone"
+            android:drawablePadding="10dp"
+            android:ems="10"
+            android:hint="Telefono"
+            android:inputType="phone"
+            android:paddingLeft="10dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/editText4" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
