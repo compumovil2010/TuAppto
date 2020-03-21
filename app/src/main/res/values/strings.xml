@@ -1,13 +1,13 @@
 <resources>
     <string name="app_name">TuAppto</string>
 
-    <string name="principal_image_description">La imagen principal de la aplicacion</string>
-    <string name="important_image_description">Muestra que es una eleccion importante</string>
+    <string name="principal_image_description">La imagen principal de la aplicación</string>
+    <string name="important_image_description">Muestra que es una elección importante</string>
     <string name="user_image_description">Es la imagen de usuario con la persona que se va a reunir</string>
-    <string name="camera_image_description">Imagen con forma de camara para indicar que si se oprime accedera a la camara</string>
-    <string name="gallery_image_description">Imagen con forma de galeria para indicar que si se oprime accedera a la galeria</string>
+    <string name="camera_image_description">Imagen con forma de cámara para indicar que si se oprime accedera a la camara</string>
+    <string name="gallery_image_description">Imagen con forma de galería para indicar que si se oprime accedera a la galeria</string>
     <string name="property_image_description">Es la imagen de la propiedad</string>
-    <string name="filters_image_description">Es la imagen del boton para acceder a los filtros</string>
+    <string name="filters_image_description">Es la imagen del botón para acceder a los filtros</string>
 
     <string name="first_option_buyer">Ver propiedades</string>
     <string name="second_option_buyer">Mis favoritos</string>
@@ -67,8 +67,8 @@
 
     <string name="chat_1">Hola, buenos dias</string>
     <string name="chat_2">Hola, mira el apartamento es nuevo y los vendo porque quiero plata</string>
-    <string name="owner_option">Si oprimes la opcion de "DUEÑO" tendras la capacidad de publicar tus viviendas para que sean vendidad o arrendadas, segun tu preferencia</string>
-    <string name="client_option">Si oprimes la opcion "CLIENTE" tendras la capacidad de ver las publicaciones de los dueños y concretar una cita para comprar o arrendar una vivienda</string>
+    <string name="owner_option">Si oprimes la opción de "DUEÑO" tendrás la capacidad de publicar tus viviendas para que sean vendidas o arrendadas, según tu preferencia</string>
+    <string name="client_option">Si oprimes la opción "CLIENTE" tendrás la capacidad de ver las publicaciones de los dueños y concretar una cita para comprar o arrendar una vivienda</string>
     <string name="date_information">Tienes una cita con Pepito perez a las 8 de la mañana el dia jueves 23 de mayo del 2020 en la avenida carrera 70 # 63a - 82</string>
     <string name="property_information">Es una casa muy linda que contiene 3 alcobas, cuenta con 3 parqueaderos, la cual se encuentra a la venta por $200.000.000</string>
 
