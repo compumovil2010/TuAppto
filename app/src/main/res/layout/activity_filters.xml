@@ -78,12 +78,12 @@
             android:id="@+id/spinner"
             android:layout_width="0dp"
             android:layout_height="34dp"
-            android:layout_marginStart="8dp"
+            android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
             android:layout_marginEnd="16dp"
             android:entries="@array/numbers"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/textView17"
+            app:layout_constraintStart_toEndOf="@+id/textView20"
             app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
 
         <TextView
@@ -101,12 +101,12 @@
             android:id="@+id/spinner2"
             android:layout_width="0dp"
             android:layout_height="34dp"
-            android:layout_marginStart="8dp"
+            android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
             android:layout_marginEnd="8dp"
             android:entries="@array/area"
             app:layout_constraintEnd_toStartOf="@+id/textView19"
-            app:layout_constraintStart_toEndOf="@+id/textView17"
+            app:layout_constraintStart_toEndOf="@+id/textView20"
             app:layout_constraintTop_toBottomOf="@+id/spinner" />
 
         <TextView
@@ -135,13 +135,13 @@
             android:id="@+id/spinner3"
             android:layout_width="0dp"
             android:layout_height="34dp"
-            android:layout_marginStart="8dp"
+            android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
             android:layout_marginEnd="16dp"
+            android:entries="@array/numbers2"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/textView17"
-            app:layout_constraintTop_toBottomOf="@+id/spinner2"
-            android:entries="@array/numbers2"/>
+            app:layout_constraintStart_toEndOf="@+id/textView20"
+            app:layout_constraintTop_toBottomOf="@+id/spinner2" />
 
         <TextView
             android:id="@+id/textView21"

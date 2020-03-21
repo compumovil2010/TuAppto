@@ -126,7 +126,7 @@
 
             <EditText
                 android:id="@+id/editText3"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="24dp"
@@ -134,7 +134,7 @@
                 android:ems="10"
                 android:inputType="number"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/textView2"
+                app:layout_constraintStart_toEndOf="@+id/textView14"
                 app:layout_constraintTop_toBottomOf="@+id/imageView3" />
 
             <com.google.android.gms.maps.MapView
@@ -220,7 +220,7 @@
                 android:ems="10"
                 android:inputType="phone"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/textView11"
+                app:layout_constraintStart_toEndOf="@+id/textView14"
                 app:layout_constraintTop_toBottomOf="@+id/checkBox2" />
 
             <TextView
@@ -244,7 +244,7 @@
                 android:ems="10"
                 android:inputType="phone"
                 app:layout_constraintEnd_toStartOf="@+id/textView13"
-                app:layout_constraintStart_toEndOf="@+id/textView11"
+                app:layout_constraintStart_toEndOf="@+id/textView14"
                 app:layout_constraintTop_toBottomOf="@+id/editText6" />
 
             <TextView
@@ -271,7 +271,7 @@
 
             <EditText
                 android:id="@+id/editText8"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="16dp"
@@ -279,7 +279,7 @@
                 android:ems="10"
                 android:inputType="phone"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/textView11"
+                app:layout_constraintStart_toEndOf="@+id/textView14"
                 app:layout_constraintTop_toBottomOf="@+id/editText7" />
 
             <EditText

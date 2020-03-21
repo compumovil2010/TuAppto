@@ -72,8 +72,6 @@
     <string name="date_information">Tienes una cita con Pepito perez a las 8 de la mañana el dia jueves 23 de mayo del 2020 en la avenida carrera 70 # 63a - 82</string>
     <string name="property_information">Es una casa muy linda que contiene 3 alcobas, cuenta con 3 parqueaderos, la cual se encuentra a la venta por $200.000.000</string>
 
-
-
     <string-array name="userType">
         <item>Dueño</item>
         <item>Cliente</item>
