@@ -8,10 +8,10 @@
     tools:context=".PrincipalActivity">
 
     <ImageView
-        android:id="@+id/imageView"
+        android:id="@+id/principalImage"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:contentDescription="@string/principal_image"
+        android:contentDescription="@string/principal_image_description"
         app:srcCompat="@drawable/inicial"
         android:alpha="0.2"/>
 
@@ -28,7 +28,7 @@
             android:layout_marginTop="16dp"
             android:layout_marginEnd="16dp"
             android:background="@drawable/text_view"
-            android:text="ELECCION"
+            android:text="@string/choose_text"
             android:textAlignment="center"
             android:textColor="@color/colorWhite"
             android:textSize="30sp"
@@ -46,7 +46,7 @@
             android:background="@drawable/text_view_transparent"
             android:drawablePadding="10dp"
             android:padding="10dp"
-            android:text="Si oprimes la opcion de 'DUEÑO' tendras la capacidad de publicar tus viviendas para que sean vendidad o arrendadas, segun tu preferencia"
+            android:text="@string/owner_option"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/imageView6" />
@@ -59,7 +59,7 @@
             android:layout_marginTop="16dp"
             android:layout_marginEnd="16dp"
             android:background="@drawable/button"
-            android:text="DUEÑO"
+            android:text="@string/owner_button"
             android:textColor="@color/colorWhite"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
@@ -75,7 +75,7 @@
             android:layout_marginEnd="16dp"
             android:background="@drawable/text_view_transparent"
             android:padding="10dp"
-            android:text="Si oprimes la opcion 'CLIENTE' tendras la capacidad de ver las publicaciones de los dueños y concretar una cita para comprar o arrendar una vivienda"
+            android:text="@string/client_option"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
@@ -91,13 +91,14 @@
             android:layout_marginTop="16dp"
             android:layout_marginEnd="16dp"
             android:background="@drawable/button"
-            android:text="CLIENTE"
+            android:text="@string/client_button"
             android:textColor="@color/colorWhite"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView7" />
 
         <ImageView
+            android:contentDescription="@string/important_image_description"
             android:id="@+id/imageView6"
             android:layout_width="206dp"
             android:layout_height="177dp"

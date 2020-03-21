@@ -8,10 +8,10 @@
     tools:context=".PrincipalActivity">
 
     <ImageView
-        android:id="@+id/imageView"
+        android:id="@+id/principalImage"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:contentDescription="@string/principal_image"
+        android:contentDescription="@string/principal_image_description"
         app:srcCompat="@drawable/inicial"
         android:alpha="0.2"/>
 
@@ -29,7 +29,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/principal"
-            android:contentDescription="@string/principal_image" />
+            android:contentDescription="@string/principal_image_description" />
 
         <EditText
             android:id="@+id/editText2"
@@ -37,12 +37,13 @@
             android:layout_height="35dp"
             android:layout_marginBottom="32dp"
             android:background="@drawable/edit_text"
-            android:drawableLeft="@drawable/user"
+            android:drawableStart="@drawable/user"
             android:drawablePadding="10dp"
             android:ems="10"
-            android:hint=" Usuario"
+            android:hint="@string/user_text"
             android:inputType="textPersonName"
-            android:paddingLeft="10dp"
+            android:paddingStart="10dp"
+            android:paddingEnd="0dp"
             app:layout_constraintBottom_toTopOf="@+id/editText"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
@@ -53,12 +54,13 @@
             android:layout_height="35dp"
             android:layout_marginBottom="32dp"
             android:background="@drawable/edit_text"
-            android:drawableLeft="@drawable/key"
+            android:drawableStart="@drawable/key"
             android:drawablePadding="10dp"
             android:ems="10"
-            android:hint="Contraseña"
+            android:hint="@string/password_text"
             android:inputType="textPassword"
-            android:paddingLeft="10dp"
+            android:paddingStart="10dp"
+            android:paddingEnd="0dp"
             app:layout_constraintBottom_toTopOf="@+id/buttonEnter"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
@@ -69,7 +71,7 @@
             android:layout_height="35dp"
             android:layout_marginBottom="32dp"
             android:background="@drawable/button"
-            android:text="INGRESAR"
+            android:text="@string/log_in_text_button"
             android:textColor="@color/colorWhite"
             app:layout_constraintBottom_toTopOf="@+id/buttonRegister"
             app:layout_constraintEnd_toEndOf="parent"
@@ -82,7 +84,7 @@
             android:layout_height="35dp"
             android:layout_marginBottom="128dp"
             android:background="@drawable/button"
-            android:text="REGISTRARSE"
+            android:text="@string/check_in_button"
             android:textColor="@color/colorWhite"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -94,7 +96,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="33dp"
-            android:text="TEMPORAL"
+            android:text="@string/temporal_button"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/buttonRegister" />

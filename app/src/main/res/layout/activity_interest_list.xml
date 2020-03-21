@@ -8,10 +8,10 @@
     tools:context=".PrincipalActivity">
 
     <ImageView
-        android:id="@+id/imageView"
+        android:id="@+id/principalImage"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:contentDescription="@string/principal_image"
+        android:contentDescription="@string/principal_image_description"
         app:srcCompat="@drawable/inicial"
         android:alpha="0.2"/>
 
@@ -27,7 +27,7 @@
             android:layout_marginTop="16dp"
             android:layout_marginEnd="16dp"
             android:background="@drawable/text_view"
-            android:text="MIS INTERESES"
+            android:text="@string/my_interests_text"
             android:textAlignment="center"
             android:textColor="@color/colorWhite"
             android:textSize="30sp"
@@ -40,7 +40,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="32dp"
-            android:text="TEMPORAL"
+            android:text="@string/temporal_button"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />

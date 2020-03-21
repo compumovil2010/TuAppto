@@ -8,10 +8,10 @@
     tools:context=".PrincipalActivity">
 
     <ImageView
-        android:id="@+id/imageView"
+        android:id="@+id/principalImage"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:contentDescription="@string/principal_image"
+        android:contentDescription="@string/principal_image_description"
         app:srcCompat="@drawable/inicial"
         android:alpha="0.2"/>
 
@@ -28,7 +28,7 @@
             android:layout_marginTop="16dp"
             android:layout_marginEnd="16dp"
             android:background="@drawable/text_view"
-            android:text="FILTROS"
+            android:text="@string/filters_text"
             android:textAlignment="center"
             android:textColor="@color/colorWhite"
             android:textSize="30sp"
@@ -52,14 +52,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.5"
-                android:text="Venta"
+                android:text="@string/sale_text"
                 android:textSize="24sp" />
 
             <CheckBox
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.5"
-                android:text="Arriendo"
+                android:text="@string/rent_text"
                 android:textSize="24sp" />
         </LinearLayout>
 
@@ -69,7 +69,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
-            android:text="Habitaciones: "
+            android:text="@string/rooms_text"
             android:textSize="24sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
@@ -92,7 +92,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
-            android:text="Area: "
+            android:text="@string/area_text"
             android:textSize="24sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/spinner" />
@@ -115,7 +115,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:layout_marginEnd="16dp"
-            android:text="mts"
+            android:text="@string/meters_text"
             android:textSize="24sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/spinner" />
@@ -126,7 +126,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
-            android:text="Parqueadero: "
+            android:text="@string/parking_lot_text"
             android:textSize="24sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/spinner2" />
@@ -149,7 +149,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
-            android:text="Ubicacion: "
+            android:text="@string/location_text"
             android:textSize="24sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/spinner3" />
@@ -173,7 +173,7 @@
             android:layout_marginTop="32dp"
             android:layout_marginEnd="16dp"
             android:background="@drawable/button"
-            android:text="APLICAR"
+            android:text="@string/apply_button"
             android:textColor="@color/colorWhite"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

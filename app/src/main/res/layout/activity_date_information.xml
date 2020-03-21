@@ -8,10 +8,10 @@
     tools:context=".PrincipalActivity">
 
     <ImageView
-        android:id="@+id/imageView"
+        android:id="@+id/principalImage"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:contentDescription="@string/principal_image"
+        android:contentDescription="@string/principal_image_description"
         app:srcCompat="@drawable/inicial"
         android:alpha="0.2"/>
 
@@ -28,7 +28,7 @@
             android:layout_marginTop="16dp"
             android:layout_marginEnd="16dp"
             android:background="@drawable/text_view"
-            android:text="INFORMACION CITA"
+            android:text="@string/date_information_text"
             android:textAlignment="center"
             android:textColor="@color/colorWhite"
             android:textSize="30sp"
@@ -37,6 +37,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageButton
+            android:contentDescription="@string/user_image_description"
             android:id="@+id/imageView8"
             android:layout_width="200dp"
             android:layout_height="200dp"
@@ -57,7 +58,7 @@
             android:layout_marginEnd="16dp"
             android:background="@drawable/text_view_transparent"
             android:padding="10dp"
-            android:text="Tienes una cita con Pepito perez a las 8 de la mañana el dia jueves 23 de mayo del 2020 en la avenida carrera 70 # 63a - 82"
+            android:text="@string/date_information"
             android:textSize="24sp"
             android:drawablePadding="10dp"
             app:layout_constraintEnd_toEndOf="parent"
@@ -71,7 +72,7 @@
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"
             android:layout_marginBottom="32dp"
-            android:text="CANCELAR"
+            android:text="@string/cancel_button"
             android:background="@color/colorRed"
             android:textColor="@color/colorWhite"
             android:textSize="24sp"

@@ -8,10 +8,10 @@
     tools:context=".PrincipalActivity">
 
     <ImageView
-        android:id="@+id/imageView"
+        android:id="@+id/principalImage"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:contentDescription="@string/principal_image"
+        android:contentDescription="@string/principal_image_description"
         app:srcCompat="@drawable/inicial"
         android:alpha="0.2"/>
 
@@ -28,7 +28,7 @@
             android:layout_marginTop="16dp"
             android:layout_marginEnd="16dp"
             android:background="@drawable/text_view"
-            android:text="PROPIEDAD"
+            android:text="@string/property_text"
             android:textAlignment="center"
             android:textColor="@color/colorWhite"
             android:textSize="30sp"
@@ -44,7 +44,7 @@
             android:layout_marginEnd="16dp"
             android:layout_marginBottom="32dp"
             android:background="@drawable/button"
-            android:text="CHAT"
+            android:text="@string/chat_button"
             android:textColor="@color/colorWhite"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -58,7 +58,7 @@
             android:layout_marginEnd="16dp"
             android:layout_marginBottom="16dp"
             android:background="@drawable/button"
-            android:text="AGREGAR A INTERES"
+            android:text="@string/add_to_interest_button"
             android:textColor="@color/colorWhite"
             app:layout_constraintBottom_toTopOf="@+id/button"
             app:layout_constraintEnd_toEndOf="parent"
@@ -66,6 +66,7 @@
             app:layout_constraintStart_toStartOf="parent" />
 
         <ImageButton
+            android:contentDescription="@string/property_image_description"
             android:id="@+id/imageView7"
             android:layout_width="200dp"
             android:layout_height="200dp"
@@ -84,7 +85,7 @@
             android:layout_marginStart="16dp"
             android:layout_marginTop="32dp"
             android:layout_marginEnd="16dp"
-            android:text="Es una casa muy linda que contiene 3 alcobas, cuenta con 3 parqueaderos, la cual se encuentra a la venta por $200.000.000"
+            android:text="@string/property_information"
             android:background="@drawable/text_view_transparent"
             android:textSize="24sp"
             android:padding="10dp"

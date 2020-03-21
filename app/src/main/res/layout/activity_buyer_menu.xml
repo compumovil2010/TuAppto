@@ -9,8 +9,8 @@
 
 
     <ImageView
-        android:contentDescription="@string/principal_image"
-        android:id="@+id/imageView"
+        android:contentDescription="@string/principal_image_description"
+        android:id="@+id/principalImage"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:srcCompat="@drawable/inicial"
@@ -44,9 +44,10 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/mapView"
             android:background="@drawable/button"
-            android:paddingLeft="10dp"
+            android:paddingStart="10dp"
+            android:paddingEnd="0dp"
             android:drawablePadding="10dp"
-            android:drawableLeft="@drawable/eye" />
+            android:drawableStart="@drawable/eye" />
 
         <Button
             android:id="@+id/buttonMyFavourites"
@@ -54,9 +55,10 @@
             android:layout_height="45dp"
             android:layout_marginTop="32dp"
             android:background="@drawable/button"
-            android:drawableLeft="@drawable/heart"
+            android:drawableStart="@drawable/heart"
             android:drawablePadding="10dp"
-            android:paddingLeft="10dp"
+            android:paddingStart="10dp"
+            android:paddingEnd="0dp"
             android:text="@string/second_option_buyer"
             android:textColor="@color/colorWhite"
             app:layout_constraintEnd_toEndOf="parent"
@@ -70,9 +72,10 @@
             android:layout_height="45dp"
             android:layout_marginTop="32dp"
             android:background="@drawable/button"
-            android:drawableLeft="@drawable/chat"
+            android:drawableStart="@drawable/chat"
             android:drawablePadding="10dp"
-            android:paddingLeft="10dp"
+            android:paddingStart="10dp"
+            android:paddingEnd="0dp"
             android:text="@string/third_option_buyer"
             android:textColor="@color/colorWhite"
             app:layout_constraintEnd_toEndOf="parent"
@@ -85,9 +88,10 @@
             android:layout_height="45dp"
             android:layout_marginTop="32dp"
             android:background="@drawable/button"
-            android:drawableLeft="@drawable/calendar"
+            android:drawableStart="@drawable/calendar"
             android:drawablePadding="10dp"
-            android:paddingLeft="10dp"
+            android:paddingStart="10dp"
+            android:paddingEnd="0dp"
             android:text="@string/four_option_buyer"
             android:textColor="@color/colorWhite"
             app:layout_constraintEnd_toEndOf="parent"
