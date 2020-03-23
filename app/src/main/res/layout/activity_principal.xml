@@ -19,17 +19,17 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="center">
-
+        
         <ImageView
             android:layout_width="250dp"
             android:layout_height="250dp"
-            android:layout_marginTop="40dp"
+            android:layout_marginTop="64dp"
+            android:contentDescription="@string/principal_image_description"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.496"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/principal"
-            android:contentDescription="@string/principal_image_description" />
+            app:srcCompat="@drawable/principal" />
 
         <EditText
             android:id="@+id/editText2"
