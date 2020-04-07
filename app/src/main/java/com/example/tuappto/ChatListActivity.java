@@ -16,7 +16,7 @@ public class ChatListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat_list);
 
-        button = findViewById(R.id.button4);
+        button = findViewById(R.id.buttonTemporal);
 
         button.setOnClickListener(new View.OnClickListener() {
             @Override

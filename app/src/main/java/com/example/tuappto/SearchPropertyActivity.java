@@ -19,7 +19,7 @@ public class SearchPropertyActivity extends AppCompatActivity {
         setContentView(R.layout.activity_search_property);
 
         imageButtonFilters = findViewById(R.id.imageButtonFilters);
-        button = findViewById(R.id.button5);
+        button = findViewById(R.id.buttonTemporal);
 
         imageButtonFilters.setOnClickListener(new View.OnClickListener() {
             @Override

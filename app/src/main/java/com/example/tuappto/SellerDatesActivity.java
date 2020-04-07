@@ -16,7 +16,7 @@ public class SellerDatesActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_buyer_dates);
 
-        button = findViewById(R.id.button6);
+        button = findViewById(R.id.buttonTemporal);
 
         button.setOnClickListener(new View.OnClickListener() {
             @Override

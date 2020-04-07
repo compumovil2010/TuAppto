@@ -67,8 +67,8 @@
 
     <string name="chat_1">Hola, buenos dias</string>
     <string name="chat_2">Hola, mira el apartamento es nuevo y los vendo porque quiero plata</string>
-    <string name="owner_option">Si oprimes la opción de "DUEÑO" tendrás la capacidad de publicar tus viviendas para que sean vendidas o arrendadas, según tu preferencia</string>
-    <string name="client_option">Si oprimes la opción "CLIENTE" tendrás la capacidad de ver las publicaciones de los dueños y concretar una cita para comprar o arrendar una vivienda</string>
+    <string name="owner_option">Si oprimes la opción de DUEÑO tendrás la capacidad de publicar tus viviendas para que sean vendidas o arrendadas, según tu preferencia</string>
+    <string name="client_option">Si oprimes la opción CLIENTE tendrás la capacidad de ver las publicaciones de los dueños y concretar una cita para comprar o arrendar una vivienda</string>
     <string name="date_information">Tienes una cita con Pepito perez a las 8 de la mañana el dia jueves 23 de mayo del 2020 en la avenida carrera 70 # 63a - 82</string>
     <string name="property_information">Es una casa muy linda que contiene 3 alcobas, cuenta con 3 parqueaderos, la cual se encuentra a la venta por $200.000.000</string>
 

@@ -21,7 +21,7 @@
         android:layout_gravity="center">
 
         <TextView
-            android:id="@+id/textView15"
+            android:id="@+id/textViewFilters"
             android:layout_width="0dp"
             android:layout_height="45dp"
             android:layout_marginStart="16dp"
@@ -37,7 +37,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <LinearLayout
-            android:id="@+id/linearLayout"
+            android:id="@+id/linearLayoutCheckBox"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
@@ -46,7 +46,7 @@
             android:orientation="horizontal"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView15">
+            app:layout_constraintTop_toBottomOf="@+id/textViewFilters">
 
             <CheckBox
                 android:layout_width="wrap_content"
@@ -64,7 +64,7 @@
         </LinearLayout>
 
         <TextView
-            android:id="@+id/textView17"
+            android:id="@+id/textViewRooms"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
@@ -72,10 +72,10 @@
             android:text="@string/rooms_text"
             android:textSize="24sp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
+            app:layout_constraintTop_toBottomOf="@+id/linearLayoutCheckBox" />
 
         <Spinner
-            android:id="@+id/spinner"
+            android:id="@+id/spinnerRooms"
             android:layout_width="0dp"
             android:layout_height="34dp"
             android:layout_marginStart="16dp"
@@ -83,11 +83,11 @@
             android:layout_marginEnd="16dp"
             android:entries="@array/numbers"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/textView20"
-            app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
+            app:layout_constraintStart_toEndOf="@+id/textViewParking"
+            app:layout_constraintTop_toBottomOf="@+id/linearLayoutCheckBox" />
 
         <TextView
-            android:id="@+id/textView18"
+            android:id="@+id/textViewArea"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
@@ -95,22 +95,22 @@
             android:text="@string/area_text"
             android:textSize="24sp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/spinner" />
+            app:layout_constraintTop_toBottomOf="@+id/spinnerRooms" />
 
         <Spinner
-            android:id="@+id/spinner2"
+            android:id="@+id/spinnerArea"
             android:layout_width="0dp"
             android:layout_height="34dp"
             android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
             android:layout_marginEnd="8dp"
             android:entries="@array/area"
-            app:layout_constraintEnd_toStartOf="@+id/textView19"
-            app:layout_constraintStart_toEndOf="@+id/textView20"
-            app:layout_constraintTop_toBottomOf="@+id/spinner" />
+            app:layout_constraintEnd_toStartOf="@+id/textViewMeters"
+            app:layout_constraintStart_toEndOf="@+id/textViewParking"
+            app:layout_constraintTop_toBottomOf="@+id/spinnerRooms" />
 
         <TextView
-            android:id="@+id/textView19"
+            android:id="@+id/textViewMeters"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
@@ -118,10 +118,10 @@
             android:text="@string/meters_text"
             android:textSize="24sp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/spinner" />
+            app:layout_constraintTop_toBottomOf="@+id/spinnerRooms" />
 
         <TextView
-            android:id="@+id/textView20"
+            android:id="@+id/textViewParking"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
@@ -129,10 +129,10 @@
             android:text="@string/parking_lot_text"
             android:textSize="24sp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/spinner2" />
+            app:layout_constraintTop_toBottomOf="@+id/spinnerArea" />
 
         <Spinner
-            android:id="@+id/spinner3"
+            android:id="@+id/spinnerParking"
             android:layout_width="0dp"
             android:layout_height="34dp"
             android:layout_marginStart="16dp"
@@ -140,11 +140,11 @@
             android:layout_marginEnd="16dp"
             android:entries="@array/numbers2"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/textView20"
-            app:layout_constraintTop_toBottomOf="@+id/spinner2" />
+            app:layout_constraintStart_toEndOf="@+id/textViewParking"
+            app:layout_constraintTop_toBottomOf="@+id/spinnerArea" />
 
         <TextView
-            android:id="@+id/textView21"
+            android:id="@+id/textViewLocation"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
@@ -152,7 +152,7 @@
             android:text="@string/location_text"
             android:textSize="24sp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/spinner3" />
+            app:layout_constraintTop_toBottomOf="@+id/spinnerParking" />
 
         <com.google.android.gms.maps.MapView
             android:id="@+id/mapView3"
@@ -163,10 +163,10 @@
             android:layout_marginEnd="16dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView21" />
+            app:layout_constraintTop_toBottomOf="@+id/textViewLocation" />
 
         <Button
-            android:id="@+id/buttonContinue"
+            android:id="@+id/buttonApply"
             android:layout_width="285dp"
             android:layout_height="35dp"
             android:layout_marginStart="16dp"

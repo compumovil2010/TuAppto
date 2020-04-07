@@ -16,7 +16,7 @@ public class InterestedActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_interested);
 
-        buttonChat = findViewById(R.id.button4);
+        buttonChat = findViewById(R.id.buttonTemporal);
 
         buttonChat.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -21,7 +21,7 @@
         android:layout_gravity="center">
 
         <TextView
-            android:id="@+id/textView6"
+            android:id="@+id/textViewChoose"
             android:layout_width="0dp"
             android:layout_height="45dp"
             android:layout_marginStart="16dp"
@@ -37,7 +37,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/textView5"
+            android:id="@+id/textViewOwner"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
@@ -49,10 +49,10 @@
             android:text="@string/owner_option"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/imageView6" />
+            app:layout_constraintTop_toBottomOf="@+id/imageViewImportant" />
 
         <Button
-            android:id="@+id/button"
+            android:id="@+id/buttonOwner"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
@@ -64,10 +64,10 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView5" />
+            app:layout_constraintTop_toBottomOf="@+id/textViewOwner" />
 
         <TextView
-            android:id="@+id/textView7"
+            android:id="@+id/textViewClient"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
@@ -80,7 +80,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/button"
+            app:layout_constraintTop_toBottomOf="@+id/buttonOwner"
             app:layout_constraintVertical_bias="0.042" />
 
         <Button
@@ -95,18 +95,18 @@
             android:textColor="@color/colorWhite"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView7" />
+            app:layout_constraintTop_toBottomOf="@+id/textViewClient" />
 
         <ImageView
             android:contentDescription="@string/important_image_description"
-            android:id="@+id/imageView6"
+            android:id="@+id/imageViewImportant"
             android:layout_width="206dp"
             android:layout_height="177dp"
             android:layout_marginTop="32dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.497"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView6"
+            app:layout_constraintTop_toBottomOf="@+id/textViewChoose"
             app:srcCompat="@drawable/information" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

@@ -16,7 +16,7 @@ public class PropertyDescriptionActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_property_description);
 
-        button = findViewById(R.id.button);
+        button = findViewById(R.id.buttonChat);
 
         button.setOnClickListener(new View.OnClickListener() {
             @Override

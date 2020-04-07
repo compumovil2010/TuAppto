@@ -16,7 +16,7 @@ public class MyPublicationsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_publications);
 
-        buttonEdit = findViewById(R.id.button5);
+        buttonEdit = findViewById(R.id.buttonTemporal);
 
         buttonEdit.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -21,7 +21,7 @@
         android:layout_gravity="center">
 
         <TextView
-            android:id="@+id/textView24"
+            android:id="@+id/textViewProperty"
             android:layout_width="0dp"
             android:layout_height="45dp"
             android:layout_marginStart="16dp"
@@ -36,8 +36,37 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
+        <ImageButton
+            android:contentDescription="@string/property_image_description"
+            android:id="@+id/imageViewUser"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="32dp"
+            android:layout_marginEnd="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textViewProperty"
+            tools:srcCompat="@tools:sample/avatars[12]" />
+
+        <TextView
+            android:id="@+id/textViewDescription"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="32dp"
+            android:layout_marginEnd="16dp"
+            android:text="@string/property_information"
+            android:background="@drawable/text_view_transparent"
+            android:textSize="24sp"
+            android:padding="10dp"
+            android:drawablePadding="10dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/imageViewUser"/>
+
         <Button
-            android:id="@+id/button"
+            android:id="@+id/buttonChat"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
@@ -51,7 +80,7 @@
             app:layout_constraintStart_toStartOf="parent" />
 
         <Button
-            android:id="@+id/button2"
+            android:id="@+id/buttonAdd"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
@@ -60,39 +89,10 @@
             android:background="@drawable/button"
             android:text="@string/add_to_interest_button"
             android:textColor="@color/colorWhite"
-            app:layout_constraintBottom_toTopOf="@+id/button"
+            app:layout_constraintBottom_toTopOf="@+id/buttonChat"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent" />
-
-        <ImageButton
-            android:contentDescription="@string/property_image_description"
-            android:id="@+id/imageView7"
-            android:layout_width="200dp"
-            android:layout_height="200dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="32dp"
-            android:layout_marginEnd="8dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView24"
-            tools:srcCompat="@tools:sample/avatars[12]" />
-
-        <TextView
-            android:id="@+id/textView25"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="32dp"
-            android:layout_marginEnd="16dp"
-            android:text="@string/property_information"
-            android:background="@drawable/text_view_transparent"
-            android:textSize="24sp"
-            android:padding="10dp"
-            android:drawablePadding="10dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/imageView7"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

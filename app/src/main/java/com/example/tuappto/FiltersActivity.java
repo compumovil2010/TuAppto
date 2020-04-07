@@ -16,7 +16,7 @@ public class FiltersActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_filters);
 
-        button = findViewById(R.id.buttonContinue);
+        button = findViewById(R.id.buttonApply);
 
         button.setOnClickListener(new View.OnClickListener() {
             @Override
