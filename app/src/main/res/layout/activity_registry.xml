@@ -98,7 +98,7 @@
                 app:srcCompat="@drawable/gallery" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <ImageButton
+        <ImageView
             android:contentDescription="@string/user_image_description"
             android:id="@+id/imageViewUser"
             android:layout_width="200dp"
