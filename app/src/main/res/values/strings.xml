@@ -45,7 +45,7 @@
     <string name="meters_text">mts</string>
     <string name="parking_lot_text">Parqueaderos: </string>
     <string name="description_text">Descripción: </string>
-    <string name="user_text">Usuario</string>
+    <string name="user_text">Correo</string>
     <string name="password_text">Contraseña</string>
     <string name="name_text">Nombre</string>
     <string name="second_name_text">Apellido</string>

@@ -18,8 +18,10 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 
@@ -35,6 +37,11 @@ public class RegistryActivity extends AppCompatActivity {
     ImageView imageViewUser;
     Button buttonContinue;
 
+    TextView name;
+    TextView user;
+    TextView password;
+    TextView phone;
+    TextView secondName;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,10 +52,29 @@ public class RegistryActivity extends AppCompatActivity {
         imageButtonGallery = findViewById(R.id.imageButtonGallery);
         imageViewUser = findViewById(R.id.imageViewUser);
 
+        name = findViewById(R.id.editTextName);
+        user = findViewById(R.id.editTextUser);
+        phone = findViewById(R.id.editTextPhone);
+        password = findViewById(R.id.editTextPassword);
+        secondName = findViewById(R.id.editTextSecondName);
+
         buttonContinue.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(view.getContext(),ChooseActivity.class));
+
+                imageViewUser.buildDrawingCache();
+                Bitmap bitmap = imageViewUser.getDrawingCache();
+
+
+                Intent i = new Intent(view.getContext(),ChooseActivity.class);
+                i.putExtra("name",name.getText().toString());
+                i.putExtra("user",user.getText().toString());
+                i.putExtra("phone",phone.getText().toString());
+                i.putExtra("password",password.getText().toString());
+                i.putExtra("secondName",secondName.getText().toString());
+                //i.putExtra("image", bitmap);
+
+                startActivity(i);
             }
         });
 
