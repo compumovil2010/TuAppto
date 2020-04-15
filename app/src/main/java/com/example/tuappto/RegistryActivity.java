@@ -14,6 +14,7 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -24,6 +25,7 @@ import android.widget.Toast;
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.util.regex.Pattern;
 
 public class RegistryActivity extends AppCompatActivity {
 
@@ -65,16 +67,33 @@ public class RegistryActivity extends AppCompatActivity {
                 imageViewUser.buildDrawingCache();
                 Bitmap bitmap = imageViewUser.getDrawingCache();
 
+                if(allFilled()){
+                    if(emailValidation(user.getText().toString())){
+                        if(password.getText().toString().length()>5){
+                            Intent i = new Intent(view.getContext(),ChooseActivity.class);
+                            i.putExtra("name",name.getText().toString());
+                            i.putExtra("user",user.getText().toString());
+                            i.putExtra("phone",phone.getText().toString());
+                            i.putExtra("password",password.getText().toString());
+                            i.putExtra("secondName",secondName.getText().toString());
+                            //i.putExtra("image", bitmap);
+                            i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                            startActivity(i);
+                        }else{
+                            Toast.makeText(RegistryActivity.this, "la contraseña debe tener mas de 5 caracteres.",
+                                    Toast.LENGTH_SHORT).show();
 
-                Intent i = new Intent(view.getContext(),ChooseActivity.class);
-                i.putExtra("name",name.getText().toString());
-                i.putExtra("user",user.getText().toString());
-                i.putExtra("phone",phone.getText().toString());
-                i.putExtra("password",password.getText().toString());
-                i.putExtra("secondName",secondName.getText().toString());
-                //i.putExtra("image", bitmap);
+                        }
 
-                startActivity(i);
+                    }else{
+                        Toast.makeText(RegistryActivity.this, "ingrese un email valido.",
+                                Toast.LENGTH_SHORT).show();
+                    }
+                }
+                else{
+                    Toast.makeText(RegistryActivity.this, "Complete todos los campos.",
+                            Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
@@ -103,6 +122,17 @@ public class RegistryActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+    private boolean emailValidation(String email) {
+        Pattern pattern = Patterns.EMAIL_ADDRESS;
+        return pattern.matcher(email).matches();
+    }
+    private boolean allFilled() {
+        return !name.getText().toString().isEmpty()||
+                !user.getText().toString().isEmpty()||
+                !phone.getText().toString().isEmpty()||
+                !password.getText().toString().isEmpty()||
+                !secondName.getText().toString().isEmpty();
     }
 
     private void requestPermission(Activity context, String permiso, String justificacion, int idCode) {
