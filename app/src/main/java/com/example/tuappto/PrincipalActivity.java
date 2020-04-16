@@ -59,6 +59,10 @@ public class PrincipalActivity extends AppCompatActivity {
 
         final FirebaseUser currentUser = mAuth.getCurrentUser();
 
+        if(updateUIC(currentUser)){
+            updateUIO(currentUser);
+        }
+
         buttonEnter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -86,6 +90,17 @@ public class PrincipalActivity extends AppCompatActivity {
 
 
     }
+
+    @Override
+    protected void onResume() {
+        mAuth = FirebaseAuth.getInstance();
+        final FirebaseUser currentUser = mAuth.getCurrentUser();
+        super.onResume();
+        updateUIC(currentUser);
+        updateUIO(currentUser);
+
+    }
+
     private void signInUser(String email, String password) {
         if (validateForm(email)) {
             mAuth.signInWithEmailAndPassword(email, password)
@@ -95,7 +110,7 @@ public class PrincipalActivity extends AppCompatActivity {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             if (task.isSuccessful()) {
-// Sign in success, update UI
+                                // Sign in success, update UI
                                 Log.d(TAG, "signInWithEmail:success");
                                 FirebaseUser user = mAuth.getCurrentUser();
                                 if(!updateUIC(user)) {
@@ -103,7 +118,7 @@ public class PrincipalActivity extends AppCompatActivity {
                                 }
 
                             } else {
-// If sign in fails, display a message to the user.
+                                // If sign in fails, display a message to the user.
                                 Log.w(TAG, "signInWithEmail:failure", task.getException());
                                 Toast.makeText(PrincipalActivity.this, "correo o contraseñas incorrectas",
                                         Toast.LENGTH_SHORT).show();
@@ -127,11 +142,14 @@ public class PrincipalActivity extends AppCompatActivity {
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     for (DataSnapshot singleSnapshot : dataSnapshot.getChildren()) {
                         Owner myUser = singleSnapshot.getValue(Owner.class);
-                        if (currentUser.getEmail() == myUser.getEmail()) {
-
+                        Log.d(TAG, "signInWithEmail: buscando email");
+                        String aux = myUser.getEmail();
+                        if (currentUser.getEmail().equals(aux)) {
+                            Log.d(TAG, "signInWithEmail:lo encontre");
                             Intent intent = new Intent(PrincipalActivity.this, SellerMenuActivity.class);
                             intent.putExtra("email", currentUser.getEmail());
                             startActivity(intent);
+                            finish();
                             flag[0] = true;
                         }
                     }
@@ -164,11 +182,13 @@ public class PrincipalActivity extends AppCompatActivity {
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     for (DataSnapshot singleSnapshot : dataSnapshot.getChildren()) {
                         Client myUser = singleSnapshot.getValue(Client.class);
-                        if (myUser.getEmail() == currentUser.getEmail()) {
+                        String aux = myUser.getEmail();
+                        if (aux.equals( currentUser.getEmail())) {
 
                             Intent intent = new Intent(PrincipalActivity.this, BuyerMenuActivity.class);
                             intent.putExtra("email", currentUser.getEmail());
                             startActivity(intent);
+                            finish();
                             flag[0] = true;
                         }
                     }
