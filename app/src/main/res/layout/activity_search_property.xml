@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -11,14 +10,12 @@
         android:id="@+id/principalImage"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:contentDescription="@string/principal_image_description"
-        app:srcCompat="@drawable/inicial"
-        android:alpha="0.2"/>
+        android:alpha="0.2"
+        android:contentDescription="@string/principal_image_description" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_gravity="center">
+        android:layout_height="match_parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/constraintLayout"
@@ -48,7 +45,6 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <ImageButton
-                android:contentDescription="@string/filters_image_description"
                 android:id="@+id/imageButtonFilters"
                 android:layout_width="35dp"
                 android:layout_height="35dp"
@@ -58,6 +54,7 @@
                 android:layout_marginBottom="8dp"
                 android:background="@drawable/text_view_transparent"
                 android:clickable="true"
+                android:contentDescription="@string/filters_image_description"
                 android:focusable="true"
                 android:scaleType="centerCrop"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -78,6 +75,23 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 
+        <ScrollView
+            android:layout_width="409dp"
+            android:layout_height="574dp"
+            tools:layout_editor_absoluteX="1dp"
+            tools:layout_editor_absoluteY="76dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" />
+        </ScrollView>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"></LinearLayout>
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-</FrameLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -9,12 +9,17 @@ import android.widget.Button;
 
 import android.content.Intent;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 
 public class PrincipalActivity extends AppCompatActivity {
 
     Button buttonRegister;
     Button buttonEnter;
     Button buttonTemporal;
+    FirebaseDatabase database;
+    DatabaseReference myRef;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +52,7 @@ public class PrincipalActivity extends AppCompatActivity {
                 startActivity(new Intent(view.getContext(),BuyerMenuActivity.class));
             }
         });
+
 
 
     }

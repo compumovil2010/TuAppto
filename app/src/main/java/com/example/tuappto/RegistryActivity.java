@@ -20,6 +20,9 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 
@@ -34,6 +37,8 @@ public class RegistryActivity extends AppCompatActivity {
     ImageButton imageButtonGallery;
     ImageView imageViewUser;
     Button buttonContinue;
+    FirebaseDatabase database;
+    DatabaseReference myRef;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
