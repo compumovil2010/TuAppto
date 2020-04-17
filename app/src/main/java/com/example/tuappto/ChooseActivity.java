@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
+import com.example.tuappto.data.Client;
 import com.example.tuappto.data.Owner;
 import com.example.tuappto.data.User;
 import com.google.firebase.auth.FirebaseAuth;
@@ -42,8 +43,8 @@ public class ChooseActivity extends AppCompatActivity {
                 Intent intent = new Intent(view.getContext(),PrincipalActivity.class);
                 myRef = database.getReference(PATH_USERS+mAuth.getUid());
                 startActivity(intent);
-                User user = new User(valorNombre,valorApellido,valorCorreo,valorContraseña,valorTelefono);
-                myRef.setValue(user);
+                Client client = new Client(valorNombre,valorApellido,valorCorreo,valorContraseña,valorTelefono);
+                myRef.setValue(client);
             }
         });
         buttonOwner.setOnClickListener(new View.OnClickListener() {
