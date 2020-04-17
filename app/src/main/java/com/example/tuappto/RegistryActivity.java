@@ -16,6 +16,7 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -32,6 +33,7 @@ public class RegistryActivity extends AppCompatActivity {
     private static final int PERMISSION_GALLERY_ID = 2;
     private static final int REQUEST_IMAGE_CAPTURE = 3;
     private static final int IMAGE_PICKER_REQUEST = 4;
+    public static final String PATH_USERS = "users/";
 
     ImageButton imageButtonCamera;
     ImageButton imageButtonGallery;
@@ -39,6 +41,7 @@ public class RegistryActivity extends AppCompatActivity {
     Button buttonContinue;
     FirebaseDatabase database;
     DatabaseReference myRef;
+    EditText correo, nombre, apellido, contraseña;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +52,10 @@ public class RegistryActivity extends AppCompatActivity {
         imageButtonCamera = findViewById(R.id.imageButtonCamera);
         imageButtonGallery = findViewById(R.id.imageButtonGallery);
         imageViewUser = findViewById(R.id.imageViewUser);
+        correo = findViewById(R.id.editTextUser);
+        nombre = findViewById(R.id.editTextName);
+        apellido = findViewById(R.id.editTextSecondName);
+        contraseña = findViewById(R.id.editTextPassword);
 
         buttonContinue.setOnClickListener(new View.OnClickListener() {
             @Override
