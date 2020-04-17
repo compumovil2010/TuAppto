@@ -16,7 +16,7 @@ public class ChatActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
 
-        buttonDate = findViewById(R.id.button2);
+        buttonDate = findViewById(R.id.buttonClient);
 
         buttonDate.setOnClickListener(new View.OnClickListener() {
             @Override
