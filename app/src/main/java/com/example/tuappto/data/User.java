@@ -4,15 +4,17 @@ public class User {
     String nombre;
     String apellido;
     String Email;
+    String contraseña;
     String telefono;
 
     public User() {
     }
 
-    public User(String nombre, String apellido, String email, String telefono) {
+    public User(String nombre, String apellido, String email, String contraseña, String telefono) {
         this.nombre = nombre;
         this.apellido = apellido;
         Email = email;
+        this.contraseña = contraseña;
         this.telefono = telefono;
     }
 
@@ -28,23 +30,11 @@ public class User {
         return Email;
     }
 
+    public String getContraseña() {
+        return contraseña;
+    }
+
     public String getTelefono() {
         return telefono;
-    }
-
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
-
-    public void setApellido(String apellido) {
-        this.apellido = apellido;
-    }
-
-    public void setEmail(String email) {
-        Email = email;
-    }
-
-    public void setTelefono(String telefono) {
-        this.telefono = telefono;
     }
 }

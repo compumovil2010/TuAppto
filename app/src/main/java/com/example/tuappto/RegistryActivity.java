@@ -21,6 +21,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -41,7 +42,8 @@ public class RegistryActivity extends AppCompatActivity {
     Button buttonContinue;
     FirebaseDatabase database;
     DatabaseReference myRef;
-    EditText correo, nombre, apellido, contraseña;
+    EditText correo, nombre, apellido, contraseña, telefono;
+    FirebaseAuth mAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,11 +58,19 @@ public class RegistryActivity extends AppCompatActivity {
         nombre = findViewById(R.id.editTextName);
         apellido = findViewById(R.id.editTextSecondName);
         contraseña = findViewById(R.id.editTextPassword);
+        telefono = findViewById(R.id.editTextPhone);
+        mAuth = FirebaseAuth.getInstance();
 
         buttonContinue.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(view.getContext(),ChooseActivity.class));
+                Intent intent = new Intent(view.getContext(),ChooseActivity.class);
+                intent.putExtra("correo", correo.getText().toString());
+                intent.putExtra("nombre", nombre.getText().toString());
+                intent.putExtra("apellido", apellido.getText().toString());
+                intent.putExtra("telefono", telefono.getText().toString());
+                intent.putExtra("contraseña", contraseña.getText().toString());
+                startActivity(intent);
             }
         });
 
