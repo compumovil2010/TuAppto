@@ -7,6 +7,10 @@
     android:layout_height="match_parent"
     tools:context=".PrincipalActivity">
 
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/toolbar" />
+
     <ImageView
         android:id="@+id/principalImage"
         android:layout_width="match_parent"
@@ -44,8 +48,9 @@
             android:inputType="textPersonName"
             android:paddingStart="10dp"
             android:paddingEnd="0dp"
-            app:layout_constraintBottom_toTopOf="@+id/editText"
+            app:layout_constraintBottom_toTopOf="@+id/editPassword"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.547"
             app:layout_constraintStart_toStartOf="parent" />
 
         <EditText

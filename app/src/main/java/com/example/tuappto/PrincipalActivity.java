@@ -1,13 +1,17 @@
 package com.example.tuappto;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import negocio.Client;
 import negocio.Owner;
 
 import android.os.Bundle;
 import android.util.Log;
 import android.util.Patterns;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.widget.Button;
 
@@ -42,10 +46,15 @@ public class PrincipalActivity extends AppCompatActivity {
     FirebaseDatabase database;
     DatabaseReference myRef;
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_principal);
+
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
         database= FirebaseDatabase.getInstance();
         mAuth = FirebaseAuth.getInstance();
@@ -90,6 +99,7 @@ public class PrincipalActivity extends AppCompatActivity {
 
 
     }
+
 
     @Override
     protected void onResume() {

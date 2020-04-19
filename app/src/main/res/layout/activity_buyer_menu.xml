@@ -8,6 +8,10 @@
     tools:context=".PrincipalActivity">
 
 
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/toolbar" />
+
     <ImageView
         android:contentDescription="@string/principal_image_description"
         android:id="@+id/principalImage"
