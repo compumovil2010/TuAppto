@@ -1,6 +1,7 @@
 package com.example.tuappto;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -33,6 +34,9 @@ public class SellerMenuActivity extends AppCompatActivity {
         buttonMyPublications = findViewById(R.id.buttonMyPublications);
         buttonInterested = findViewById(R.id.buttonInterested);
         buttonDates = findViewById(R.id.buttonDates);
+
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
         buttonPublishProperty.setOnClickListener(new View.OnClickListener() {
             @Override
