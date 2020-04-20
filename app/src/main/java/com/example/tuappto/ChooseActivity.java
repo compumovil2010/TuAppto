@@ -6,46 +6,39 @@ import negocio.Client;
 import negocio.Owner;
 
 import android.content.Intent;
-import android.net.Uri;
+
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
-
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
-
-import java.io.File;
 
 public class ChooseActivity extends AppCompatActivity {
 
     Owner nuevoDuenio;
     Client nuevoCliente;
-    String user;
+    String email;
     String password;
     String name;
     String secondName;
     String imagePath;
-    int phone;
+    Long phone;
 
     Button duenio;
     Button cliente;
+    Bundle bundle;
 
     private FirebaseAuth mAuth;
+
     FirebaseDatabase database;
     DatabaseReference myRef;
-    private StorageReference mStorageRef;
 
     public static final String PATH_CLIENTS="clients/";
     public static final String PATH_OWNERS="owners/";
@@ -58,26 +51,26 @@ public class ChooseActivity extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
         database= FirebaseDatabase.getInstance();
-        mStorageRef = FirebaseStorage.getInstance().getReference();
 
-        user = getIntent().getStringExtra("user");
-        password = getIntent().getStringExtra("password");
-        name = getIntent().getStringExtra("name");
-        secondName = getIntent().getStringExtra("secondName");
-        phone = Integer.parseInt(getIntent().getStringExtra("phone"));
+        bundle = getIntent().getBundleExtra("bundle");
+        email = bundle.getString("email");
+        password = bundle.getString("password");
+        name = bundle.getString("name");
+        secondName = bundle.getString("secondName");
+        phone = bundle.getLong("phone");
         imagePath= getIntent().getStringExtra("imagePath");
 
 
         duenio = findViewById(R.id.buttonOwner);
         cliente = findViewById(R.id.buttonClient);
 
-    duenio.setOnClickListener(new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-            tipo = "duenio";
-            crearUsuario();
-        }
-    });
+        duenio.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                tipo = "duenio";
+                crearUsuario();
+            }
+        });
         cliente.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -88,7 +81,7 @@ public class ChooseActivity extends AppCompatActivity {
     }
 
     private void crearUsuario() {
-        mAuth.createUserWithEmailAndPassword(user, password)
+        mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     private static final String TAG = "tag";
 
@@ -98,9 +91,10 @@ public class ChooseActivity extends AppCompatActivity {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "createUserWithEmail:success");
                             FirebaseUser fuser = mAuth.getCurrentUser();
-                            if (tipo=="duenio"){
+                            if (tipo.equals("duenio")){
                                 crearDuenio(fuser);
-                            }else{
+                            }
+                            else{
                                 crearCliente(fuser);
                             }
 
@@ -108,7 +102,7 @@ public class ChooseActivity extends AppCompatActivity {
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "createUserWithEmail:failure", task.getException());
-                            Toast.makeText(ChooseActivity.this, "Authentication failed."+ user+password,
+                            Toast.makeText(ChooseActivity.this, "Authentication failed."+ email +password,
                                     Toast.LENGTH_SHORT).show();
                             //updateUI(null);
                         }
@@ -118,43 +112,35 @@ public class ChooseActivity extends AppCompatActivity {
                 });
     }
 
-
-
-
-
-
     private void crearCliente(FirebaseUser fuser) {
         nuevoCliente = new Client();
-        nuevoCliente.setEmail(user);
+        nuevoCliente.setEmail(email);
         nuevoCliente.setPassword(password);
         nuevoCliente.setName(name);
         nuevoCliente.setSecondname(secondName);
         nuevoCliente.setPhone(phone);
 
-        myRef=database.getReference(PATH_CLIENTS+fuser.getUid());
+        myRef = database.getReference(PATH_CLIENTS + fuser.getUid());
         myRef.setValue(nuevoCliente);
-
-        saveImage(fuser);
 
         Intent intent = new Intent(getBaseContext(), BuyerMenuActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         intent.putExtra("email", nuevoCliente.getEmail());
         startActivity(intent);
+        finish();
 
     }
 
     private void crearDuenio(FirebaseUser fuser) {
         nuevoDuenio = new Owner();
-        nuevoDuenio.setEmail(user);
+        nuevoDuenio.setEmail(email);
         nuevoDuenio.setPassword(password);
         nuevoDuenio.setName(name);
         nuevoDuenio.setSecondname(secondName);
         nuevoDuenio.setPhone(phone);
 
-        myRef=database.getReference(PATH_OWNERS+fuser.getUid());
+        myRef = database.getReference(PATH_OWNERS+fuser.getUid());
         myRef.setValue(nuevoDuenio);
-
-        saveImage(fuser);
 
         Intent intent = new Intent(getBaseContext(), SellerMenuActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -163,28 +149,4 @@ public class ChooseActivity extends AppCompatActivity {
         finish();
     }
 
-    private void saveImage(FirebaseUser fuser) {
-        if(!imagePath.isEmpty()){
-            Uri file = Uri.fromFile(new File(imagePath));
-        mStorageRef = FirebaseStorage.getInstance().getReference();
-        StorageReference riversRef = mStorageRef.child("images/"+fuser.getUid()+".jpg");
-        riversRef.putFile(file)
-                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                    @Override
-                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                        // Get a URL to the uploaded content
-
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception exception) {
-                        // Handle unsuccessful uploads
-                        // ...
-                    }
-                });
-        }else{
-
-        }
-    }
 }

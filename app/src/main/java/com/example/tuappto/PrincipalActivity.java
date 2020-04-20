@@ -37,7 +37,7 @@ import java.util.regex.Pattern;
 public class PrincipalActivity extends AppCompatActivity {
 
     public static final String PATH_CLIENTS="clients/";
-    public static final String PATH_OWNERS="owners/";;
+    public static final String PATH_OWNERS="owners/";
     private static final String TAG = "tag";
     Button buttonRegister;
     Button buttonEnter;
