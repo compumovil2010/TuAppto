@@ -4,9 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import negocio.Client;
 import negocio.Owner;
-
 import android.content.Intent;
-
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -22,8 +20,8 @@ import com.google.firebase.database.FirebaseDatabase;
 
 public class ChooseActivity extends AppCompatActivity {
 
-    Owner nuevoDuenio;
-    Client nuevoCliente;
+    Owner newOwner;
+    Client newClient;
     String email;
     String password;
     String name;
@@ -92,10 +90,10 @@ public class ChooseActivity extends AppCompatActivity {
                             Log.d(TAG, "createUserWithEmail:success");
                             FirebaseUser fuser = mAuth.getCurrentUser();
                             if (tipo.equals("duenio")){
-                                crearDuenio(fuser);
+                                createOwner(fuser);
                             }
                             else{
-                                crearCliente(fuser);
+                                createClient(fuser);
                             }
 
                             //updateUI(user);
@@ -112,39 +110,39 @@ public class ChooseActivity extends AppCompatActivity {
                 });
     }
 
-    private void crearCliente(FirebaseUser fuser) {
-        nuevoCliente = new Client();
-        nuevoCliente.setEmail(email);
-        nuevoCliente.setPassword(password);
-        nuevoCliente.setName(name);
-        nuevoCliente.setSecondname(secondName);
-        nuevoCliente.setPhone(phone);
+    private void createClient(FirebaseUser fuser) {
+        newClient = new Client();
+        newClient.setEmail(email);
+        newClient.setPassword(password);
+        newClient.setName(name);
+        newClient.setSecondname(secondName);
+        newClient.setPhone(phone);
 
         myRef = database.getReference(PATH_CLIENTS + fuser.getUid());
-        myRef.setValue(nuevoCliente);
+        myRef.setValue(newClient);
 
         Intent intent = new Intent(getBaseContext(), BuyerMenuActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        intent.putExtra("email", nuevoCliente.getEmail());
+        intent.putExtra("email", newClient.getEmail());
         startActivity(intent);
         finish();
 
     }
 
-    private void crearDuenio(FirebaseUser fuser) {
-        nuevoDuenio = new Owner();
-        nuevoDuenio.setEmail(email);
-        nuevoDuenio.setPassword(password);
-        nuevoDuenio.setName(name);
-        nuevoDuenio.setSecondname(secondName);
-        nuevoDuenio.setPhone(phone);
+    private void createOwner(FirebaseUser fuser) {
+        newOwner = new Owner();
+        newOwner.setEmail(email);
+        newOwner.setPassword(password);
+        newOwner.setName(name);
+        newOwner.setSecondname(secondName);
+        newOwner.setPhone(phone);
 
         myRef = database.getReference(PATH_OWNERS+fuser.getUid());
-        myRef.setValue(nuevoDuenio);
+        myRef.setValue(newOwner);
 
         Intent intent = new Intent(getBaseContext(), SellerMenuActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        intent.putExtra("email", nuevoDuenio.getEmail());
+        intent.putExtra("email", newOwner.getEmail());
         startActivity(intent);
         finish();
     }
