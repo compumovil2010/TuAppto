@@ -4,8 +4,6 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-import androidx.core.content.FileProvider;
-
 import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
@@ -19,28 +17,18 @@ import android.provider.MediaStore;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
-
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
-
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URI;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.regex.Pattern;
 
-import static com.example.tuappto.R.id.imageViewUser;
 
 public class RegistryActivity extends AppCompatActivity {
 
@@ -56,11 +44,11 @@ public class RegistryActivity extends AppCompatActivity {
     Button buttonContinue;
     String filePath;
 
-    TextView name;
-    TextView user;
-    TextView password;
-    TextView phone;
-    TextView secondName;
+    EditText name;
+    EditText email;
+    EditText password;
+    EditText phone;
+    EditText secondName;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -72,7 +60,7 @@ public class RegistryActivity extends AppCompatActivity {
         imageViewUser = findViewById(R.id.imageViewUser);
 
         name = findViewById(R.id.editTextName);
-        user = findViewById(R.id.editTextUser);
+        email = findViewById(R.id.editTextUser);
         phone = findViewById(R.id.editTextPhone);
         password = findViewById(R.id.editTextPassword);
         secondName = findViewById(R.id.editTextSecondName);
@@ -85,21 +73,24 @@ public class RegistryActivity extends AppCompatActivity {
                 Bitmap bitmap = imageViewUser.getDrawingCache();
 
                 if(allFilled()){
-                    if(emailValidation(user.getText().toString())){
+                    if(emailValidation(email.getText().toString())){
                         if(password.getText().toString().length()>5){
+                            Bundle bundle = new Bundle();
                             Intent i = new Intent(view.getContext(),ChooseActivity.class);
-                            i.putExtra("name",name.getText().toString());
-                            i.putExtra("user",user.getText().toString());
-                            i.putExtra("phone",phone.getText().toString());
-                            i.putExtra("password",password.getText().toString());
-                            i.putExtra("secondName",secondName.getText().toString());
+
+                            bundle.putString("name",name.getText().toString());
+                            bundle.putString("email",email.getText().toString());
+                            bundle.putLong("phone",Long.parseLong(phone.getText().toString()));
+                            bundle.putString("password",password.getText().toString());
+                            bundle.putString("secondName",secondName.getText().toString());
 
                             if(filePath!=null) {
-                                i.putExtra("imagePath", filePath);
+                                bundle.putString("imagePath", filePath);
                             }else{
-                                i.putExtra("imagePath", "");
+                                bundle.putString("imagePath", "");
                             }
                             //saveImage();
+                            i.putExtra("bundle",bundle);
                             i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                             startActivity(i);
                         }else{
@@ -147,15 +138,13 @@ public class RegistryActivity extends AppCompatActivity {
         });
     }
 
-
-
     private boolean emailValidation(String email) {
         Pattern pattern = Patterns.EMAIL_ADDRESS;
         return pattern.matcher(email).matches();
     }
     private boolean allFilled() {
         return !name.getText().toString().isEmpty()||
-                !user.getText().toString().isEmpty()||
+                !email.getText().toString().isEmpty()||
                 !phone.getText().toString().isEmpty()||
                 !password.getText().toString().isEmpty()||
                 !secondName.getText().toString().isEmpty();
