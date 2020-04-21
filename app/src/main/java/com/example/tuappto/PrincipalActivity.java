@@ -1,25 +1,18 @@
 package com.example.tuappto;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import negocio.Client;
 import negocio.Owner;
-
 import android.os.Bundle;
 import android.util.Log;
 import android.util.Patterns;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.View;
 import android.widget.Button;
-
-
 import android.content.Intent;
 import android.widget.EditText;
 import android.widget.Toast;
-
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -30,9 +23,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-
 import java.util.regex.Pattern;
-
 
 public class PrincipalActivity extends AppCompatActivity {
 
@@ -41,12 +32,9 @@ public class PrincipalActivity extends AppCompatActivity {
     private static final String TAG = "tag";
     Button buttonRegister;
     Button buttonEnter;
-    Button buttonTemporal;
     private FirebaseAuth mAuth;
     FirebaseDatabase database;
     DatabaseReference myRef;
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,7 +52,6 @@ public class PrincipalActivity extends AppCompatActivity {
 
         buttonEnter = findViewById(R.id.buttonEnter);
         buttonRegister = findViewById(R.id.buttonRegister);
-        buttonTemporal = findViewById(R.id.buttonTemporal);
 
         final FirebaseUser currentUser = mAuth.getCurrentUser();
 
@@ -89,14 +76,6 @@ public class PrincipalActivity extends AppCompatActivity {
 
             }
         });
-
-        buttonTemporal.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(view.getContext(),BuyerMenuActivity.class));
-            }
-        });
-
 
     }
 

@@ -27,12 +27,12 @@
         <ImageView
             android:layout_width="250dp"
             android:layout_height="250dp"
-            android:layout_marginTop="64dp"
+            android:layout_marginBottom="32dp"
             android:contentDescription="@string/principal_image_description"
+            app:layout_constraintBottom_toTopOf="@+id/editEmail"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.496"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/principal" />
 
         <EditText
@@ -47,7 +47,7 @@
             android:hint="@string/user_text"
             android:inputType="textPersonName"
             android:paddingStart="10dp"
-            android:paddingEnd="0dp"
+            android:paddingEnd="10dp"
             app:layout_constraintBottom_toTopOf="@+id/editPassword"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
@@ -64,7 +64,7 @@
             android:hint="@string/password_text"
             android:inputType="textPassword"
             android:paddingStart="10dp"
-            android:paddingEnd="0dp"
+            android:paddingEnd="10dp"
             app:layout_constraintBottom_toTopOf="@+id/buttonEnter"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
@@ -94,16 +94,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.498"
             app:layout_constraintStart_toStartOf="parent" />
-
-        <Button
-            android:id="@+id/buttonTemporal"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="33dp"
-            android:text="@string/temporal_button"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/buttonRegister" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
