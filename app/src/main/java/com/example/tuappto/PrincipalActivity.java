@@ -52,8 +52,5 @@ public class PrincipalActivity extends AppCompatActivity {
                 startActivity(new Intent(view.getContext(),BuyerMenuActivity.class));
             }
         });
-
-
-
     }
 }
