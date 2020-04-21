@@ -5,38 +5,47 @@ import androidx.appcompat.app.AppCompatActivity;
 import negocio.Client;
 import negocio.Owner;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 
 public class ChooseActivity extends AppCompatActivity {
 
-    Owner newOwner;
-    Client newClient;
-    String email;
-    String password;
-    String name;
-    String secondName;
-    String imagePath;
-    Long phone;
-
+    Bundle bundle;
     Button duenio;
     Button cliente;
-    Bundle bundle;
-
+    Client newClient;
+    Intent intent;
+    private Long phone;
+    Owner newOwner;
+    private String email;
+    private String password;
+    private String name;
+    private String secondName;
+    private Uri imageUri;
+    private InputStream imageStream;
     private FirebaseAuth mAuth;
 
-    FirebaseDatabase database;
-    DatabaseReference myRef;
+    private StorageReference mStorage;
+    private FirebaseDatabase database;
+    private DatabaseReference myRef;
 
     public static final String PATH_CLIENTS="clients/";
     public static final String PATH_OWNERS="owners/";
@@ -56,9 +65,16 @@ public class ChooseActivity extends AppCompatActivity {
         name = bundle.getString("name");
         secondName = bundle.getString("secondName");
         phone = bundle.getLong("phone");
-        imagePath= getIntent().getStringExtra("imagePath");
 
+        intent = getIntent();
+        imageUri = intent.getParcelableExtra("uri");
+        try {
+            imageStream = getContentResolver().openInputStream(imageUri);
+        } catch (FileNotFoundException e) {
+                e.printStackTrace();
+        }
 
+        mStorage = FirebaseStorage.getInstance().getReference();
         duenio = findViewById(R.id.buttonOwner);
         cliente = findViewById(R.id.buttonClient);
 
@@ -66,19 +82,19 @@ public class ChooseActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 tipo = "duenio";
-                crearUsuario();
+                createUser();
             }
         });
         cliente.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 tipo="cliente";
-                crearUsuario();
+                createUser();
             }
         });
     }
 
-    private void crearUsuario() {
+    private void createUser() {
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     private static final String TAG = "tag";
@@ -86,7 +102,6 @@ public class ChooseActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "createUserWithEmail:success");
                             FirebaseUser fuser = mAuth.getCurrentUser();
                             if (tipo.equals("duenio")){
@@ -96,16 +111,11 @@ public class ChooseActivity extends AppCompatActivity {
                                 createClient(fuser);
                             }
 
-                            //updateUI(user);
                         } else {
-                            // If sign in fails, display a message to the user.
                             Log.w(TAG, "createUserWithEmail:failure", task.getException());
                             Toast.makeText(ChooseActivity.this, "Authentication failed."+ email +password,
                                     Toast.LENGTH_SHORT).show();
-                            //updateUI(null);
                         }
-
-                        // ...
                     }
                 });
     }
@@ -120,6 +130,16 @@ public class ChooseActivity extends AppCompatActivity {
 
         myRef = database.getReference(PATH_CLIENTS + fuser.getUid());
         myRef.setValue(newClient);
+
+        if(imageUri != null) {
+            StorageReference folder = mStorage.child("Images").child("Clients").child(fuser.getUid());
+            folder.putFile(imageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    Log.i("FBApp", "Succesfully upload image");
+                }
+            });
+        }
 
         Intent intent = new Intent(getBaseContext(), BuyerMenuActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -137,8 +157,18 @@ public class ChooseActivity extends AppCompatActivity {
         newOwner.setSecondname(secondName);
         newOwner.setPhone(phone);
 
-        myRef = database.getReference(PATH_OWNERS+fuser.getUid());
+        myRef = database.getReference(PATH_OWNERS + fuser.getUid());
         myRef.setValue(newOwner);
+
+        if(imageUri != null) {
+            StorageReference folder = mStorage.child("Images").child("Owners").child(fuser.getUid());
+            folder.putFile(imageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    Log.i("FBApp", "Succesfully upload image");
+                }
+            });
+        }
 
         Intent intent = new Intent(getBaseContext(), SellerMenuActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
