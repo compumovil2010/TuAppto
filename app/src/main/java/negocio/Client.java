@@ -7,8 +7,8 @@ public class Client extends User {
     List<Integer> favoritos;
     List<Integer> interes;
 
-    public Client(String email, String password, String name, String secondname, int phone) {
-        super(email, password, name, secondname, phone);
+    public Client(String email, String password, String name, String secondname, Long phone, String imagePath) {
+        super(email, password, name, secondname, phone, imagePath);
 
         favoritos = new ArrayList<>();
         interes = new ArrayList<>();
