@@ -15,14 +15,21 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.View;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+
+import negocio.Property;
 
 public class PublishPropertyActivity extends AppCompatActivity {
 
@@ -37,6 +44,13 @@ public class PublishPropertyActivity extends AppCompatActivity {
     EditText price, rooms, area, parking, description;
     CheckBox rent, sell;
     Boolean venta= false, renta= false;
+    public static final String PATH_PROPERTY = "propertys/";
+    FirebaseDatabase database;
+    DatabaseReference myRef;
+    Button botonpublicar;
+    FirebaseAuth mAuth;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +58,8 @@ public class PublishPropertyActivity extends AppCompatActivity {
         setContentView(R.layout.activity_publish_property);
 
         imageButtonCamera = findViewById(R.id.imageButtonCamera);
+        mAuth = FirebaseAuth.getInstance();
+        database = FirebaseDatabase.getInstance();
         imageButtonGallery = findViewById(R.id.imageButtonGallery);
         imageViewUser = findViewById(R.id.imageViewUser);
         price = findViewById(R.id.editTextPrice);
@@ -53,6 +69,7 @@ public class PublishPropertyActivity extends AppCompatActivity {
         price = findViewById(R.id.editTextDescription);
         rent = findViewById(R.id.checkBox);
         sell = findViewById(R.id.checkBox2);
+        botonpublicar = findViewById(R.id.buttonPublish);
 
         imageButtonCamera.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -79,7 +96,18 @@ public class PublishPropertyActivity extends AppCompatActivity {
                 }
             }
         });
+
+        botonpublicar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                myRef = database.getReference(PATH_PROPERTY+mAuth.getUid());
+                Property property = new Property(Integer.parseInt(price.getText().toString()), null, venta,renta, Integer.parseInt(rooms.getText().toString()),Integer.parseInt(area.getText().toString()), Integer.parseInt(parking.getText().toString()),description.getText().toString());
+            }
+        });
+
     }
+
+
 
     private void requestPermission(Activity context, String permiso, String justificacion, int idCode) {
 
@@ -187,7 +215,6 @@ public class PublishPropertyActivity extends AppCompatActivity {
             // TODO: Veggie sandwich
         }
     }
-
 
 
 }

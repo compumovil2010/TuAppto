@@ -16,7 +16,7 @@ public class Property {
     public Property() {
     }
 
-    public Property(String owner, int price, LatLng ubication, Boolean rent, Boolean sell, int rooms, int area, int parking, String description) {
+    public Property(/*String owner,*/ int price, LatLng ubication, Boolean rent, Boolean sell, int rooms, int area, int parking, String description) {
         this.owner = owner;
         this.price = price;
         this.ubication = ubication;
