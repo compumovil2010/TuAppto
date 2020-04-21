@@ -5,14 +5,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import negocio.Client;
 import negocio.Owner;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.Toast;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -31,26 +28,22 @@ import java.io.InputStream;
 
 public class ChooseActivity extends AppCompatActivity {
 
-    private Bitmap bitmap;
-    private Bundle bundle;
-    private Button duenio;
-    private Button cliente;
-    private Client newClient;
-    private Intent intent;
+    Bundle bundle;
+    Button duenio;
+    Button cliente;
+    Client newClient;
+    Intent intent;
     private Long phone;
-    private Owner newOwner;
+    Owner newOwner;
     private String email;
     private String password;
     private String name;
     private String secondName;
-    private ImageView prueba;
     private Uri imageUri;
     private InputStream imageStream;
     private FirebaseAuth mAuth;
 
     private StorageReference mStorage;
-    private StorageReference filePath;
-
     private FirebaseDatabase database;
     private DatabaseReference myRef;
 
@@ -65,7 +58,6 @@ public class ChooseActivity extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
         database= FirebaseDatabase.getInstance();
-        prueba = findViewById(R.id.imageViewImportant);
 
         bundle = getIntent().getBundleExtra("bundle");
         email = bundle.getString("email");
@@ -75,24 +67,14 @@ public class ChooseActivity extends AppCompatActivity {
         phone = bundle.getLong("phone");
 
         intent = getIntent();
-
-        if(intent.getParcelableExtra("bitMap")!=null){
-            bitmap = intent.getParcelableExtra("bitMap");
-            prueba.setImageBitmap(bitmap);
-        }
-        else{
-            imageUri = intent.getParcelableExtra("uri");
-            try {
-                imageStream = getContentResolver().openInputStream(imageUri);
-            } catch (FileNotFoundException e) {
+        imageUri = intent.getParcelableExtra("uri");
+        try {
+            imageStream = getContentResolver().openInputStream(imageUri);
+        } catch (FileNotFoundException e) {
                 e.printStackTrace();
-            }
-            Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
-            prueba.setImageBitmap(selectedImage);
         }
 
         mStorage = FirebaseStorage.getInstance().getReference();
-
         duenio = findViewById(R.id.buttonOwner);
         cliente = findViewById(R.id.buttonClient);
 

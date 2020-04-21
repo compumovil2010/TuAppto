@@ -34,18 +34,17 @@ public class RegistryActivity extends AppCompatActivity {
     private static final int PERMISSION_GALLERY_ID = 2;
     private static final int REQUEST_IMAGE_CAPTURE = 3;
     private static final int IMAGE_PICKER_REQUEST = 4;
-
+    private Bitmap bitmap;
+    private EditText email;
+    private EditText name;
+    private EditText password;
+    private EditText phone;
+    private EditText secondName;
+    private ImageView imageViewUser;
+    private Uri imageUri;
     ImageButton imageButtonCamera;
     ImageButton imageButtonGallery;
-    ImageView imageViewUser;
     Button buttonContinue;
-    Bitmap bitmap;
-    EditText name;
-    EditText email;
-    EditText password;
-    EditText phone;
-    EditText secondName;
-    Uri imageUri;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -172,7 +171,6 @@ public class RegistryActivity extends AppCompatActivity {
                     try {
                         Bitmap bitmap = BitmapFactory.decodeFile(getExternalFilesDir(null)+"/test.jpg");
 
-
                             imageViewUser.setImageBitmap(bitmap);
 
                     } catch (Exception e) {
@@ -186,7 +184,6 @@ public class RegistryActivity extends AppCompatActivity {
                     try {
                         imageUri = data.getData();
                         final InputStream imageStream;
-
                         if (imageUri != null) {
                             imageStream = getContentResolver().openInputStream(imageUri);
                             Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
