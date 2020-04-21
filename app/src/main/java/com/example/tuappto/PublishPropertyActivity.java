@@ -15,6 +15,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.View;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -33,6 +34,9 @@ public class PublishPropertyActivity extends AppCompatActivity {
     ImageButton imageButtonCamera;
     ImageButton imageButtonGallery;
     ImageView imageViewUser;
+    EditText price, rooms, area, parking, description;
+    CheckBox rent, sell;
+    Boolean venta= false, renta= false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,7 +46,13 @@ public class PublishPropertyActivity extends AppCompatActivity {
         imageButtonCamera = findViewById(R.id.imageButtonCamera);
         imageButtonGallery = findViewById(R.id.imageButtonGallery);
         imageViewUser = findViewById(R.id.imageViewUser);
-        EditText precio, habitaciones, area, parqueaderos, descripcion;
+        price = findViewById(R.id.editTextPrice);
+        rooms = findViewById(R.id.editTextRooms);
+        area = findViewById(R.id.editTextArea);
+        parking = findViewById(R.id.editText8);
+        price = findViewById(R.id.editTextDescription);
+        rent = findViewById(R.id.checkBox);
+        sell = findViewById(R.id.checkBox2);
 
         imageButtonCamera.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -152,5 +162,32 @@ public class PublishPropertyActivity extends AppCompatActivity {
             break;
         }
     }
+
+    public void onCheckboxClicked(View view) {
+        // Is the view now checked?
+        boolean checked = ((CheckBox) view).isChecked();
+
+        // Check which checkbox was clicked
+        switch(view.getId()) {
+            case R.id.checkBox:
+                if (checked){
+                    venta = true;
+                }
+            else
+                // Remove the meat
+                break;
+            case R.id.checkBox2:
+                if (checked){
+                    renta = true;
+                }
+                // Cheese me
+            else
+                // I'm lactose intolerant
+                break;
+            // TODO: Veggie sandwich
+        }
+    }
+
+
 
 }
