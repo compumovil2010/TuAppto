@@ -9,19 +9,18 @@ import android.widget.Button;
 
 public class ChatActivity extends AppCompatActivity {
 
-    Button buttonDate;
+    Button makeDateButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
+        makeDateButton = findViewById(R.id.buttonMakeDate);
 
-        buttonDate = findViewById(R.id.buttonClient);
-
-        buttonDate.setOnClickListener(new View.OnClickListener() {
+        makeDateButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                startActivity(new Intent(view.getContext(),MakeDateActivity.class));
+            public void onClick(View v) {
+                startActivity(new Intent(v.getContext(),MakeDateActivity.class));
             }
         });
     }

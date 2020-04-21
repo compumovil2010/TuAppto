@@ -6,7 +6,8 @@ public class Property {
     String owner;
     int price;
     LatLng ubication;
-    String sellOrRent;
+    Boolean rent;
+    Boolean sell;
     int rooms;
     int area;
     int parking;
@@ -15,64 +16,84 @@ public class Property {
     public Property() {
     }
 
-    public String getOwner() {
-        return owner;
+    public Property(/*String owner,*/ int price, LatLng ubication, Boolean rent, Boolean sell, int rooms, int area, int parking, String description) {
+        this.owner = owner;
+        this.price = price;
+        this.ubication = ubication;
+        this.rent = rent;
+        this.sell = sell;
+        this.rooms = rooms;
+        this.area = area;
+        this.parking = parking;
+        this.description = description;
     }
 
-    public void setOwner(String owner) {
-        this.owner = owner;
+    public String getOwner() {
+        return owner;
     }
 
     public int getPrice() {
         return price;
     }
 
-    public void setPrice(int price) {
-        this.price = price;
-    }
-
     public LatLng getUbication() {
         return ubication;
     }
 
-    public void setUbication(LatLng ubication) {
-        this.ubication = ubication;
+    public Boolean getRent() {
+        return rent;
     }
 
-    public String getSellOrRent() {
-        return sellOrRent;
-    }
-
-    public void setSellOrRent(String sellOrRent) {
-        this.sellOrRent = sellOrRent;
+    public Boolean getSell() {
+        return sell;
     }
 
     public int getRooms() {
         return rooms;
     }
 
-    public void setRooms(int rooms) {
-        this.rooms = rooms;
-    }
-
     public int getArea() {
         return area;
-    }
-
-    public void setArea(int area) {
-        this.area = area;
     }
 
     public int getParking() {
         return parking;
     }
 
-    public void setParking(int parking) {
-        this.parking = parking;
-    }
-
     public String getDescription() {
         return description;
+    }
+
+    public void setOwner(String owner) {
+        this.owner = owner;
+    }
+
+    public void setPrice(int price) {
+        this.price = price;
+    }
+
+    public void setUbication(LatLng ubication) {
+        this.ubication = ubication;
+    }
+
+    public void setRent(Boolean rent) {
+        this.rent = rent;
+    }
+
+    public void setSell(Boolean sell) {
+        this.sell = sell;
+    }
+
+    public void setRooms(int rooms) {
+        this.rooms = rooms;
+    }
+
+    public void setArea(int area) {
+        this.area = area;
+    }
+
+    public void setParking(int parking) {
+        this.parking = parking;
     }
 
     public void setDescription(String description) {
