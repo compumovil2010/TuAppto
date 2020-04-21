@@ -15,6 +15,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -41,6 +42,7 @@ public class PublishPropertyActivity extends AppCompatActivity {
         imageButtonCamera = findViewById(R.id.imageButtonCamera);
         imageButtonGallery = findViewById(R.id.imageButtonGallery);
         imageViewUser = findViewById(R.id.imageViewUser);
+        EditText precio, habitaciones, area, parqueaderos, descripcion;
 
         imageButtonCamera.setOnClickListener(new View.OnClickListener() {
             @Override
