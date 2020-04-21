@@ -14,6 +14,7 @@ public class InterestListActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_interest_list);
+
         boton = findViewById(R.id.buttonTemporal);
 
         boton.setOnClickListener(new View.OnClickListener() {
