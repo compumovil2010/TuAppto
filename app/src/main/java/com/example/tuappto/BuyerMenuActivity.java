@@ -174,9 +174,9 @@ public class BuyerMenuActivity extends AppCompatActivity implements OnMapReadyCa
         googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15));
         googleMap.addMarker(markerOptions);
         if(currentLocation != null){
-            ofertas.add(new LatLng(currentLocation.getLatitude() +0.0002, currentLocation.getLongitude() + 0.0002));
-            ofertas.add(new LatLng(currentLocation.getLatitude() -0.0001, currentLocation.getLongitude() + -0.0003));
-            ofertas.add(new LatLng(currentLocation.getLatitude() + 0.0003, currentLocation.getLongitude() + 0.0002));
+            ofertas.add(new LatLng(currentLocation.getLatitude() +0.001, currentLocation.getLongitude() + 0.002));
+            ofertas.add(new LatLng(currentLocation.getLatitude() -0.001, currentLocation.getLongitude() + -0.003));
+            ofertas.add(new LatLng(currentLocation.getLatitude() + 0.003, currentLocation.getLongitude() + 0.002));
             for(int i = 0; i < ofertas.size(); i++){
                 mMap.addMarker(new MarkerOptions().position(ofertas.get(i)).title(""));
             }
