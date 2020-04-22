@@ -46,7 +46,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 
-public class PublishPropertyActivity extends FragmentActivity implements OnMapReadyCallback {
+public class PublishPropertyActivity extends FragmentActivity {
 
     private static final int PERMISSION_CAMERA_ID = 1;
     private static final int PERMISSION_GALLERY_ID = 2;
@@ -55,14 +55,14 @@ public class PublishPropertyActivity extends FragmentActivity implements OnMapRe
     ImageButton imageButtonCamera;
     ImageButton imageButtonGallery;
     ImageView imageViewUser;
-
-    GoogleMap mMap;
     Button buttonContinuar;
+    /*
+    GoogleMap mMap;
     Location currentLocation;
     FusedLocationProviderClient fusedLocationProviderClient;
     Location destiny;
     Geocoder mGeocoder;
-
+    */
     private static final int REQUEST_CODE = 101;
 
 
@@ -110,12 +110,12 @@ public class PublishPropertyActivity extends FragmentActivity implements OnMapRe
             }
         });
 
-
+/*
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
         //fetchLocation();
         destiny = new Location("");
         mGeocoder = new Geocoder(getBaseContext());
-
+*/
 
     }
     private void requestPermission(Activity context, String permiso, String justificacion, int idCode) {
@@ -181,13 +181,6 @@ public class PublishPropertyActivity extends FragmentActivity implements OnMapRe
                     Toast.makeText(this, "Permiso necesario para acceder a la camara", Toast.LENGTH_LONG).show();
                 }
             }
-            case REQUEST_CODE:{
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    fetchLocation();
-                }
-            }
-            break;
-
             case PERMISSION_GALLERY_ID: {
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     Intent pickImage = new Intent(Intent.ACTION_PICK);
@@ -201,7 +194,7 @@ public class PublishPropertyActivity extends FragmentActivity implements OnMapRe
             break;
         }
     }
-
+/*
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
@@ -232,7 +225,7 @@ public class PublishPropertyActivity extends FragmentActivity implements OnMapRe
             }
         });
     }
-
+*/
     @Override
     protected void onResume() {
         super.onResume();
@@ -241,7 +234,7 @@ public class PublishPropertyActivity extends FragmentActivity implements OnMapRe
     protected void onPause() {
         super.onPause();
     }
-
+/*
     private void fetchLocation() {
         if (ActivityCompat.checkSelfPermission(
                 this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
@@ -263,4 +256,6 @@ public class PublishPropertyActivity extends FragmentActivity implements OnMapRe
             }
         });
     }
+    */
+
 }
