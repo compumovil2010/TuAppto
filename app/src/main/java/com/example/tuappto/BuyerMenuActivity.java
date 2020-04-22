@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -22,6 +23,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
@@ -33,6 +35,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -66,8 +69,12 @@ public class BuyerMenuActivity extends AppCompatActivity implements OnMapReadyCa
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_buyer_menu);
-        fetchLocation();
-        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
+        }
+        else {
+            requestPermission(BuyerMenuActivity.this, Manifest.permission.ACCESS_FINE_LOCATION, "Acceso a localizacion necesario", REQUEST_CODE);
+        }
         destiny = new Location("");
         mGeocoder = new Geocoder(getBaseContext());
         mAuth = FirebaseAuth.getInstance();
@@ -81,7 +88,6 @@ public class BuyerMenuActivity extends AppCompatActivity implements OnMapReadyCa
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
         fetchLocation();
         destiny = new Location("");
         mGeocoder = new Geocoder(getBaseContext());
@@ -115,7 +121,8 @@ public class BuyerMenuActivity extends AppCompatActivity implements OnMapReadyCa
                 startActivity(new Intent(view.getContext(),SellerDatesActivity.class));
             }
         });
-
+        sensorManager= (SensorManager) getSystemService(SENSOR_SERVICE);
+        lightSensor = sensorManager.getDefaultSensor(Sensor.TYPE_LIGHT);
         lightSensorListener = new SensorEventListener() {
             @Override
             public void onSensorChanged(SensorEvent event) {
@@ -156,8 +163,6 @@ public class BuyerMenuActivity extends AppCompatActivity implements OnMapReadyCa
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-        fetchLocation();
-        // Add a marker in Sydney and move the camera
         mMap.getUiSettings().setMyLocationButtonEnabled(true);
         mMap.getUiSettings().setCompassEnabled(true);
         mMap.getUiSettings().setZoomGesturesEnabled(true);
@@ -167,28 +172,16 @@ public class BuyerMenuActivity extends AppCompatActivity implements OnMapReadyCa
         googleMap.animateCamera(CameraUpdateFactory.newLatLng(latLng));
         googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15));
         googleMap.addMarker(markerOptions);
-
-        mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
-            @Override
-            public void onMapClick(LatLng latLng) {
-                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-            }
-        });
-
-        mMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
-            @Override
-            public void onMapLongClick(LatLng latLng) {
-                try {
-                    mMap.clear();
-                    destiny.setLatitude(latLng.latitude);
-                    destiny.setLongitude(latLng.longitude);
-                    mMap.addMarker(new MarkerOptions().position(latLng)
-                            .title(mGeocoder.getFromLocation(latLng.latitude, latLng.longitude, 1).get(0).getAddressLine(0)));
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
+    }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        sensorManager.registerListener(lightSensorListener, lightSensor, SensorManager.SENSOR_DELAY_NORMAL);
+    }
+    @Override
+    protected void onPause() {
+        super.onPause();
+        sensorManager.unregisterListener(lightSensorListener);
     }
     private void fetchLocation() {
         if (ActivityCompat.checkSelfPermission(
@@ -213,17 +206,27 @@ public class BuyerMenuActivity extends AppCompatActivity implements OnMapReadyCa
     }
 
 
-    public void onRequestPermissionsResult(int requestCode,String[] permissions,int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode) {
-            case REQUEST_CODE:
+            case REQUEST_CODE: {
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    //SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);mapFragment.getMapAsync(this);
-
                     fetchLocation();
-
-                    //
+                } else{
+                    Toast.makeText(this, "Permiso necesario para acceder a la camara", Toast.LENGTH_LONG).show();
                 }
-                break;
+
+            }
+            break;
+
+        }
+    }
+    private void requestPermission(Activity context, String permiso, String justificacion, int idCode) {
+
+        if (ContextCompat.checkSelfPermission(context, permiso) != PackageManager.PERMISSION_GRANTED) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(context, permiso)) {
+                Toast.makeText(context, justificacion, Toast.LENGTH_SHORT).show();
+            }
+            ActivityCompat.requestPermissions(context, new String[]{permiso}, idCode);
         }
     }
 }
