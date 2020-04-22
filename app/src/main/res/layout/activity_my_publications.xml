@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -10,12 +11,14 @@
         android:id="@+id/principalImage"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:alpha="0.2"
-        android:contentDescription="@string/principal_image_description" />
+        android:contentDescription="@string/principal_image_description"
+        app:srcCompat="@drawable/inicial"
+        android:alpha="0.2"/>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_gravity="center">
 
         <TextView
             android:layout_width="0dp"
@@ -32,20 +35,16 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <ScrollView
-            android:layout_width="match_parent"
+        <Button
+            android:id="@+id/buttonTemporal"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            tools:layout_editor_absoluteX="1dp"
-            tools:layout_editor_absoluteY="62dp"
-            tools:ignore="MissingConstraints">
-
-            <LinearLayout
-                android:id="@+id/listProperty"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical" />
-        </ScrollView>
+            android:layout_marginBottom="32dp"
+            android:text="@string/temporal_button"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</FrameLayout>
