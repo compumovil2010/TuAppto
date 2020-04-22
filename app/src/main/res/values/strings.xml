@@ -115,4 +115,5 @@
         <item>3</item>
         <item>4</item>
     </string-array>
+    <string name="title_activity_publish_property">Map</string>
 </resources>
