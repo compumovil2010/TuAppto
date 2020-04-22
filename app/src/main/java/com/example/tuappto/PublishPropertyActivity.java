@@ -112,7 +112,7 @@ public class PublishPropertyActivity extends FragmentActivity implements OnMapRe
 
 
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
-        fetchLocation();
+        //fetchLocation();
         destiny = new Location("");
         mGeocoder = new Geocoder(getBaseContext());
 
@@ -236,12 +236,10 @@ public class PublishPropertyActivity extends FragmentActivity implements OnMapRe
     @Override
     protected void onResume() {
         super.onResume();
-        fetchLocation();
     }
     @Override
     protected void onPause() {
         super.onPause();
-        fetchLocation();
     }
 
     private void fetchLocation() {
