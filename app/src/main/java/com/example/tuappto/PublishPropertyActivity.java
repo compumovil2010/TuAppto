@@ -117,7 +117,6 @@ public class PublishPropertyActivity extends FragmentActivity implements OnMapRe
         imageButtonCamera = findViewById(R.id.imageButtonCamera);
         imageButtonGallery = findViewById(R.id.imageButtonGallery);
         imageViewUser = findViewById(R.id.imageViewUser);
-        mapa = findViewById(R.id.map);
 
         imageButtonCamera.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -144,15 +143,22 @@ public class PublishPropertyActivity extends FragmentActivity implements OnMapRe
                 }
             }
         });
-
-
-
-
-
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
         fetchLocation();
         destiny = new Location("");
         mGeocoder = new Geocoder(getBaseContext());
+
+        imageButtonCamera.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (ContextCompat.checkSelfPermission(v.getContext(), Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
+                    takePhoto();
+                }
+                else {
+                    requestPermission(PublishPropertyActivity.this, Manifest.permission.CAMERA, "Acceso a cámara necesario", PERMISSION_CAMERA_ID);
+                }
+            }
+        });
 
 
     }
