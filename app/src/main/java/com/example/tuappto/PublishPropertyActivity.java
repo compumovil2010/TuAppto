@@ -118,7 +118,7 @@ public class PublishPropertyActivity extends FragmentActivity implements OnMapRe
         imageButtonCamera = findViewById(R.id.imageButtonCamera);
         imageButtonGallery = findViewById(R.id.imageButtonGallery);
         imageViewUser = findViewById(R.id.imageViewUser);
-
+        buttonContinuar = findViewById(R.id.buttonPublish);
         imageButtonCamera.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -167,6 +167,7 @@ public class PublishPropertyActivity extends FragmentActivity implements OnMapRe
             ActivityCompat.requestPermissions(context, new String[]{permiso}, idCode);
         }
     }
+
     private void takePhoto() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
@@ -428,19 +429,20 @@ public class PublishPropertyActivity extends FragmentActivity implements OnMapRe
         String destination = "destination="+addressResult.getLatitude()+","+addressResult.getLongitude();
         String mode = "mode=walking";
         String key = "key="+getResources().getString(R.string.google_maps_key);
-        StringRequest req = new StringRequest(Request.Method.GET, url+origin+"&"+destination+"&"+mode+"&"+key,
+        StringRequest req = new StringRequest(Request.Method.GET, url + origin + "&" + destination + "&" + mode + "&" + key,
                 new Response.Listener() {
                     @Override
                     public void onResponse(Object response) {
-                        String data = (String)response;
+                        String data = (String) response;
                         parseJSON(data);
                     }
                 },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Log.i("TAG", "Error handling rest invocation"+error.getCause());
-                    } }
+                        Log.i("TAG", "Error handling rest invocation" + error.getCause());
+                    }
+                }
         );
         queue.add(req);
     }

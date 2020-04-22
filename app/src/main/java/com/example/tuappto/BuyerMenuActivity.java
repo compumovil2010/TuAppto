@@ -1,6 +1,7 @@
 package com.example.tuappto;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -24,6 +25,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -64,8 +66,8 @@ public class BuyerMenuActivity extends AppCompatActivity implements OnMapReadyCa
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_buyer_menu);
-        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
         fetchLocation();
+        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
         destiny = new Location("");
         mGeocoder = new Geocoder(getBaseContext());
         mAuth = FirebaseAuth.getInstance();
@@ -154,9 +156,8 @@ public class BuyerMenuActivity extends AppCompatActivity implements OnMapReadyCa
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-
+        fetchLocation();
         // Add a marker in Sydney and move the camera
-
         mMap.getUiSettings().setMyLocationButtonEnabled(true);
         mMap.getUiSettings().setCompassEnabled(true);
         mMap.getUiSettings().setZoomGesturesEnabled(true);
@@ -210,6 +211,8 @@ public class BuyerMenuActivity extends AppCompatActivity implements OnMapReadyCa
             }
         });
     }
+
+
     public void onRequestPermissionsResult(int requestCode,String[] permissions,int[] grantResults) {
         switch (requestCode) {
             case REQUEST_CODE:
@@ -222,16 +225,5 @@ public class BuyerMenuActivity extends AppCompatActivity implements OnMapReadyCa
                 }
                 break;
         }
-    }
-    @Override
-    protected void onResume() {
-        super.onResume();
-        fetchLocation();
-        sensorManager.registerListener(lightSensorListener, lightSensor, SensorManager.SENSOR_DELAY_NORMAL);
-    }
-    @Override
-    protected void onPause() {
-        super.onPause();
-        sensorManager.unregisterListener(lightSensorListener);
     }
 }
