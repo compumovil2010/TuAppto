@@ -154,29 +154,20 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/spinnerParking" />
 
-        <com.google.android.gms.maps.MapView
-            android:id="@+id/mapView3"
-            android:layout_width="373dp"
-            android:layout_height="235dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="16dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textViewLocation" />
 
         <fragment
             android:id="@+id/map"
             android:name="com.google.android.gms.maps.SupportMapFragment"
 
             android:layout_width="match_parent"
-            android:layout_height="380dp"
-            android:layout_marginTop="60dp"
+            android:layout_height="400dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.491"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:context=".BuyerMenuActivity" />
+            app:layout_constraintTop_toBottomOf="@+id/textViewLocation" />
 
         <Button
             android:id="@+id/buttonApply"
