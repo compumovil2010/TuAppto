@@ -16,6 +16,7 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.net.Uri;
@@ -63,6 +64,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.List;
 
 public class PublishPropertyActivity extends FragmentActivity implements OnMapReadyCallback {
 
@@ -416,7 +418,7 @@ public class PublishPropertyActivity extends FragmentActivity implements OnMapRe
         String origin = "origin="+latitud+","+longitud;
         String destination = "destination="+addressResult.getLatitude()+","+addressResult.getLongitude();
         String mode = "mode=walking";
-        String key = "key="+getResources().getString(R.string.direcciones_llave);
+        String key = "key="+getResources().getString(R.string.google_maps_key);
         StringRequest req = new StringRequest(Request.Method.GET, url+origin+"&"+destination+"&"+mode+"&"+key,
                 new Response.Listener() {
                     @Override
