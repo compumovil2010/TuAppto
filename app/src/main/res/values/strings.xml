@@ -116,4 +116,5 @@
         <item>4</item>
     </string-array>
     <string name="title_activity_publish_property">Map</string>
+    <string name="title_activity_buyer_menu">BuyerMenuActivity</string>
 </resources>

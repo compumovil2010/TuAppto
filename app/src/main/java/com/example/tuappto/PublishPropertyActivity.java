@@ -141,49 +141,54 @@ public class PublishPropertyActivity extends FragmentActivity implements OnMapRe
             @Override
             public void onClick(View view) {
 
-                if(allFilled()){
 
-                    price = Integer.parseInt(editTextprice.getText().toString());
+                if(allFilled()) {
 
-                    if(sell.isChecked()){
-                        sellOrRent = "sell";
-                    }
-                    else{
-                        sellOrRent = "rent";
-                    }
+                        price = Integer.parseInt(editTextprice.getText().toString());
 
-                    rooms = Integer.parseInt(editTextrooms.getText().toString());
-                    area = Integer.parseInt(editTextarea.getText().toString());
-                    parking = Integer.parseInt(editTextparking.getText().toString());
-                    description = editTextdescription.getText().toString();
+                        if (sell.isChecked()&&!rent.isChecked()) {
+                            sellOrRent = "sell";
+                        } else if(!sell.isChecked()&&rent.isChecked()){
+                            sellOrRent = "rent";
+                        }
+                        else{
+                            sellOrRent = "ambos";
+                        }
 
-                    newProperty = new Property();
-                    ubication = new LatLng(40.416775,-3.703790);
-                    newProperty.setArea(33);
-                    newProperty.setDescription("hola");
-                    newProperty.setParking(2);
-                    newProperty.setPrice(2);
-                    newProperty.setRooms(22);
-                    newProperty.setSellOrRent("sell");
-                    newProperty.setUbication(ubication);
+                        rooms = Integer.parseInt(editTextrooms.getText().toString());
+                        area = Integer.parseInt(editTextarea.getText().toString());
+                        parking = Integer.parseInt(editTextparking.getText().toString());
+                        description = editTextdescription.getText().toString();
 
-                    String key = myRef.push().getKey();
-                    myRef = database.getReference(PATH_PROPERTY + key);
-                    myRef.setValue(newProperty);
+                        newProperty = new Property();
+                        ubication = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
+                        newProperty.setArea(area);
+                        newProperty.setDescription(description);
+                        newProperty.setParking(parking);
+                        newProperty.setPrice(price);
+                        newProperty.setRooms(rooms);
+                        newProperty.setSellOrRent(sellOrRent);
+                        newProperty.setUbication(ubication);
 
-                    if(imageUri != null) { // aca en storage
-                        StorageReference folder = mStorage.child("Images").child("Properties").child(key);
-                        folder.putFile(imageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                            @Override
-                            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                                Log.i("FBApp", "Succesfully upload image");
-                            }
-                        });
-                    }
+                        //String key = myRef.push().getKey();
+                        myRef = database.getReference(PATH_PROPERTY + "aca va la key");
+                        myRef.setValue(newProperty);
+
+                        if (imageUri != null) { // aca en storage
+                            StorageReference folder = mStorage.child("Images").child("Properties").child("aca va la key");
+                            folder.putFile(imageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                                @Override
+                                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                    Log.i("FBApp", "Succesfully upload image");
+                                }
+                            });
+                        }
 
 
-                    finish();
+                        finish();
                 }
+
+
                 else{
                     Toast.makeText(PublishPropertyActivity.this, "Complete todos los campos.", Toast.LENGTH_SHORT).show();
                 }
@@ -353,3 +358,4 @@ public class PublishPropertyActivity extends FragmentActivity implements OnMapRe
 
     }
 }
+
