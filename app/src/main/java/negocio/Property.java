@@ -15,6 +15,16 @@ public class Property {
     public Property() {
     }
 
+    public Property(int price, LatLng ubication, String sellOrRent, int rooms, int area, int parking, String description) {
+        this.price = price;
+        this.ubication = ubication;
+        this.sellOrRent = sellOrRent;
+        this.rooms = rooms;
+        this.area = area;
+        this.parking = parking;
+        this.description = description;
+    }
+
     public String getOwner() {
         return owner;
     }
