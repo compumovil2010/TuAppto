@@ -118,10 +118,25 @@ public class PublishPropertyActivity extends FragmentActivity implements OnMapRe
         editTextdescription = findViewById(R.id.editTextDescription);
         database = FirebaseDatabase.getInstance();
 
-        SensorManager sensorManager;
-        Sensor lightSensor;
-        SensorEventListener lightSensorListener;
+        sensorManager= (SensorManager) getSystemService(SENSOR_SERVICE);
+        lightSensor = sensorManager.getDefaultSensor(Sensor.TYPE_LIGHT);
+        lightSensorListener = new SensorEventListener() {
+            @Override
+            public void onSensorChanged(SensorEvent event) {
+                if (mMap != null) {
+                    if (event.values[0] < 1000) {
+                        Log.i("MAPS", "DARK MAP " + event.values[0]);
+                        mMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(PublishPropertyActivity.this,R.raw.style_json_night));
+                    } else {
+                        Log.i("MAPS", "LIGHT MAP " + event.values[0]);
+                        mMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(PublishPropertyActivity.this,R.raw.style_json_day));
+                    }
+                }
+            }
 
+            @Override
+            public void onAccuracyChanged(Sensor sensor, int accuracy) {}
+        };
         imageButtonCamera.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -349,7 +364,9 @@ public class PublishPropertyActivity extends FragmentActivity implements OnMapRe
     @Override
     protected void onResume() {
         super.onResume();
-        sensorManager.registerListener(lightSensorListener, lightSensor, SensorManager.SENSOR_DELAY_NORMAL);
+        if(sensorManager != null){
+            sensorManager.registerListener(lightSensorListener, lightSensor, SensorManager.SENSOR_DELAY_NORMAL);
+        }
         fetchLocation();
     }
     @Override
