@@ -3,6 +3,7 @@ package com.example.tuappto;
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 
 import android.Manifest;
@@ -101,6 +102,7 @@ public class PublishPropertyActivity extends FragmentActivity implements OnMapRe
     double latitud;
     double longitud;
     private Polyline mLine;
+    Fragment mapa;
 
     private static final int REQUEST_CODE = 101;
 
@@ -115,6 +117,7 @@ public class PublishPropertyActivity extends FragmentActivity implements OnMapRe
         imageButtonCamera = findViewById(R.id.imageButtonCamera);
         imageButtonGallery = findViewById(R.id.imageButtonGallery);
         imageViewUser = findViewById(R.id.imageViewUser);
+        mapa = findViewById(R.id.map);
 
         imageButtonCamera.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -141,6 +144,10 @@ public class PublishPropertyActivity extends FragmentActivity implements OnMapRe
                 }
             }
         });
+
+
+
+
 
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
         fetchLocation();
