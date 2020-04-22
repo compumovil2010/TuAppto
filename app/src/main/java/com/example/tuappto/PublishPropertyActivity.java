@@ -7,6 +7,7 @@ import androidx.fragment.app.FragmentActivity;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -22,6 +23,7 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -40,6 +42,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
 
 public class PublishPropertyActivity extends FragmentActivity implements OnMapReadyCallback {
@@ -52,20 +55,14 @@ public class PublishPropertyActivity extends FragmentActivity implements OnMapRe
     ImageButton imageButtonGallery;
     ImageView imageViewUser;
 
-    private GoogleMap mMap;
+    GoogleMap mMap;
 
     Location currentLocation;
     FusedLocationProviderClient fusedLocationProviderClient;
     Location destiny;
     Geocoder mGeocoder;
-    TextView mAddress;
 
     private static final int REQUEST_CODE = 101;
-    public static final double lowerLeftLatitude = 1.396967;
-    public static final double lowerLeftLongitude= -78.903968;
-    public static final double upperRightLatitude= 11.983639;
-    public static final double upperRigthLongitude= -71.869905;
-    private static final double RADIUS_OF_EARTH_KM = 6371;
 
 
     @Override
@@ -194,14 +191,35 @@ public class PublishPropertyActivity extends FragmentActivity implements OnMapRe
         }
     }
 
-    @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
         // Add a marker in Sydney and move the camera
-        LatLng sydney = new LatLng(-34, 151);
-        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+
+        mMap.getUiSettings().setMyLocationButtonEnabled(true);
+        mMap.getUiSettings().setCompassEnabled(true);
+        mMap.getUiSettings().setZoomGesturesEnabled(true);
+        mMap.getUiSettings().setZoomControlsEnabled(true);
+        LatLng latLng = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
+        MarkerOptions markerOptions = new MarkerOptions().position(latLng).title("Aqui estamos!!!");
+        googleMap.animateCamera(CameraUpdateFactory.newLatLng(latLng));
+        googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15));
+        googleMap.addMarker(markerOptions);
+
+        mMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
+            @Override
+            public void onMapLongClick(LatLng latLng) {
+                try {
+                    mMap.clear();
+                    destiny.setLatitude(latLng.latitude);
+                    destiny.setLongitude(latLng.longitude);
+                    mMap.addMarker(new MarkerOptions().position(latLng)
+                            .title(mGeocoder.getFromLocation(latLng.latitude, latLng.longitude, 1).get(0).getAddressLine(0)));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
     }
 
     @Override
