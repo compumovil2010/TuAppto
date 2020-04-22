@@ -28,6 +28,7 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -103,6 +104,7 @@ public class PublishPropertyActivity extends FragmentActivity implements OnMapRe
     double longitud;
     private Polyline mLine;
     Fragment mapa;
+    Button buttonContinuar;
 
     private static final int REQUEST_CODE = 101;
 
@@ -113,7 +115,6 @@ public class PublishPropertyActivity extends FragmentActivity implements OnMapRe
         setContentView(R.layout.activity_publish_property);
         sensorManager = (SensorManager)getSystemService(SENSOR_SERVICE);
         lightSensor = sensorManager.getDefaultSensor(Sensor.TYPE_LIGHT);
-
         imageButtonCamera = findViewById(R.id.imageButtonCamera);
         imageButtonGallery = findViewById(R.id.imageButtonGallery);
         imageViewUser = findViewById(R.id.imageViewUser);
@@ -148,15 +149,10 @@ public class PublishPropertyActivity extends FragmentActivity implements OnMapRe
         destiny = new Location("");
         mGeocoder = new Geocoder(getBaseContext());
 
-        imageButtonCamera.setOnClickListener(new View.OnClickListener() {
+        buttonContinuar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (ContextCompat.checkSelfPermission(v.getContext(), Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
-                    takePhoto();
-                }
-                else {
-                    requestPermission(PublishPropertyActivity.this, Manifest.permission.CAMERA, "Acceso a cámara necesario", PERMISSION_CAMERA_ID);
-                }
+                startActivity(new Intent(v.getContext(), EditActivity.class));
             }
         });
 
