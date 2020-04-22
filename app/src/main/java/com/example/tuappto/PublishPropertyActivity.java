@@ -11,6 +11,10 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.location.Geocoder;
 import android.location.Location;
 import android.net.Uri;
@@ -31,6 +35,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -64,11 +69,13 @@ public class PublishPropertyActivity extends FragmentActivity implements OnMapRe
     private Uri imageUri;
 
     GoogleMap mMap;
-
     Location currentLocation;
     FusedLocationProviderClient fusedLocationProviderClient;
     Location destiny;
     Geocoder mGeocoder;
+    SensorManager sensorManager;
+    Sensor lightSensor;
+    SensorEventListener lightSensorListener;
 
     int price;
     LatLng ubication;
@@ -110,6 +117,10 @@ public class PublishPropertyActivity extends FragmentActivity implements OnMapRe
         editTextparking = findViewById(R.id.editTextParking);
         editTextdescription = findViewById(R.id.editTextDescription);
         database = FirebaseDatabase.getInstance();
+
+        SensorManager sensorManager;
+        Sensor lightSensor;
+        SensorEventListener lightSensorListener;
 
         imageButtonCamera.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -194,6 +205,26 @@ public class PublishPropertyActivity extends FragmentActivity implements OnMapRe
                 }
             }
         });
+
+        sensorManager= (SensorManager) getSystemService(SENSOR_SERVICE);
+        lightSensor = sensorManager.getDefaultSensor(Sensor.TYPE_LIGHT);
+        lightSensorListener = new SensorEventListener() {
+            @Override
+            public void onSensorChanged(SensorEvent event) {
+                if (mMap != null) {
+                    if (event.values[0] < 10000) {
+                        Log.i("MAPS", "DARK MAP " + event.values[0]);
+                        mMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(PublishPropertyActivity.this,R.raw.style_json_night));
+                    } else {
+                        Log.i("MAPS", "LIGHT MAP " + event.values[0]);
+                        mMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(PublishPropertyActivity.this,R.raw.style_json_day));
+                    }
+                }
+            }
+
+            @Override
+            public void onAccuracyChanged(Sensor sensor, int accuracy) {}
+        };
 
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
         fetchLocation();
@@ -318,11 +349,13 @@ public class PublishPropertyActivity extends FragmentActivity implements OnMapRe
     @Override
     protected void onResume() {
         super.onResume();
+        sensorManager.registerListener(lightSensorListener, lightSensor, SensorManager.SENSOR_DELAY_NORMAL);
         fetchLocation();
     }
     @Override
     protected void onPause() {
         super.onPause();
+        sensorManager.unregisterListener(lightSensorListener);
         fetchLocation();
     }
     private void fetchLocation() {

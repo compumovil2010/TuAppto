@@ -187,11 +187,13 @@ public class BuyerMenuActivity extends AppCompatActivity implements OnMapReadyCa
     protected void onResume() {
         super.onResume();
         sensorManager.registerListener(lightSensorListener, lightSensor, SensorManager.SENSOR_DELAY_NORMAL);
+        fetchLocation();
     }
     @Override
     protected void onPause() {
         super.onPause();
         sensorManager.unregisterListener(lightSensorListener);
+        fetchLocation();
     }
     private void fetchLocation() {
         if (ActivityCompat.checkSelfPermission(
