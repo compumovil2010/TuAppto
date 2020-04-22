@@ -128,7 +128,7 @@ public class BuyerMenuActivity extends AppCompatActivity implements OnMapReadyCa
             @Override
             public void onSensorChanged(SensorEvent event) {
                 if (mMap != null) {
-                    if (event.values[0] < 10000) {
+                    if (event.values[0] < 1000) {
                         Log.i("MAPS", "DARK MAP " + event.values[0]);
                         mMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(BuyerMenuActivity.this,R.raw.style_json_night));
                     } else {

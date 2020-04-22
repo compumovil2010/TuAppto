@@ -49,6 +49,7 @@ public class FiltersActivity extends FragmentActivity implements OnMapReadyCallb
     SensorManager sensorManager;
     Sensor lightSensor;
     SensorEventListener lightSensorListener;
+
     private static final int REQUEST_CODE = 101;
     ArrayList<LatLng> ofertas = new ArrayList<LatLng>();
 
@@ -79,7 +80,7 @@ public class FiltersActivity extends FragmentActivity implements OnMapReadyCallb
             @Override
             public void onSensorChanged(SensorEvent event) {
                 if (mMap != null) {
-                    if (event.values[0] < 10000) {
+                    if (event.values[0] < 1000) {
                         Log.i("MAPS", "DARK MAP " + event.values[0]);
                         mMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(FiltersActivity.this,R.raw.style_json_night));
                     } else {
