@@ -277,7 +277,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/editTextArea" />
 
             <EditText
-                android:id="@+id/editText8"
+                android:id="@+id/editTextParking"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
@@ -298,7 +298,7 @@
                 android:text="@string/description_text"
                 android:textSize="24sp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/editText8"/>
+                app:layout_constraintTop_toBottomOf="@+id/editTextParking"/>
 
             <EditText
                 android:id="@+id/editTextDescription"

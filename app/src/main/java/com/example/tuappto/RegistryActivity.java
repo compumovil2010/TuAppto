@@ -68,7 +68,6 @@ public class RegistryActivity extends AppCompatActivity {
                 if(allFilled()){
                     if(emailValidation(email.getText().toString())){
                         if(password.getText().toString().length() > 5){
-                            bitmap = ((BitmapDrawable)imageViewUser.getDrawable()).getBitmap();
                             Bundle bundle = new Bundle();
                             Intent i = new Intent(view.getContext(),ChooseActivity.class);
 
@@ -82,9 +81,7 @@ public class RegistryActivity extends AppCompatActivity {
                             if(imageUri != null) {
                                 i.putExtra("uri", imageUri);
                             }
-                            else{
-                                i.putExtra("bitMap", bitmap);
-                            }
+
                             i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                             startActivity(i);
                         }
@@ -171,7 +168,7 @@ public class RegistryActivity extends AppCompatActivity {
                     try {
                         Bitmap bitmap = BitmapFactory.decodeFile(getExternalFilesDir(null)+"/test.jpg");
 
-                            imageViewUser.setImageBitmap(bitmap);
+                        imageViewUser.setImageBitmap(bitmap);
 
                     } catch (Exception e) {
                         e.printStackTrace();

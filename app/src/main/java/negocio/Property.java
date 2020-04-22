@@ -3,7 +3,7 @@ package negocio;
 import com.google.android.gms.maps.model.LatLng;
 
 public class Property {
-    String owner;
+
     int price;
     LatLng ubication;
     String sellOrRent;
@@ -13,14 +13,6 @@ public class Property {
     String description;
 
     public Property() {
-    }
-
-    public String getOwner() {
-        return owner;
-    }
-
-    public void setOwner(String owner) {
-        this.owner = owner;
     }
 
     public int getPrice() {

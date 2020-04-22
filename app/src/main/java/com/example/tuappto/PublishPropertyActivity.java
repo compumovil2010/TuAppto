@@ -3,19 +3,14 @@ package com.example.tuappto;
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.core.content.FileProvider;
 import androidx.fragment.app.FragmentActivity;
-
 import android.Manifest;
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.hardware.Sensor;
-import android.hardware.SensorEvent;
-import android.hardware.SensorEventListener;
-import android.hardware.SensorManager;
 import android.location.Geocoder;
 import android.location.Location;
 import android.net.Uri;
@@ -23,12 +18,12 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
-
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -36,14 +31,21 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import negocio.Property;
 
 public class PublishPropertyActivity extends FragmentActivity implements OnMapReadyCallback {
 
@@ -51,9 +53,15 @@ public class PublishPropertyActivity extends FragmentActivity implements OnMapRe
     private static final int PERMISSION_GALLERY_ID = 2;
     private static final int REQUEST_IMAGE_CAPTURE = 3;
     private static final int IMAGE_PICKER_REQUEST = 4;
+    public static final String PATH_PROPERTY="properties/";
     ImageButton imageButtonCamera;
     ImageButton imageButtonGallery;
     ImageView imageViewUser;
+    Button buttonPublish;
+    CheckBox sell;
+    CheckBox rent;
+    private Property newProperty;
+    private Uri imageUri;
 
     GoogleMap mMap;
 
@@ -62,9 +70,27 @@ public class PublishPropertyActivity extends FragmentActivity implements OnMapRe
     Location destiny;
     Geocoder mGeocoder;
 
+    int price;
+    LatLng ubication;
+    String sellOrRent;
+    int rooms;
+    int area;
+    int parking;
+    String description;
+
+    EditText editTextprice;
+    LatLng editTextubication;
+    String editTextsellOrRent;
+    EditText editTextrooms;
+    EditText editTextarea;
+    EditText editTextparking;
+    EditText editTextdescription;
+
+    private StorageReference mStorage;
+    private FirebaseDatabase database;
+    private DatabaseReference myRef;
+
     private static final int REQUEST_CODE = 101;
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -73,6 +99,17 @@ public class PublishPropertyActivity extends FragmentActivity implements OnMapRe
         imageButtonCamera = findViewById(R.id.imageButtonCamera);
         imageButtonGallery = findViewById(R.id.imageButtonGallery);
         imageViewUser = findViewById(R.id.imageViewUser);
+        buttonPublish = findViewById(R.id.buttonPublish);
+        sell = findViewById(R.id.checkBox);
+        rent = findViewById(R.id.checkBox2);
+        mStorage = FirebaseStorage.getInstance().getReference();
+
+        editTextprice = findViewById(R.id.editTextPrice);
+        editTextrooms = findViewById(R.id.editTextRooms);
+        editTextarea = findViewById(R.id.editTextArea);
+        editTextparking = findViewById(R.id.editTextParking);
+        editTextdescription = findViewById(R.id.editTextDescription);
+        database = FirebaseDatabase.getInstance();
 
         imageButtonCamera.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -100,6 +137,59 @@ public class PublishPropertyActivity extends FragmentActivity implements OnMapRe
             }
         });
 
+        buttonPublish.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                if(allFilled()){
+
+                    price = Integer.parseInt(editTextprice.getText().toString());
+
+                    if(sell.isChecked()){
+                        sellOrRent = "sell";
+                    }
+                    else{
+                        sellOrRent = "rent";
+                    }
+
+                    rooms = Integer.parseInt(editTextrooms.getText().toString());
+                    area = Integer.parseInt(editTextarea.getText().toString());
+                    parking = Integer.parseInt(editTextparking.getText().toString());
+                    description = editTextdescription.getText().toString();
+
+                    newProperty = new Property();
+                    ubication = new LatLng(40.416775,-3.703790);
+                    newProperty.setArea(33);
+                    newProperty.setDescription("hola");
+                    newProperty.setParking(2);
+                    newProperty.setPrice(2);
+                    newProperty.setRooms(22);
+                    newProperty.setSellOrRent("sell");
+                    newProperty.setUbication(ubication);
+
+                    String key = myRef.push().getKey();
+                    myRef = database.getReference(PATH_PROPERTY + key);
+                    myRef.setValue(newProperty);
+
+                    if(imageUri != null) { // aca en storage
+                        StorageReference folder = mStorage.child("Images").child("Properties").child(key);
+                        folder.putFile(imageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                            @Override
+                            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                Log.i("FBApp", "Succesfully upload image");
+                            }
+                        });
+                    }
+
+
+                    finish();
+                }
+                else{
+                    Toast.makeText(PublishPropertyActivity.this, "Complete todos los campos.", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
         fetchLocation();
         destiny = new Location("");
@@ -119,6 +209,10 @@ public class PublishPropertyActivity extends FragmentActivity implements OnMapRe
     private void takePhoto() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+            takePictureIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            File foto = new File(getExternalFilesDir(null),"test.jpg");
+            imageUri = FileProvider.getUriForFile(this,getPackageName()+".provider",foto);
+            takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT,imageUri);
             startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
         }
     }
@@ -128,12 +222,10 @@ public class PublishPropertyActivity extends FragmentActivity implements OnMapRe
             case REQUEST_IMAGE_CAPTURE:
                 if (resultCode == RESULT_OK) {
                     try {
-                        Bundle extras = data.getExtras();
-                        Bitmap imageBitmap;
-                        if (extras != null) {
-                            imageBitmap = (Bitmap) extras.get("data");
-                            imageViewUser.setImageBitmap(imageBitmap);
-                        }
+                        Bitmap bitmap = BitmapFactory.decodeFile(getExternalFilesDir(null)+"/test.jpg");
+
+                        imageViewUser.setImageBitmap(bitmap);
+
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -143,12 +235,11 @@ public class PublishPropertyActivity extends FragmentActivity implements OnMapRe
             case IMAGE_PICKER_REQUEST:
                 if (resultCode == RESULT_OK) {
                     try {
-                        final Uri imageUri = data.getData();
+                        imageUri = data.getData();
                         final InputStream imageStream;
-
                         if (imageUri != null) {
                             imageStream = getContentResolver().openInputStream(imageUri);
-                            final Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
+                            Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
                             imageViewUser.setImageBitmap(selectedImage);
                         }
 
@@ -156,10 +247,9 @@ public class PublishPropertyActivity extends FragmentActivity implements OnMapRe
                         e.printStackTrace();
                     }
                 }
-
         }
-    }
 
+    }
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode) {
             case PERMISSION_CAMERA_ID: {
@@ -190,7 +280,6 @@ public class PublishPropertyActivity extends FragmentActivity implements OnMapRe
             break;
         }
     }
-
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
@@ -221,7 +310,6 @@ public class PublishPropertyActivity extends FragmentActivity implements OnMapRe
             }
         });
     }
-
     @Override
     protected void onResume() {
         super.onResume();
@@ -232,7 +320,6 @@ public class PublishPropertyActivity extends FragmentActivity implements OnMapRe
         super.onPause();
         fetchLocation();
     }
-
     private void fetchLocation() {
         if (ActivityCompat.checkSelfPermission(
                 this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
@@ -253,5 +340,16 @@ public class PublishPropertyActivity extends FragmentActivity implements OnMapRe
                 }
             }
         });
+    }
+
+    private boolean allFilled() {
+        return !editTextprice.getText().toString().isEmpty()||
+                !editTextrooms.getText().toString().isEmpty()||
+                !editTextarea.getText().toString().isEmpty()||
+                !editTextparking.getText().toString().isEmpty()||
+                !editTextdescription.getText().toString().isEmpty()||
+                (sell.isChecked()||rent.isChecked());
+
+
     }
 }
