@@ -45,13 +45,13 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class BuyerMenuActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
     Location currentLocation;
     FusedLocationProviderClient fusedLocationProviderClient;
-    Location destiny;
     Geocoder mGeocoder;
 
     SensorManager sensorManager;
@@ -64,6 +64,7 @@ public class BuyerMenuActivity extends AppCompatActivity implements OnMapReadyCa
     Button buttonDates;
     private FirebaseAuth mAuth;
     private static final int REQUEST_CODE = 101;
+    ArrayList<LatLng> ofertas = new ArrayList<LatLng>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,7 +76,7 @@ public class BuyerMenuActivity extends AppCompatActivity implements OnMapReadyCa
         else {
             requestPermission(BuyerMenuActivity.this, Manifest.permission.ACCESS_FINE_LOCATION, "Acceso a localizacion necesario", REQUEST_CODE);
         }
-        destiny = new Location("");
+
         mGeocoder = new Geocoder(getBaseContext());
         mAuth = FirebaseAuth.getInstance();
         FirebaseUser currentUser = mAuth.getCurrentUser();
@@ -89,7 +90,7 @@ public class BuyerMenuActivity extends AppCompatActivity implements OnMapReadyCa
         setSupportActionBar(toolbar);
 
         fetchLocation();
-        destiny = new Location("");
+
         mGeocoder = new Geocoder(getBaseContext());
 
 
@@ -168,10 +169,19 @@ public class BuyerMenuActivity extends AppCompatActivity implements OnMapReadyCa
         mMap.getUiSettings().setZoomGesturesEnabled(true);
         mMap.getUiSettings().setZoomControlsEnabled(true);
         LatLng latLng = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
-        MarkerOptions markerOptions = new MarkerOptions().position(latLng).title("Aqui estamos!!!");
+        MarkerOptions markerOptions = new MarkerOptions().position(latLng).title("");
         googleMap.animateCamera(CameraUpdateFactory.newLatLng(latLng));
         googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15));
         googleMap.addMarker(markerOptions);
+        if(currentLocation != null){
+            ofertas.add(new LatLng(currentLocation.getLatitude() +0.0002, currentLocation.getLongitude() + 0.0002));
+            ofertas.add(new LatLng(currentLocation.getLatitude() -0.0001, currentLocation.getLongitude() + -0.0003));
+            ofertas.add(new LatLng(currentLocation.getLatitude() + 0.0003, currentLocation.getLongitude() + 0.0002));
+            for(int i = 0; i < ofertas.size(); i++){
+                mMap.addMarker(new MarkerOptions().position(ofertas.get(i)).title(""));
+            }
+        }
+
     }
     @Override
     protected void onResume() {
