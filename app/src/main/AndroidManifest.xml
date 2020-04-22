@@ -35,8 +35,11 @@
             android:value="@string/google_maps_key" />
 
         <activity
+            android:name=".BuyerMenuActivity"
+            android:label="@string/title_activity_buyer_menu"></activity>
+        <activity
             android:name=".PublishPropertyActivity"
-            android:label="@string/title_activity_publish_property"></activity>
+            android:label="@string/title_activity_publish_property" />
         <activity android:name=".ChatActivity" />
         <activity android:name=".InterestListActivity" />
         <activity android:name=".PropertyDescriptionActivity" />
@@ -54,7 +57,6 @@
         <activity android:name=".EditActivity" />
         <activity android:name=".MyPublicationsActivity" />
         <activity android:name=".SellerMenuActivity" />
-        <activity android:name=".BuyerMenuActivity" />
         <activity android:name=".PrincipalActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
