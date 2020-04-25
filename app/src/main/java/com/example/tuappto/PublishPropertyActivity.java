@@ -11,6 +11,10 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.location.Geocoder;
 import android.location.Location;
 import android.net.Uri;
@@ -31,6 +35,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -64,11 +69,13 @@ public class PublishPropertyActivity extends FragmentActivity implements OnMapRe
     private Uri imageUri;
 
     GoogleMap mMap;
-
     Location currentLocation;
     FusedLocationProviderClient fusedLocationProviderClient;
     Location destiny;
     Geocoder mGeocoder;
+    SensorManager sensorManager;
+    Sensor lightSensor;
+    SensorEventListener lightSensorListener;
 
     int price;
     LatLng ubication;
@@ -111,6 +118,25 @@ public class PublishPropertyActivity extends FragmentActivity implements OnMapRe
         editTextdescription = findViewById(R.id.editTextDescription);
         database = FirebaseDatabase.getInstance();
 
+        sensorManager= (SensorManager) getSystemService(SENSOR_SERVICE);
+        lightSensor = sensorManager.getDefaultSensor(Sensor.TYPE_LIGHT);
+        lightSensorListener = new SensorEventListener() {
+            @Override
+            public void onSensorChanged(SensorEvent event) {
+                if (mMap != null) {
+                    if (event.values[0] < 1000) {
+                        Log.i("MAPS", "DARK MAP " + event.values[0]);
+                        mMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(PublishPropertyActivity.this,R.raw.style_json_night));
+                    } else {
+                        Log.i("MAPS", "LIGHT MAP " + event.values[0]);
+                        mMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(PublishPropertyActivity.this,R.raw.style_json_day));
+                    }
+                }
+            }
+
+            @Override
+            public void onAccuracyChanged(Sensor sensor, int accuracy) {}
+        };
         imageButtonCamera.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -144,48 +170,48 @@ public class PublishPropertyActivity extends FragmentActivity implements OnMapRe
 
                 if(allFilled()) {
 
-                        price = Integer.parseInt(editTextprice.getText().toString());
+                    price = Integer.parseInt(editTextprice.getText().toString());
 
-                        if (sell.isChecked()&&!rent.isChecked()) {
-                            sellOrRent = "sell";
-                        } else if(!sell.isChecked()&&rent.isChecked()){
-                            sellOrRent = "rent";
-                        }
-                        else{
-                            sellOrRent = "ambos";
-                        }
+                    if (sell.isChecked()&&!rent.isChecked()) {
+                        sellOrRent = "sell";
+                    } else if(!sell.isChecked()&&rent.isChecked()){
+                        sellOrRent = "rent";
+                    }
+                    else{
+                        sellOrRent = "ambos";
+                    }
 
-                        rooms = Integer.parseInt(editTextrooms.getText().toString());
-                        area = Integer.parseInt(editTextarea.getText().toString());
-                        parking = Integer.parseInt(editTextparking.getText().toString());
-                        description = editTextdescription.getText().toString();
+                    rooms = Integer.parseInt(editTextrooms.getText().toString());
+                    area = Integer.parseInt(editTextarea.getText().toString());
+                    parking = Integer.parseInt(editTextparking.getText().toString());
+                    description = editTextdescription.getText().toString();
 
-                        newProperty = new Property();
-                        ubication = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
-                        newProperty.setArea(area);
-                        newProperty.setDescription(description);
-                        newProperty.setParking(parking);
-                        newProperty.setPrice(price);
-                        newProperty.setRooms(rooms);
-                        newProperty.setSellOrRent(sellOrRent);
-                        newProperty.setUbication(ubication);
+                    newProperty = new Property();
+                    ubication = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
+                    newProperty.setArea(area);
+                    newProperty.setDescription(description);
+                    newProperty.setParking(parking);
+                    newProperty.setPrice(price);
+                    newProperty.setRooms(rooms);
+                    newProperty.setSellOrRent(sellOrRent);
+                    newProperty.setUbication(ubication);
 
-                        //String key = myRef.push().getKey();
-                        myRef = database.getReference(PATH_PROPERTY + "aca va la key");
-                        myRef.setValue(newProperty);
+                    //String key = myRef.push().getKey();
+                    myRef = database.getReference(PATH_PROPERTY + "aca va la key");
+                    myRef.setValue(newProperty);
 
-                        if (imageUri != null) { // aca en storage
-                            StorageReference folder = mStorage.child("Images").child("Properties").child("aca va la key");
-                            folder.putFile(imageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                                @Override
-                                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                                    Log.i("FBApp", "Succesfully upload image");
-                                }
-                            });
-                        }
+                    if (imageUri != null) { // aca en storage
+                        StorageReference folder = mStorage.child("Images").child("Properties").child("aca va la key");
+                        folder.putFile(imageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                            @Override
+                            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                Log.i("FBApp", "Succesfully upload image");
+                            }
+                        });
+                    }
 
 
-                        finish();
+                    finish();
                 }
 
 
@@ -194,6 +220,26 @@ public class PublishPropertyActivity extends FragmentActivity implements OnMapRe
                 }
             }
         });
+
+        sensorManager= (SensorManager) getSystemService(SENSOR_SERVICE);
+        lightSensor = sensorManager.getDefaultSensor(Sensor.TYPE_LIGHT);
+        lightSensorListener = new SensorEventListener() {
+            @Override
+            public void onSensorChanged(SensorEvent event) {
+                if (mMap != null) {
+                    if (event.values[0] < 1000) {
+                        Log.i("MAPS", "DARK MAP " + event.values[0]);
+                        mMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(PublishPropertyActivity.this,R.raw.style_json_night));
+                    } else {
+                        Log.i("MAPS", "LIGHT MAP " + event.values[0]);
+                        mMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(PublishPropertyActivity.this,R.raw.style_json_day));
+                    }
+                }
+            }
+
+            @Override
+            public void onAccuracyChanged(Sensor sensor, int accuracy) {}
+        };
 
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
         fetchLocation();
@@ -318,11 +364,15 @@ public class PublishPropertyActivity extends FragmentActivity implements OnMapRe
     @Override
     protected void onResume() {
         super.onResume();
+        if(sensorManager != null){
+            sensorManager.registerListener(lightSensorListener, lightSensor, SensorManager.SENSOR_DELAY_NORMAL);
+        }
         fetchLocation();
     }
     @Override
     protected void onPause() {
         super.onPause();
+        sensorManager.unregisterListener(lightSensorListener);
         fetchLocation();
     }
     private void fetchLocation() {

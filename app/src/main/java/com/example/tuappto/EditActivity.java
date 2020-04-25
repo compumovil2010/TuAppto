@@ -33,6 +33,7 @@ public class EditActivity extends AppCompatActivity {
     ImageButton imageButtonGallery;
     ImageView imageViewUser;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
