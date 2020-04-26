@@ -3,8 +3,19 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/logOut"
-        android:title="Log Out"
-        app:showAsAction="never" />
+        android:id="@+id/logOut12"
+        android:icon="@drawable/menu"
+        android:visible="true"
+        android:title="@string/log_out_option"
+        app:showAsAction="always">
+        <menu>
+            <item
+                android:id="@+id/logOut"
+                android:icon="@drawable/log_out"
+                android:title="@string/log_out_option"
+                android:visible="true"
+                app:showAsAction="never" />
+        </menu>
+    </item>
 
 </menu>

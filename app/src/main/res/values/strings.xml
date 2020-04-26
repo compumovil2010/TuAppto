@@ -65,6 +65,9 @@
     <string name="publish_button">PUBLICAR</string>
     <string name="continue_button">CONTINUAR</string>
 
+    <string name="log_out_option">Cerrar sesión</string>
+
+
     <string name="chat_1">Hola, buenos dias</string>
     <string name="chat_2">Hola, mira el apartamento es nuevo y los vendo porque quiero plata</string>
     <string name="owner_option">Si oprimes la opción de DUEÑO tendrás la capacidad de publicar tus viviendas para que sean vendidas o arrendadas, según tu preferencia</string>

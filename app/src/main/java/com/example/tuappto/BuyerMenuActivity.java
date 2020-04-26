@@ -216,8 +216,6 @@ public class BuyerMenuActivity extends AppCompatActivity implements OnMapReadyCa
             }
         });
     }
-
-
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode) {
             case REQUEST_CODE: {
