@@ -39,8 +39,6 @@ import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
@@ -58,40 +56,40 @@ public class PublishPropertyActivity extends FragmentActivity implements OnMapRe
     private static final int PERMISSION_GALLERY_ID = 2;
     private static final int REQUEST_IMAGE_CAPTURE = 3;
     private static final int IMAGE_PICKER_REQUEST = 4;
-    public static final String PATH_PROPERTY="properties/";
-    ImageButton imageButtonCamera;
-    ImageButton imageButtonGallery;
-    ImageView imageViewUser;
-    Button buttonPublish;
-    CheckBox sell;
-    CheckBox rent;
-    private Property newProperty;
+    public static final String PATH_PROPERTY = "properties/";
+
+    public ImageButton imageButtonCamera;
+    public ImageButton imageButtonGallery;
+    private ImageView imageViewUser;
+    public Button buttonPublish;
+    private CheckBox sell;
+    private CheckBox rent;
+    public Property newProperty;
     private Uri imageUri;
 
-    GoogleMap mMap;
-    Location currentLocation;
-    FusedLocationProviderClient fusedLocationProviderClient;
-    Location destiny;
-    Geocoder mGeocoder;
-    SensorManager sensorManager;
-    Sensor lightSensor;
-    SensorEventListener lightSensorListener;
+    private GoogleMap mMap;
+    private Location currentLocation;
+    private FusedLocationProviderClient fusedLocationProviderClient;
+    private Location destiny;
+    private Geocoder mGeocoder;
+    private SensorManager sensorManager;
+    private Sensor lightSensor;
+    private SensorEventListener lightSensorListener;
 
-    int price;
-    LatLng ubication;
-    String sellOrRent;
-    int rooms;
-    int area;
-    int parking;
-    String description;
+    private int price;
+    public LatLng ubication;
+    private String sellOrRent;
+    private int rooms;
+    private int area;
+    private int parking;
+    private String description;
+    private String key;
 
-    EditText editTextprice;
-    LatLng editTextubication;
-    String editTextsellOrRent;
-    EditText editTextrooms;
-    EditText editTextarea;
-    EditText editTextparking;
-    EditText editTextdescription;
+    private EditText editTextprice;
+    private EditText editTextrooms;
+    private EditText editTextarea;
+    private EditText editTextparking;
+    private EditText editTextdescription;
 
     private StorageReference mStorage;
     private FirebaseDatabase database;
@@ -117,18 +115,20 @@ public class PublishPropertyActivity extends FragmentActivity implements OnMapRe
         editTextparking = findViewById(R.id.editTextParking);
         editTextdescription = findViewById(R.id.editTextDescription);
         database = FirebaseDatabase.getInstance();
+        myRef = database.getReference();
 
         sensorManager= (SensorManager) getSystemService(SENSOR_SERVICE);
+        assert sensorManager != null;
         lightSensor = sensorManager.getDefaultSensor(Sensor.TYPE_LIGHT);
         lightSensorListener = new SensorEventListener() {
             @Override
             public void onSensorChanged(SensorEvent event) {
                 if (mMap != null) {
                     if (event.values[0] < 1000) {
-                        Log.i("MAPS", "DARK MAP " + event.values[0]);
+                        //Log.i("MAPS", "DARK MAP " + event.values[0]);
                         mMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(PublishPropertyActivity.this,R.raw.style_json_night));
                     } else {
-                        Log.i("MAPS", "LIGHT MAP " + event.values[0]);
+                        //Log.i("MAPS", "LIGHT MAP " + event.values[0]);
                         mMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(PublishPropertyActivity.this,R.raw.style_json_day));
                     }
                 }
@@ -167,8 +167,9 @@ public class PublishPropertyActivity extends FragmentActivity implements OnMapRe
             @Override
             public void onClick(View view) {
 
-
                 if(allFilled()) {
+
+                    key = myRef.push().getKey();
 
                     price = Integer.parseInt(editTextprice.getText().toString());
 
@@ -178,7 +179,7 @@ public class PublishPropertyActivity extends FragmentActivity implements OnMapRe
                         sellOrRent = "rent";
                     }
                     else{
-                        sellOrRent = "ambos";
+                        sellOrRent = "both";
                     }
 
                     rooms = Integer.parseInt(editTextrooms.getText().toString());
@@ -186,30 +187,7 @@ public class PublishPropertyActivity extends FragmentActivity implements OnMapRe
                     parking = Integer.parseInt(editTextparking.getText().toString());
                     description = editTextdescription.getText().toString();
 
-                    newProperty = new Property();
-                    ubication = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
-                    newProperty.setArea(area);
-                    newProperty.setDescription(description);
-                    newProperty.setParking(parking);
-                    newProperty.setPrice(price);
-                    newProperty.setRooms(rooms);
-                    newProperty.setSellOrRent(sellOrRent);
-                    newProperty.setUbication(ubication);
-
-                    //String key = myRef.push().getKey();
-                    myRef = database.getReference(PATH_PROPERTY + "aca va la key");
-                    myRef.setValue(newProperty);
-
-                    if (imageUri != null) { // aca en storage
-                        StorageReference folder = mStorage.child("Images").child("Properties").child("aca va la key");
-                        folder.putFile(imageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                            @Override
-                            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                                Log.i("FBApp", "Succesfully upload image");
-                            }
-                        });
-                    }
-
+                    publishProperty();
 
                     finish();
                 }
@@ -222,6 +200,7 @@ public class PublishPropertyActivity extends FragmentActivity implements OnMapRe
         });
 
         sensorManager= (SensorManager) getSystemService(SENSOR_SERVICE);
+        assert sensorManager != null;
         lightSensor = sensorManager.getDefaultSensor(Sensor.TYPE_LIGHT);
         lightSensorListener = new SensorEventListener() {
             @Override
@@ -257,16 +236,18 @@ public class PublishPropertyActivity extends FragmentActivity implements OnMapRe
             ActivityCompat.requestPermissions(context, new String[]{permiso}, idCode);
         }
     }
+
     private void takePhoto() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
             takePictureIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-            File foto = new File(getExternalFilesDir(null),"test.jpg");
-            imageUri = FileProvider.getUriForFile(this,getPackageName()+".provider",foto);
+            File photo = new File(getExternalFilesDir(null),"test.jpg");
+            imageUri = FileProvider.getUriForFile(this,getPackageName()+".provider",photo);
             takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT,imageUri);
             startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
         }
     }
+
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
@@ -274,7 +255,6 @@ public class PublishPropertyActivity extends FragmentActivity implements OnMapRe
                 if (resultCode == RESULT_OK) {
                     try {
                         Bitmap bitmap = BitmapFactory.decodeFile(getExternalFilesDir(null)+"/test.jpg");
-
                         imageViewUser.setImageBitmap(bitmap);
 
                     } catch (Exception e) {
@@ -301,6 +281,7 @@ public class PublishPropertyActivity extends FragmentActivity implements OnMapRe
         }
 
     }
+
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode) {
             case PERMISSION_CAMERA_ID: {
@@ -331,6 +312,7 @@ public class PublishPropertyActivity extends FragmentActivity implements OnMapRe
             break;
         }
     }
+
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
@@ -375,6 +357,7 @@ public class PublishPropertyActivity extends FragmentActivity implements OnMapRe
         sensorManager.unregisterListener(lightSensorListener);
         fetchLocation();
     }
+
     private void fetchLocation() {
         if (ActivityCompat.checkSelfPermission(
                 this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
@@ -404,7 +387,32 @@ public class PublishPropertyActivity extends FragmentActivity implements OnMapRe
                 !editTextparking.getText().toString().isEmpty()||
                 !editTextdescription.getText().toString().isEmpty()||
                 (sell.isChecked()||rent.isChecked());
+    }
 
+    private void publishProperty(){
+
+        newProperty = new Property();
+        ubication = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
+        newProperty.setArea(area);
+        newProperty.setDescription(description);
+        newProperty.setParking(parking);
+        newProperty.setPrice(price);
+        newProperty.setRooms(rooms);
+        newProperty.setSellOrRent(sellOrRent);
+        newProperty.setUbication(ubication);
+
+        myRef = database.getReference(PATH_PROPERTY + key);
+        myRef.setValue(newProperty);
+
+        if (imageUri != null) { // aca en storage
+            StorageReference folder = mStorage.child("Images").child("Properties").child(key);
+            folder.putFile(imageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    Log.i("FBApp", "Succesfully upload image");
+                }
+            });
+        }
 
     }
 }
