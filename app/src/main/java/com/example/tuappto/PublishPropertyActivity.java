@@ -39,8 +39,13 @@ import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -48,6 +53,9 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
+
+import negocio.Owner;
 import negocio.Property;
 
 public class PublishPropertyActivity extends FragmentActivity implements OnMapReadyCallback {
@@ -57,6 +65,7 @@ public class PublishPropertyActivity extends FragmentActivity implements OnMapRe
     private static final int REQUEST_IMAGE_CAPTURE = 3;
     private static final int IMAGE_PICKER_REQUEST = 4;
     public static final String PATH_PROPERTY = "properties/";
+    public static final String PATH_OWNERS = "owners/";
 
     public ImageButton imageButtonCamera;
     public ImageButton imageButtonGallery;
@@ -94,6 +103,9 @@ public class PublishPropertyActivity extends FragmentActivity implements OnMapRe
     private StorageReference mStorage;
     private FirebaseDatabase database;
     private DatabaseReference myRef;
+    private FirebaseUser fuser;
+    public FirebaseAuth mAuth;
+    public Owner aux;
 
     private static final int REQUEST_CODE = 101;
     @Override
@@ -108,7 +120,6 @@ public class PublishPropertyActivity extends FragmentActivity implements OnMapRe
         sell = findViewById(R.id.checkBox);
         rent = findViewById(R.id.checkBox2);
         mStorage = FirebaseStorage.getInstance().getReference();
-
         editTextprice = findViewById(R.id.editTextPrice);
         editTextrooms = findViewById(R.id.editTextRooms);
         editTextarea = findViewById(R.id.editTextArea);
@@ -116,6 +127,10 @@ public class PublishPropertyActivity extends FragmentActivity implements OnMapRe
         editTextdescription = findViewById(R.id.editTextDescription);
         database = FirebaseDatabase.getInstance();
         myRef = database.getReference();
+
+        mAuth = FirebaseAuth.getInstance();
+
+        fuser = mAuth.getCurrentUser();
 
         sensorManager= (SensorManager) getSystemService(SENSOR_SERVICE);
         assert sensorManager != null;
@@ -207,10 +222,10 @@ public class PublishPropertyActivity extends FragmentActivity implements OnMapRe
             public void onSensorChanged(SensorEvent event) {
                 if (mMap != null) {
                     if (event.values[0] < 1000) {
-                        Log.i("MAPS", "DARK MAP " + event.values[0]);
+                        //Log.i("MAPS", "DARK MAP " + event.values[0]);
                         mMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(PublishPropertyActivity.this,R.raw.style_json_night));
                     } else {
-                        Log.i("MAPS", "LIGHT MAP " + event.values[0]);
+                        //Log.i("MAPS", "LIGHT MAP " + event.values[0]);
                         mMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(PublishPropertyActivity.this,R.raw.style_json_day));
                     }
                 }
@@ -371,7 +386,7 @@ public class PublishPropertyActivity extends FragmentActivity implements OnMapRe
             public void onSuccess(Location location) {
                 if (location != null) {
                     currentLocation = location;
-                    Toast.makeText(getApplicationContext(), currentLocation.getLatitude() + "" + currentLocation.getLongitude(), Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(getApplicationContext(), currentLocation.getLatitude() + "" + currentLocation.getLongitude(), Toast.LENGTH_SHORT).show();
                     SupportMapFragment supportMapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
                     assert supportMapFragment != null;
                     supportMapFragment.getMapAsync(PublishPropertyActivity.this);
@@ -400,6 +415,7 @@ public class PublishPropertyActivity extends FragmentActivity implements OnMapRe
         newProperty.setRooms(rooms);
         newProperty.setSellOrRent(sellOrRent);
         newProperty.setUbication(ubication);
+        newProperty.setOwnerId(fuser.getUid());
 
         myRef = database.getReference(PATH_PROPERTY + key);
         myRef.setValue(newProperty);
@@ -413,6 +429,39 @@ public class PublishPropertyActivity extends FragmentActivity implements OnMapRe
                 }
             });
         }
+
+        myRef = database.getReference(PATH_OWNERS).child(fuser.getUid());
+
+
+        myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                aux = dataSnapshot.getValue(Owner.class);
+                assert aux != null;
+                List<String> properties = aux.getProperties();
+
+                if(properties.size() == 1 && properties.get(0).equals("null")){
+                    properties.remove(0);
+                    properties.add(key);
+                    aux.setProperties(properties);
+                    myRef = database.getReference(PATH_OWNERS).child(fuser.getUid());
+                    myRef.setValue(aux);
+                }
+                else {
+                    properties.add(key);
+                    aux.setProperties(properties);
+                    myRef = database.getReference(PATH_OWNERS).child(fuser.getUid());
+                    myRef.setValue(aux);
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
 
     }
 }

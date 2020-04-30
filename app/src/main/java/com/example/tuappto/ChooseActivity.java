@@ -24,6 +24,8 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ChooseActivity extends AppCompatActivity {
 
@@ -39,7 +41,7 @@ public class ChooseActivity extends AppCompatActivity {
     private String name;
     private String secondName;
     private Uri imageUri;
-    private InputStream imageStream;
+    public InputStream imageStream;
     private FirebaseAuth mAuth;
 
     private StorageReference mStorage;
@@ -59,6 +61,7 @@ public class ChooseActivity extends AppCompatActivity {
         database= FirebaseDatabase.getInstance();
 
         bundle = getIntent().getBundleExtra("bundle");
+        assert bundle != null;
         email = bundle.getString("email");
         password = bundle.getString("password");
         name = bundle.getString("name");
@@ -104,9 +107,11 @@ public class ChooseActivity extends AppCompatActivity {
                             Log.d(TAG, "createUserWithEmail:success");
                             FirebaseUser fuser = mAuth.getCurrentUser();
                             if (tipo.equals("duenio")){
+                                assert fuser != null;
                                 createOwner(fuser);
                             }
                             else{
+                                assert fuser != null;
                                 createClient(fuser);
                             }
 
@@ -150,11 +155,14 @@ public class ChooseActivity extends AppCompatActivity {
 
     private void createOwner(FirebaseUser fuser) {
         newOwner = new Owner();
+        List<String> aux = new ArrayList<>();
+        aux.add("null");
         newOwner.setEmail(email);
         newOwner.setPassword(password);
         newOwner.setName(name);
         newOwner.setSecondname(secondName);
         newOwner.setPhone(phone);
+        newOwner.setProperties(aux);
 
         myRef = database.getReference(PATH_OWNERS + fuser.getUid());
         myRef.setValue(newOwner);

@@ -7,12 +7,13 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ListView;
 
 public class SearchPropertyActivity extends AppCompatActivity {
 
     ImageButton imageButtonFilters;
     Button button;
-
+    ListView listView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -20,6 +21,7 @@ public class SearchPropertyActivity extends AppCompatActivity {
 
         imageButtonFilters = findViewById(R.id.imageButtonFilters);
         button = findViewById(R.id.buttonTemporal);
+        listView = findViewById(R.id.listView);
 
         imageButtonFilters.setOnClickListener(new View.OnClickListener() {
             @Override
