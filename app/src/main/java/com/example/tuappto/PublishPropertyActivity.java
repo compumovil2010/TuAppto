@@ -432,7 +432,6 @@ public class PublishPropertyActivity extends FragmentActivity implements OnMapRe
 
         myRef = database.getReference(PATH_OWNERS).child(fuser.getUid());
 
-
         myRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
