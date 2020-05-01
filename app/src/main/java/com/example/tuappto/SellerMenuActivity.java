@@ -25,7 +25,6 @@ public class SellerMenuActivity extends AppCompatActivity {
         setContentView(R.layout.activity_seller_menu);
 
         mAuth = FirebaseAuth.getInstance();
-
         buttonPublishProperty = findViewById(R.id.buttonPublishProperty);
         buttonMyPublications = findViewById(R.id.buttonMyPublications);
         buttonInterested = findViewById(R.id.buttonInterested);
@@ -61,7 +60,6 @@ public class SellerMenuActivity extends AppCompatActivity {
                 startActivity(new Intent(view.getContext(), SellerDatesActivity.class));
             }
         });
-
 
     }
     public boolean onCreateOptionsMenu(Menu menu) {

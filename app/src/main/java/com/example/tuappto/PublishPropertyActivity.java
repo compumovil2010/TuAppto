@@ -421,7 +421,7 @@ public class PublishPropertyActivity extends FragmentActivity implements OnMapRe
         myRef.setValue(newProperty);
 
         if (imageUri != null) { // aca en storage
-            StorageReference folder = mStorage.child("Images").child("Properties").child(key+".jpg");
+            StorageReference folder = mStorage.child("Images").child("Properties").child(key +".jpg");
             folder.putFile(imageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
@@ -439,7 +439,7 @@ public class PublishPropertyActivity extends FragmentActivity implements OnMapRe
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 aux = dataSnapshot.getValue(Owner.class);
                 assert aux != null;
-                List<String> properties = aux.getProperties();
+                List<String>properties = aux.getProperties();
 
                 if(properties.size() == 1 && properties.get(0).equals("null")){
                     properties.remove(0);
