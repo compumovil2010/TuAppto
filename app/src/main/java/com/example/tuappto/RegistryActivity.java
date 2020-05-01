@@ -39,9 +39,9 @@ public class RegistryActivity extends AppCompatActivity {
     private EditText secondName;
     private ImageView imageViewUser;
     private Uri imageUri;
-    ImageButton imageButtonCamera;
-    ImageButton imageButtonGallery;
-    Button buttonContinue;
+    public ImageButton imageButtonCamera;
+    public ImageButton imageButtonGallery;
+    public Button buttonContinue;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

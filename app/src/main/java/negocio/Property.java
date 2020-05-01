@@ -12,6 +12,7 @@ public class Property {
     public int parking;
     public String description;
     public String ownerId;
+    public String imagePath;
 
     public Property() {
     }
@@ -78,5 +79,13 @@ public class Property {
 
     public void setOwnerId(String ownerId) {
         this.ownerId = ownerId;
+    }
+
+    public String getImagePath() {
+        return imagePath;
+    }
+
+    public void setImagePath(String imagePath) {
+        this.imagePath = imagePath;
     }
 }

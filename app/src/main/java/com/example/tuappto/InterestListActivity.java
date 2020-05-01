@@ -8,7 +8,7 @@ import android.view.View;
 import android.widget.Button;
 
 public class InterestListActivity extends AppCompatActivity {
-    Button boton;
+    public Button boton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

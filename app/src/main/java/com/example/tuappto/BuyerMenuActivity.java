@@ -2,10 +2,8 @@ package com.example.tuappto;
 
 import android.Manifest;
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -18,53 +16,46 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
-import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 
-import java.io.IOException;
 import java.util.ArrayList;
 
 public class BuyerMenuActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
-    Location currentLocation;
-    FusedLocationProviderClient fusedLocationProviderClient;
-    Geocoder mGeocoder;
+    private Location currentLocation;
+    private FusedLocationProviderClient fusedLocationProviderClient;
+    public Geocoder mGeocoder;
 
-    SensorManager sensorManager;
-    Sensor lightSensor;
-    SensorEventListener lightSensorListener;
+    private SensorManager sensorManager;
+    private Sensor lightSensor;
+    private SensorEventListener lightSensorListener;
 
-    Button buttonViewProperties;
-    Button buttonMyFavourites;
-    Button buttonChats;
-    Button buttonDates;
+    public Button buttonViewProperties;
+    public Button buttonMyFavourites;
+    public Button buttonChats;
+    public Button buttonDates;
     private FirebaseAuth mAuth;
     private static final int REQUEST_CODE = 101;
-    ArrayList<LatLng> ofertas = new ArrayList<LatLng>();
+    ArrayList<LatLng> ofertas = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,12 +65,12 @@ public class BuyerMenuActivity extends AppCompatActivity implements OnMapReadyCa
             fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
         }
         else {
-            requestPermission(BuyerMenuActivity.this, Manifest.permission.ACCESS_FINE_LOCATION, "Acceso a localizacion necesario", REQUEST_CODE);
+            requestPermission(BuyerMenuActivity.this);
         }
 
         mGeocoder = new Geocoder(getBaseContext());
         mAuth = FirebaseAuth.getInstance();
-        FirebaseUser currentUser = mAuth.getCurrentUser();
+
 
         buttonViewProperties = findViewById(R.id.buttonViewProperties);
         buttonMyFavourites = findViewById(R.id.buttonMyFavourites);
@@ -123,6 +114,7 @@ public class BuyerMenuActivity extends AppCompatActivity implements OnMapReadyCa
             }
         });
         sensorManager= (SensorManager) getSystemService(SENSOR_SERVICE);
+        assert sensorManager != null;
         lightSensor = sensorManager.getDefaultSensor(Sensor.TYPE_LIGHT);
         lightSensorListener = new SensorEventListener() {
             @Override
@@ -145,13 +137,11 @@ public class BuyerMenuActivity extends AppCompatActivity implements OnMapReadyCa
     }
 
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.logOut:
-                mAuth.signOut();
-                startActivity(new Intent(BuyerMenuActivity.this,PrincipalActivity.class));
-                finish();
-                return true;
-
+        if (item.getItemId() == R.id.logOut) {
+            mAuth.signOut();
+            startActivity(new Intent(BuyerMenuActivity.this, PrincipalActivity.class));
+            finish();
+            return true;
         }
         return false;
     }
@@ -217,26 +207,21 @@ public class BuyerMenuActivity extends AppCompatActivity implements OnMapReadyCa
         });
     }
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        switch (requestCode) {
-            case REQUEST_CODE: {
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    fetchLocation();
-                } else{
-                    Toast.makeText(this, "Permiso necesario para acceder a la camara", Toast.LENGTH_LONG).show();
-                }
-
+        if (requestCode == REQUEST_CODE) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                fetchLocation();
+            } else {
+                Toast.makeText(this, "Permiso necesario para acceder a la camara", Toast.LENGTH_LONG).show();
             }
-            break;
-
         }
     }
-    private void requestPermission(Activity context, String permiso, String justificacion, int idCode) {
+    private void requestPermission(Activity context) {
 
-        if (ContextCompat.checkSelfPermission(context, permiso) != PackageManager.PERMISSION_GRANTED) {
-            if (ActivityCompat.shouldShowRequestPermissionRationale(context, permiso)) {
-                Toast.makeText(context, justificacion, Toast.LENGTH_SHORT).show();
+        if (ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(context, Manifest.permission.ACCESS_FINE_LOCATION)) {
+                Toast.makeText(context, "Acceso a localizacion necesario", Toast.LENGTH_SHORT).show();
             }
-            ActivityCompat.requestPermissions(context, new String[]{permiso}, idCode);
+            ActivityCompat.requestPermissions(context, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, BuyerMenuActivity.REQUEST_CODE);
         }
     }
 }

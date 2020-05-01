@@ -9,7 +9,7 @@ import android.widget.Button;
 
 public class BuyerDatesActivity extends AppCompatActivity {
 
-    Button button;
+    public Button button;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

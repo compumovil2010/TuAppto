@@ -23,6 +23,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+
+import java.util.Objects;
 import java.util.regex.Pattern;
 
 public class PrincipalActivity extends AppCompatActivity {
@@ -30,11 +32,11 @@ public class PrincipalActivity extends AppCompatActivity {
     public static final String PATH_CLIENTS="clients/";
     public static final String PATH_OWNERS="owners/";
     private static final String TAG = "tag";
-    Button buttonRegister;
-    Button buttonEnter;
+    public Button buttonRegister;
+    public Button buttonEnter;
     private FirebaseAuth mAuth;
-    FirebaseDatabase database;
-    DatabaseReference myRef;
+    private FirebaseDatabase database;
+    private DatabaseReference myRef;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -121,37 +123,35 @@ public class PrincipalActivity extends AppCompatActivity {
         }
     }
 
-    private boolean updateUIO(final FirebaseUser currentUser) {
-        final boolean[] flag = {false};
+    private void updateUIO(final FirebaseUser currentUser) {
         if (currentUser != null) {
 
             myRef = database.getReference(PATH_OWNERS);
             myRef.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     for (DataSnapshot singleSnapshot : dataSnapshot.getChildren()) {
                         Owner myUser = singleSnapshot.getValue(Owner.class);
                         Log.d(TAG, "signInWithEmail: buscando email");
+                        assert myUser != null;
                         String aux = myUser.getEmail();
-                        if (currentUser.getEmail().equals(aux)) {
+                        if (Objects.equals(currentUser.getEmail(), aux)) {
                             Log.d(TAG, "signInWithEmail:lo encontre");
                             Intent intent = new Intent(PrincipalActivity.this, SellerMenuActivity.class);
                             intent.putExtra("email", currentUser.getEmail());
                             startActivity(intent);
                             finish();
-                            flag[0] = true;
                         }
                     }
 
                 }
 
                 @Override
-                public void onCancelled(DatabaseError databaseError) {
+                public void onCancelled(@NonNull DatabaseError databaseError) {
                     Log.w(TAG, "error en la consulta", databaseError.toException());
                 }
             });
         }
-        return flag[0];
     }
 
     private boolean validateForm(String email) {
@@ -168,9 +168,10 @@ public class PrincipalActivity extends AppCompatActivity {
             myRef = database.getReference(PATH_CLIENTS);
             myRef.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     for (DataSnapshot singleSnapshot : dataSnapshot.getChildren()) {
                         Client myUser = singleSnapshot.getValue(Client.class);
+                        assert myUser != null;
                         String aux = myUser.getEmail();
                         if (aux.equals( currentUser.getEmail())) {
 
@@ -185,7 +186,7 @@ public class PrincipalActivity extends AppCompatActivity {
                 }
 
                 @Override
-                public void onCancelled(DatabaseError databaseError) {
+                public void onCancelled(@NonNull DatabaseError databaseError) {
                     Log.w(TAG, "error en la consulta", databaseError.toException());
                 }
             });

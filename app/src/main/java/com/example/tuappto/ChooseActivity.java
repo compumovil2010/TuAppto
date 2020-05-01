@@ -29,13 +29,13 @@ import java.util.List;
 
 public class ChooseActivity extends AppCompatActivity {
 
-    Bundle bundle;
-    Button duenio;
-    Button cliente;
-    Client newClient;
-    Intent intent;
+    public Bundle bundle;
+    public Button duenio;
+    public Button cliente;
+    public Client newClient;
+    public Intent intent;
     private Long phone;
-    Owner newOwner;
+    public Owner newOwner;
     private String email;
     private String password;
     private String name;

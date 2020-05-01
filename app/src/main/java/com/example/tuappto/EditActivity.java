@@ -29,9 +29,9 @@ public class EditActivity extends AppCompatActivity {
     private static final int REQUEST_IMAGE_CAPTURE = 3;
     private static final int IMAGE_PICKER_REQUEST = 4;
 
-    ImageButton imageButtonCamera;
-    ImageButton imageButtonGallery;
-    ImageView imageViewUser;
+    public ImageButton imageButtonCamera;
+    public ImageButton imageButtonGallery;
+    public ImageView imageViewUser;
 
 
     @Override

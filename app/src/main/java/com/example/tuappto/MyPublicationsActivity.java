@@ -12,6 +12,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
+import java.util.Objects;
+
 import negocio.Property;
 
 public class MyPublicationsActivity extends AppCompatActivity {
@@ -41,11 +43,12 @@ public class MyPublicationsActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if(dataSnapshot.exists()){
                     for(DataSnapshot ds: dataSnapshot.getChildren()){
-                        int parking = Integer.parseInt(ds.child("parking").getValue().toString());
-                        int area = Integer.parseInt(ds.child("area").getValue().toString());
-                        int price = Integer.parseInt(ds.child("price").getValue().toString());
-                        int rooms = Integer.parseInt(ds.child("rooms").getValue().toString());
-                        String kind = ds.child("sellOrRent").getValue().toString();
+                        int parking = Integer.parseInt(Objects.requireNonNull(ds.child("parking").getValue()).toString());
+                        int area = Integer.parseInt(Objects.requireNonNull(ds.child("area").getValue()).toString());
+                        int price = Integer.parseInt(Objects.requireNonNull(ds.child("price").getValue()).toString());
+                        int rooms = Integer.parseInt(Objects.requireNonNull(ds.child("rooms").getValue()).toString());
+                        String kind = Objects.requireNonNull(ds.child("sellOrRent").getValue()).toString();
+                        String imagePath = Objects.requireNonNull(ds.child("imagePath").getValue()).toString();
                         //String address = ds.child("sellOrRent").getValue().toString();
                         Property aux = new Property();
                         aux.setSellOrRent(kind);
@@ -53,6 +56,7 @@ public class MyPublicationsActivity extends AppCompatActivity {
                         aux.setArea(area);
                         aux.setPrice(price);
                         aux.setRooms(rooms);
+                        aux.setImagePath(imagePath);
                         mProperties.add(aux);
                     }
                     mAdapter = new PropertyAdapter(mProperties, R.layout.publication);

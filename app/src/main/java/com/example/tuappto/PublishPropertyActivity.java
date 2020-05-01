@@ -421,7 +421,7 @@ public class PublishPropertyActivity extends FragmentActivity implements OnMapRe
         myRef.setValue(newProperty);
 
         if (imageUri != null) { // aca en storage
-            StorageReference folder = mStorage.child("Images").child("Properties").child(key);
+            StorageReference folder = mStorage.child("Images").child("Properties").child(key+".jpg");
             folder.putFile(imageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
@@ -429,6 +429,8 @@ public class PublishPropertyActivity extends FragmentActivity implements OnMapRe
                 }
             });
         }
+        newProperty.setImagePath("Images/Properties/"+key+".jpg");
+        myRef.setValue(newProperty);
 
         myRef = database.getReference(PATH_OWNERS).child(fuser.getUid());
 
