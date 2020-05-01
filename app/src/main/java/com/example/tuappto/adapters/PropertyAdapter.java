@@ -18,10 +18,11 @@ import com.google.firebase.storage.StorageReference;
 import java.util.ArrayList;
 import negocio.Property;
 
-public class PropertyAdapter extends RecyclerView.Adapter<PropertyAdapter.ViewHolder> {
+public class PropertyAdapter extends RecyclerView.Adapter<PropertyAdapter.ViewHolder> implements View.OnClickListener {
 
     private int resources;
     private ArrayList<Property> properties;
+    private View.OnClickListener listener;
     public PropertyAdapter(ArrayList<Property>properties,int resources){
         this.properties = properties;
         this.resources = resources;
@@ -34,6 +35,7 @@ public class PropertyAdapter extends RecyclerView.Adapter<PropertyAdapter.ViewHo
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(resources,parent,false);
+        view.setOnClickListener(this);
         return new ViewHolder(view);
     }
 
@@ -68,6 +70,18 @@ public class PropertyAdapter extends RecyclerView.Adapter<PropertyAdapter.ViewHo
         return properties.size();
     }
 
+    public void setOnClickListener(View.OnClickListener listener){
+        this.listener = listener;
+
+    }
+
+    @Override
+    public void onClick(View v) {
+        if(listener != null){
+            listener.onClick(v);
+        }
+    }
+
     public static class ViewHolder extends RecyclerView.ViewHolder{
         private TextView textViewAddress;
         private TextView textViewArea;
@@ -92,8 +106,7 @@ public class PropertyAdapter extends RecyclerView.Adapter<PropertyAdapter.ViewHo
         }
     }
 
-    private void downloadPhoto(String ruta, final ImageView iv)
-    {
+    private void downloadPhoto(String ruta, final ImageView iv) {
         db.setFirestoreSettings(settings);
         StorageReference photoRef = mStorageRef.child(ruta);
         final long ONE_MEGABYTE = 1024 * 1024 * 10; //(1024 bytes = 1 KB) x (1024 = 1 MB) x 1 = 1 MB

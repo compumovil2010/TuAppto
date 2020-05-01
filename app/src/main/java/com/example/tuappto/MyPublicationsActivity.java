@@ -5,6 +5,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Toast;
 import com.example.tuappto.adapters.PropertyAdapter;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -71,6 +73,13 @@ public class MyPublicationsActivity extends AppCompatActivity {
 
                     }
                     mAdapter = new PropertyAdapter(mProperties, R.layout.publication);
+
+                    mAdapter.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Toast.makeText(getApplicationContext(),"Selecciono el:" + mProperties.get(mRecyclerView.getChildAdapterPosition(v)).getImagePath(), Toast.LENGTH_LONG ).show();
+                        }
+                    });
                     mRecyclerView.setAdapter(mAdapter);
 
                 }
