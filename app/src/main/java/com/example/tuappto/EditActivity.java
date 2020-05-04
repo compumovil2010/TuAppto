@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.core.content.FileProvider;
 
 import android.Manifest;
 import android.app.Activity;
@@ -14,15 +15,24 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
-
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreSettings;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 
@@ -43,7 +53,7 @@ public class EditActivity extends AppCompatActivity {
     public EditText editTextDescription;
     public CheckBox checkBoxSell;
     public CheckBox checkBoxRent;
-
+    public Button buttonSave;
     public Bundle bundle;
     public Intent intent;
 
@@ -58,11 +68,23 @@ public class EditActivity extends AppCompatActivity {
     public double latitude;
     public  double longitude;
 
+    private FirebaseFirestore db;
+    private static FirebaseFirestoreSettings settings;
+    private static StorageReference mStorageRef;
+    private StorageReference mStorage;
+
+    private Uri imageUri;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit);
+
+        db = FirebaseFirestore.getInstance();
+        mStorage = FirebaseStorage.getInstance().getReference();
+        settings = new FirebaseFirestoreSettings.Builder().build();
+        mStorageRef = FirebaseStorage.getInstance().getReference();
 
         imageButtonCamera = findViewById(R.id.imageButtonCamera);
         imageButtonGallery = findViewById(R.id.imageButtonGallery);
@@ -74,6 +96,7 @@ public class EditActivity extends AppCompatActivity {
         editTextDescription = findViewById(R.id.editTextDescription);
         checkBoxSell = findViewById(R.id.checkBoxSell);
         checkBoxRent = findViewById(R.id.checkBoxRent);
+        buttonSave = findViewById(R.id.buttonSave);
 
         intent = getIntent();
         bundle = intent.getBundleExtra("bundle");
@@ -90,14 +113,17 @@ public class EditActivity extends AppCompatActivity {
         longitude = bundle.getDouble("longitude");
         location = new LatLng(latitude,longitude);
 
-        editTextPrice.setText(price);
-        editTextArea.setText(area);
-        editTextRooms.setText(rooms);
-        editTextParking.setText(parking);
+        editTextPrice.setText(String.valueOf(price));
+        editTextArea.setText(String.valueOf(area));
+        editTextRooms.setText(String.valueOf(rooms));
+        editTextParking.setText(String.valueOf(parking));
         editTextDescription.setText(description);
 
+        downloadPhoto(imagePath,imageViewProperty);
+        Toast.makeText(this,description,Toast.LENGTH_LONG).show();
+
         if(sellOrRent.equals("rent")){
-            checkBoxSell.setChecked(true);
+            checkBoxRent.setChecked(true);
         }
         else if(sellOrRent.equals("sell")){
             checkBoxRent.setChecked(true);
@@ -107,9 +133,13 @@ public class EditActivity extends AppCompatActivity {
             checkBoxRent.setChecked(true);
         }
 
-
-
-
+        buttonSave.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                isChanged();
+                upLoadImage();
+            }
+        });
 
         imageButtonCamera.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -151,6 +181,10 @@ public class EditActivity extends AppCompatActivity {
     private void takePhoto() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+            takePictureIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            File foto = new File(getExternalFilesDir(null),"test.jpg");
+            imageUri = FileProvider.getUriForFile(this,getPackageName()+".provider",foto);
+            takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT,imageUri);
             startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
         }
     }
@@ -161,12 +195,10 @@ public class EditActivity extends AppCompatActivity {
             case REQUEST_IMAGE_CAPTURE:
                 if (resultCode == RESULT_OK) {
                     try {
-                        Bundle extras = data.getExtras();
-                        Bitmap imageBitmap;
-                        if (extras != null) {
-                            imageBitmap = (Bitmap) extras.get("data");
-                            imageViewProperty.setImageBitmap(imageBitmap);
-                        }
+                        Bitmap bitmap = BitmapFactory.decodeFile(getExternalFilesDir(null)+"/test.jpg");
+
+                        imageViewProperty.setImageBitmap(bitmap);
+
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -176,12 +208,11 @@ public class EditActivity extends AppCompatActivity {
             case IMAGE_PICKER_REQUEST:
                 if (resultCode == RESULT_OK) {
                     try {
-                        final Uri imageUri = data.getData();
+                        imageUri = data.getData();
                         final InputStream imageStream;
-
                         if (imageUri != null) {
                             imageStream = getContentResolver().openInputStream(imageUri);
-                            final Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
+                            Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
                             imageViewProperty.setImageBitmap(selectedImage);
                         }
 
@@ -189,8 +220,8 @@ public class EditActivity extends AppCompatActivity {
                         e.printStackTrace();
                     }
                 }
-
         }
+
     }
 
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -198,11 +229,9 @@ public class EditActivity extends AppCompatActivity {
             case PERMISSION_CAMERA_ID: {
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     takePhoto();
-
                 } else{
                     Toast.makeText(this, "Permiso necesario para acceder a la camara", Toast.LENGTH_LONG).show();
                 }
-
             }
             break;
 
@@ -217,6 +246,52 @@ public class EditActivity extends AppCompatActivity {
                 }
             }
             break;
+        }
+    }
+
+    private void downloadPhoto(String ruta, final ImageView iv) {
+        db.setFirestoreSettings(settings);
+        StorageReference photoRef = mStorageRef.child(ruta);
+        final long ONE_MEGABYTE = 1024 * 1024 * 10; //(1024 bytes = 1 KB) x (1024 = 1 MB) x 1 = 1 MB
+        photoRef.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>()
+        {
+            @Override
+            public void onSuccess(byte[] bytes) {
+                iv.setImageBitmap(BitmapFactory.decodeByteArray(bytes, 0, bytes.length));
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                // Handle any errors
+            }
+        });
+    }
+
+    private boolean isChanged() {
+        if (
+            editTextPrice.getText().toString().equals(String.valueOf(price))&&
+        editTextArea.getText().toString().equals(String.valueOf(area))&&
+        editTextRooms.getText().toString().equals(String.valueOf(rooms))&&
+        editTextParking.getText().toString().equals(String.valueOf(parking))&&
+        editTextDescription.getText().toString().equals(String.valueOf(description))){
+            Toast.makeText(this, "False", Toast.LENGTH_LONG).show();
+            return false;
+        }
+
+        Toast.makeText(this, "true", Toast.LENGTH_LONG).show();
+
+        return true;
+    }
+
+    private void upLoadImage(){
+        if (imageUri != null) { // aca en storage
+            StorageReference folder = mStorage.child(imagePath);
+            folder.putFile(imageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    Log.i("FBApp", "Succesfully upload image");
+                }
+            });
         }
     }
 }
