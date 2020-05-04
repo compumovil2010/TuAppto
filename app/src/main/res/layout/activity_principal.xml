@@ -7,10 +7,6 @@
     android:layout_height="match_parent"
     tools:context=".PrincipalActivity">
 
-    <include
-        android:id="@+id/toolbar"
-        layout="@layout/toolbar" />
-
     <ImageView
         android:id="@+id/principalImage"
         android:layout_width="match_parent"
@@ -24,15 +20,24 @@
         android:layout_height="match_parent"
         android:layout_gravity="center">
 
+        <include
+            android:id="@+id/toolbar"
+            layout="@layout/toolbar"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
         <ImageView
             android:layout_width="250dp"
             android:layout_height="250dp"
+            android:layout_marginTop="32dp"
             android:layout_marginBottom="32dp"
             android:contentDescription="@string/principal_image_description"
             app:layout_constraintBottom_toTopOf="@+id/editEmail"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.496"
             app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/toolbar"
             app:srcCompat="@drawable/principal" />
 
         <EditText

@@ -11,6 +11,10 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.location.Geocoder;
 import android.location.Location;
 import android.net.Uri;
@@ -31,13 +35,17 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -45,6 +53,9 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
+
+import negocio.Owner;
 import negocio.Property;
 
 public class PublishPropertyActivity extends FragmentActivity implements OnMapReadyCallback {
@@ -53,42 +64,48 @@ public class PublishPropertyActivity extends FragmentActivity implements OnMapRe
     private static final int PERMISSION_GALLERY_ID = 2;
     private static final int REQUEST_IMAGE_CAPTURE = 3;
     private static final int IMAGE_PICKER_REQUEST = 4;
-    public static final String PATH_PROPERTY="properties/";
-    ImageButton imageButtonCamera;
-    ImageButton imageButtonGallery;
-    ImageView imageViewUser;
-    Button buttonPublish;
-    CheckBox sell;
-    CheckBox rent;
-    private Property newProperty;
+    public static final String PATH_PROPERTY = "properties/";
+    public static final String PATH_OWNERS = "owners/";
+
+    public ImageButton imageButtonCamera;
+    public ImageButton imageButtonGallery;
+    private ImageView imageViewUser;
+    public Button buttonPublish;
+    private CheckBox sell;
+    private CheckBox rent;
+    public Property newProperty;
     private Uri imageUri;
 
-    GoogleMap mMap;
+    private GoogleMap mMap;
+    private Location currentLocation;
+    private FusedLocationProviderClient fusedLocationProviderClient;
+    private Location destiny;
+    private Geocoder mGeocoder;
+    private SensorManager sensorManager;
+    private Sensor lightSensor;
+    private SensorEventListener lightSensorListener;
 
-    Location currentLocation;
-    FusedLocationProviderClient fusedLocationProviderClient;
-    Location destiny;
-    Geocoder mGeocoder;
+    private int price;
+    public LatLng ubication;
+    private String sellOrRent;
+    private int rooms;
+    private int area;
+    private int parking;
+    private String description;
+    private String key;
 
-    int price;
-    LatLng ubication;
-    String sellOrRent;
-    int rooms;
-    int area;
-    int parking;
-    String description;
-
-    EditText editTextprice;
-    LatLng editTextubication;
-    String editTextsellOrRent;
-    EditText editTextrooms;
-    EditText editTextarea;
-    EditText editTextparking;
-    EditText editTextdescription;
+    private EditText editTextprice;
+    private EditText editTextrooms;
+    private EditText editTextarea;
+    private EditText editTextparking;
+    private EditText editTextdescription;
 
     private StorageReference mStorage;
     private FirebaseDatabase database;
     private DatabaseReference myRef;
+    private FirebaseUser fuser;
+    public FirebaseAuth mAuth;
+    public Owner aux;
 
     private static final int REQUEST_CODE = 101;
     @Override
@@ -103,14 +120,38 @@ public class PublishPropertyActivity extends FragmentActivity implements OnMapRe
         sell = findViewById(R.id.checkBox);
         rent = findViewById(R.id.checkBox2);
         mStorage = FirebaseStorage.getInstance().getReference();
-
         editTextprice = findViewById(R.id.editTextPrice);
         editTextrooms = findViewById(R.id.editTextRooms);
         editTextarea = findViewById(R.id.editTextArea);
         editTextparking = findViewById(R.id.editTextParking);
         editTextdescription = findViewById(R.id.editTextDescription);
         database = FirebaseDatabase.getInstance();
+        myRef = database.getReference();
 
+        mAuth = FirebaseAuth.getInstance();
+
+        fuser = mAuth.getCurrentUser();
+
+        sensorManager= (SensorManager) getSystemService(SENSOR_SERVICE);
+        assert sensorManager != null;
+        lightSensor = sensorManager.getDefaultSensor(Sensor.TYPE_LIGHT);
+        lightSensorListener = new SensorEventListener() {
+            @Override
+            public void onSensorChanged(SensorEvent event) {
+                if (mMap != null) {
+                    if (event.values[0] < 1000) {
+                        //Log.i("MAPS", "DARK MAP " + event.values[0]);
+                        mMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(PublishPropertyActivity.this,R.raw.style_json_night));
+                    } else {
+                        //Log.i("MAPS", "LIGHT MAP " + event.values[0]);
+                        mMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(PublishPropertyActivity.this,R.raw.style_json_day));
+                    }
+                }
+            }
+
+            @Override
+            public void onAccuracyChanged(Sensor sensor, int accuracy) {}
+        };
         imageButtonCamera.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -143,6 +184,8 @@ public class PublishPropertyActivity extends FragmentActivity implements OnMapRe
 
                 if(allFilled()) {
 
+                    key = myRef.push().getKey();
+
                     price = Integer.parseInt(editTextprice.getText().toString());
 
                     if (sell.isChecked()&&!rent.isChecked()) {
@@ -151,7 +194,7 @@ public class PublishPropertyActivity extends FragmentActivity implements OnMapRe
                         sellOrRent = "rent";
                     }
                     else{
-                        sellOrRent = "ambos";
+                        sellOrRent = "both";
                     }
 
                     rooms = Integer.parseInt(editTextrooms.getText().toString());
@@ -159,34 +202,10 @@ public class PublishPropertyActivity extends FragmentActivity implements OnMapRe
                     parking = Integer.parseInt(editTextparking.getText().toString());
                     description = editTextdescription.getText().toString();
 
-                    newProperty = new Property();
-                    ubication = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
-                    newProperty.setArea(area);
-                    newProperty.setDescription(description);
-                    newProperty.setParking(parking);
-                    newProperty.setPrice(price);
-                    newProperty.setRooms(rooms);
-                    newProperty.setSellOrRent(sellOrRent);
-                    newProperty.setUbication(ubication);
-
-                    //String key = myRef.push().getKey();
-                    myRef = database.getReference(PATH_PROPERTY + "aca va la key");
-                    myRef.setValue(newProperty);
-
-                    if (imageUri != null) { // aca en storage
-                        StorageReference folder = mStorage.child("Images").child("Properties").child("aca va la key");
-                        folder.putFile(imageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                            @Override
-                            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                                Log.i("FBApp", "Succesfully upload image");
-                            }
-                        });
-                    }
-
+                    publishProperty();
 
                     finish();
                 }
-
 
 
                 else{
@@ -194,6 +213,27 @@ public class PublishPropertyActivity extends FragmentActivity implements OnMapRe
                 }
             }
         });
+
+        sensorManager= (SensorManager) getSystemService(SENSOR_SERVICE);
+        assert sensorManager != null;
+        lightSensor = sensorManager.getDefaultSensor(Sensor.TYPE_LIGHT);
+        lightSensorListener = new SensorEventListener() {
+            @Override
+            public void onSensorChanged(SensorEvent event) {
+                if (mMap != null) {
+                    if (event.values[0] < 1000) {
+                        //Log.i("MAPS", "DARK MAP " + event.values[0]);
+                        mMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(PublishPropertyActivity.this,R.raw.style_json_night));
+                    } else {
+                        //Log.i("MAPS", "LIGHT MAP " + event.values[0]);
+                        mMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(PublishPropertyActivity.this,R.raw.style_json_day));
+                    }
+                }
+            }
+
+            @Override
+            public void onAccuracyChanged(Sensor sensor, int accuracy) {}
+        };
 
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
         fetchLocation();
@@ -211,16 +251,18 @@ public class PublishPropertyActivity extends FragmentActivity implements OnMapRe
             ActivityCompat.requestPermissions(context, new String[]{permiso}, idCode);
         }
     }
+
     private void takePhoto() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
             takePictureIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-            File foto = new File(getExternalFilesDir(null),"test.jpg");
-            imageUri = FileProvider.getUriForFile(this,getPackageName()+".provider",foto);
+            File photo = new File(getExternalFilesDir(null),"test.jpg");
+            imageUri = FileProvider.getUriForFile(this,getPackageName()+".provider",photo);
             takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT,imageUri);
             startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
         }
     }
+
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
@@ -228,7 +270,6 @@ public class PublishPropertyActivity extends FragmentActivity implements OnMapRe
                 if (resultCode == RESULT_OK) {
                     try {
                         Bitmap bitmap = BitmapFactory.decodeFile(getExternalFilesDir(null)+"/test.jpg");
-
                         imageViewUser.setImageBitmap(bitmap);
 
                     } catch (Exception e) {
@@ -255,6 +296,7 @@ public class PublishPropertyActivity extends FragmentActivity implements OnMapRe
         }
 
     }
+
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode) {
             case PERMISSION_CAMERA_ID: {
@@ -285,6 +327,7 @@ public class PublishPropertyActivity extends FragmentActivity implements OnMapRe
             break;
         }
     }
+
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
@@ -318,13 +361,18 @@ public class PublishPropertyActivity extends FragmentActivity implements OnMapRe
     @Override
     protected void onResume() {
         super.onResume();
+        if(sensorManager != null){
+            sensorManager.registerListener(lightSensorListener, lightSensor, SensorManager.SENSOR_DELAY_NORMAL);
+        }
         fetchLocation();
     }
     @Override
     protected void onPause() {
         super.onPause();
+        sensorManager.unregisterListener(lightSensorListener);
         fetchLocation();
     }
+
     private void fetchLocation() {
         if (ActivityCompat.checkSelfPermission(
                 this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
@@ -338,7 +386,7 @@ public class PublishPropertyActivity extends FragmentActivity implements OnMapRe
             public void onSuccess(Location location) {
                 if (location != null) {
                     currentLocation = location;
-                    Toast.makeText(getApplicationContext(), currentLocation.getLatitude() + "" + currentLocation.getLongitude(), Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(getApplicationContext(), currentLocation.getLatitude() + "" + currentLocation.getLongitude(), Toast.LENGTH_SHORT).show();
                     SupportMapFragment supportMapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
                     assert supportMapFragment != null;
                     supportMapFragment.getMapAsync(PublishPropertyActivity.this);
@@ -353,8 +401,69 @@ public class PublishPropertyActivity extends FragmentActivity implements OnMapRe
                 !editTextarea.getText().toString().isEmpty()||
                 !editTextparking.getText().toString().isEmpty()||
                 !editTextdescription.getText().toString().isEmpty()||
-                (!sell.isChecked()||!rent.isChecked());
+                (sell.isChecked()||rent.isChecked());
+    }
+
+    private void publishProperty(){
+
+        newProperty = new Property();
+        ubication = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
+        newProperty.setArea(area);
+        newProperty.setDescription(description);
+        newProperty.setParking(parking);
+        newProperty.setPrice(price);
+        newProperty.setRooms(rooms);
+        newProperty.setSellOrRent(sellOrRent);
+        newProperty.setUbication(ubication);
+        newProperty.setOwnerId(fuser.getUid());
+
+        myRef = database.getReference(PATH_PROPERTY + key);
+        myRef.setValue(newProperty);
+
+        if (imageUri != null) { // aca en storage
+            StorageReference folder = mStorage.child("Images").child("Properties").child(key +".jpg");
+            folder.putFile(imageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    Log.i("FBApp", "Succesfully upload image");
+                }
+            });
+        }
+        newProperty.setImagePath("Images/Properties/"+key+".jpg");
+        myRef.setValue(newProperty);
+
+        myRef = database.getReference(PATH_OWNERS).child(fuser.getUid());
+
+        myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                aux = dataSnapshot.getValue(Owner.class);
+                assert aux != null;
+                List<String>properties = aux.getProperties();
+
+                if(properties.size() == 1 && properties.get(0).equals("null")){
+                    properties.remove(0);
+                    properties.add(key);
+                    aux.setProperties(properties);
+                    myRef = database.getReference(PATH_OWNERS).child(fuser.getUid());
+                    myRef.setValue(aux);
+                }
+                else {
+                    properties.add(key);
+                    aux.setProperties(properties);
+                    myRef = database.getReference(PATH_OWNERS).child(fuser.getUid());
+                    myRef.setValue(aux);
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
 
 
     }
 }
+

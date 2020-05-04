@@ -9,7 +9,7 @@ import android.widget.Button;
 
 public class ChatActivity extends AppCompatActivity {
 
-    Button makeDateButton;
+    public Button makeDateButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

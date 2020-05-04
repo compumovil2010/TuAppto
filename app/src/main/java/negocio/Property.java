@@ -3,34 +3,18 @@ package negocio;
 import com.google.android.gms.maps.model.LatLng;
 
 public class Property {
-    String owner;
-    int price;
-    LatLng ubication;
-    String sellOrRent;
-    int rooms;
-    int area;
-    int parking;
-    String description;
+
+    public int price;
+    public LatLng ubication;
+    public String sellOrRent;
+    public int rooms;
+    public int area;
+    public int parking;
+    public String description;
+    public String ownerId;
+    public String imagePath;
 
     public Property() {
-    }
-
-    public Property(int price, LatLng ubication, String sellOrRent, int rooms, int area, int parking, String description) {
-        this.price = price;
-        this.ubication = ubication;
-        this.sellOrRent = sellOrRent;
-        this.rooms = rooms;
-        this.area = area;
-        this.parking = parking;
-        this.description = description;
-    }
-
-    public String getOwner() {
-        return owner;
-    }
-
-    public void setOwner(String owner) {
-        this.owner = owner;
     }
 
     public int getPrice() {
@@ -87,5 +71,21 @@ public class Property {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getOwnerId() {
+        return ownerId;
+    }
+
+    public void setOwnerId(String ownerId) {
+        this.ownerId = ownerId;
+    }
+
+    public String getImagePath() {
+        return imagePath;
+    }
+
+    public void setImagePath(String imagePath) {
+        this.imagePath = imagePath;
     }
 }

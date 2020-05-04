@@ -2,8 +2,6 @@ package com.example.tuappto;
 
 import android.Manifest;
 import android.app.Activity;
-import android.content.Intent;
-import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.hardware.Sensor;
@@ -24,7 +22,6 @@ import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
-
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -45,18 +42,13 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
-import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
@@ -66,7 +58,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private static final double upperRigthLongitude= -71.869905;
     private static final double RADIUS_OF_EARTH_KM = 6371;
     private static final int PERMISSION_LOCATION_ID = 1;
-    private static final int REQUEST_CHECK_SETTINGS = 2;
 
     private GoogleMap mMap;
     private FusedLocationProviderClient mFusedLocationClient;
@@ -79,7 +70,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     Marker myMarker2;
     LatLng dis1;
     LatLng dis2;
-    LatLng dis3;
     double latitud;
     double longitud;
     private Polyline mLine;
@@ -87,10 +77,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         sensorManager = (SensorManager)getSystemService(SENSOR_SERVICE);
+        assert sensorManager != null;
         lightSensor = sensorManager.getDefaultSensor(Sensor.TYPE_LIGHT);
         setContentView(R.layout.activity_maps);
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
+        assert mapFragment != null;
         mapFragment.getMapAsync(this); // Esto llama al metodo onMapReady
 
         opcionesSensorLuz();
@@ -173,7 +165,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             localizacion();
         } else {
             //si el permiso no esta aceptado, lo pide!!!
-            requestPermission(this, Manifest.permission.ACCESS_FINE_LOCATION, "Acceso a la localizacion necesario", PERMISSION_LOCATION_ID);
+            requestPermission(this);
         }
         mMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
             @Override
@@ -222,23 +214,21 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         sensorManager.unregisterListener(lightSensorListener);
     }
 
-    private void requestPermission(Activity context, String permiso, String justificacion, int idCode) {
+    private void requestPermission(Activity context) {
         //Aca pide el permiso
-        if (ContextCompat.checkSelfPermission(context, permiso) != PackageManager.PERMISSION_GRANTED) {
-            if (ActivityCompat.shouldShowRequestPermissionRationale(context, permiso)) {
-                Toast.makeText(context, justificacion, Toast.LENGTH_SHORT).show();
+        if (ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(context, Manifest.permission.ACCESS_FINE_LOCATION)) {
+                Toast.makeText(context, "Acceso a la localizacion necesario", Toast.LENGTH_SHORT).show();
             }
-            ActivityCompat.requestPermissions(context, new String[]{permiso}, idCode);
+            ActivityCompat.requestPermissions(context, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, MapsActivity.PERMISSION_LOCATION_ID);
         }
     }
 
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        switch (requestCode) {
-            //si acepta el permiso mira cual fue
-            case PERMISSION_LOCATION_ID: {
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    localizacion();
-                }
+        //si acepta el permiso mira cual fue
+        if (requestCode == PERMISSION_LOCATION_ID) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                localizacion();
             }
         }
     }
@@ -300,8 +290,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private void parseJSON(String data) {
         ArrayList<LatLng> result = new ArrayList<>();
-        String distance="";
-        Double d;
+        String distance;
+        double d;
 
         try {
             JSONObject jsonObject = new JSONObject(data);

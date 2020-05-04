@@ -1,27 +1,93 @@
 package com.example.tuappto;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-
-import android.content.Intent;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
+import android.widget.Toast;
+import com.example.tuappto.adapters.PropertyAdapter;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import java.util.ArrayList;
+import java.util.Objects;
+import negocio.Property;
 
 public class MyPublicationsActivity extends AppCompatActivity {
 
-    Button buttonEdit;
+    private DatabaseReference mDatabase;
+    private PropertyAdapter mAdapter;
+    private RecyclerView mRecyclerView;
+    private ArrayList<Property> mProperties = new ArrayList<>();
+    private FirebaseUser fuser;
+    public FirebaseAuth mAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_publications);
 
-        buttonEdit = findViewById(R.id.buttonTemporal);
+        mRecyclerView = findViewById(R.id.recyclerViewProperties);
 
-        buttonEdit.setOnClickListener(new View.OnClickListener() {
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        mDatabase = FirebaseDatabase.getInstance().getReference();
+
+        mAuth = FirebaseAuth.getInstance();
+        fuser = mAuth.getCurrentUser();
+
+        getPropertiesFromFirebase();
+
+    }
+
+    private  void getPropertiesFromFirebase(){
+
+        final String owner = fuser.getUid();
+        mDatabase.child("properties").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            public void onClick(View view) {
-                startActivity(new Intent(view.getContext(),EditActivity.class));
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(dataSnapshot.exists()){
+                    for(DataSnapshot ds: dataSnapshot.getChildren()){
+                        if(owner.equals(Objects.requireNonNull(ds.child("ownerId").getValue()).toString())){
+                            int parking = Integer.parseInt(Objects.requireNonNull(ds.child("parking").getValue()).toString());
+                            int area = Integer.parseInt(Objects.requireNonNull(ds.child("area").getValue()).toString());
+                            int price = Integer.parseInt(Objects.requireNonNull(ds.child("price").getValue()).toString());
+                            int rooms = Integer.parseInt(Objects.requireNonNull(ds.child("rooms").getValue()).toString());
+                            String kind = Objects.requireNonNull(ds.child("sellOrRent").getValue()).toString();
+                            String imagePath = Objects.requireNonNull(ds.child("imagePath").getValue()).toString();
+                            //String address = ds.child("sellOrRent").getValue().toString();
+                            Property aux = new Property();
+                            aux.setSellOrRent(kind);
+                            aux.setParking(parking);
+                            aux.setArea(area);
+                            aux.setPrice(price);
+                            aux.setRooms(rooms);
+                            aux.setImagePath(imagePath);
+                            mProperties.add(aux);
+                        }
+
+                    }
+                    mAdapter = new PropertyAdapter(mProperties, R.layout.publication);
+
+                    mAdapter.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Toast.makeText(getApplicationContext(),"Selecciono el:" + mProperties.get(mRecyclerView.getChildAdapterPosition(v)).getImagePath(), Toast.LENGTH_LONG ).show();
+                        }
+                    });
+                    mRecyclerView.setAdapter(mAdapter);
+
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
             }
         });
     }

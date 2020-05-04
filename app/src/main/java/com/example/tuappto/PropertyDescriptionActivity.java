@@ -9,7 +9,7 @@ import android.widget.Button;
 
 public class PropertyDescriptionActivity extends AppCompatActivity {
 
-    Button button;
+    public Button button;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {

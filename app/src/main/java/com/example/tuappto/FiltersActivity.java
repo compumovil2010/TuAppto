@@ -1,12 +1,9 @@
 package com.example.tuappto;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
-
 import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
@@ -22,7 +19,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
-
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -35,22 +31,22 @@ import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-
 import java.util.ArrayList;
 
 public class FiltersActivity extends FragmentActivity implements OnMapReadyCallback {
 
-    Button button;
+    public Button button;
     private GoogleMap mMap;
-    Location currentLocation;
-    FusedLocationProviderClient fusedLocationProviderClient;
-    Geocoder mGeocoder;
+    private Location currentLocation;
+    private FusedLocationProviderClient fusedLocationProviderClient;
+    public Geocoder mGeocoder;
 
-    SensorManager sensorManager;
-    Sensor lightSensor;
-    SensorEventListener lightSensorListener;
+    private SensorManager sensorManager;
+    private Sensor lightSensor;
+    private SensorEventListener lightSensorListener;
+
     private static final int REQUEST_CODE = 101;
-    ArrayList<LatLng> ofertas = new ArrayList<LatLng>();
+    ArrayList<LatLng> ofertas = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,7 +56,7 @@ public class FiltersActivity extends FragmentActivity implements OnMapReadyCallb
             fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
         }
         else {
-            requestPermission(FiltersActivity.this, Manifest.permission.ACCESS_FINE_LOCATION, "Acceso a localizacion necesario", REQUEST_CODE);
+            requestPermission(FiltersActivity.this);
         }
 
         mGeocoder = new Geocoder(getBaseContext());
@@ -74,12 +70,13 @@ public class FiltersActivity extends FragmentActivity implements OnMapReadyCallb
             }
         });
         sensorManager= (SensorManager) getSystemService(SENSOR_SERVICE);
+        assert sensorManager != null;
         lightSensor = sensorManager.getDefaultSensor(Sensor.TYPE_LIGHT);
         lightSensorListener = new SensorEventListener() {
             @Override
             public void onSensorChanged(SensorEvent event) {
                 if (mMap != null) {
-                    if (event.values[0] < 10000) {
+                    if (event.values[0] < 1000) {
                         Log.i("MAPS", "DARK MAP " + event.values[0]);
                         mMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(FiltersActivity.this,R.raw.style_json_night));
                     } else {
@@ -153,26 +150,21 @@ public class FiltersActivity extends FragmentActivity implements OnMapReadyCallb
 
 
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        switch (requestCode) {
-            case REQUEST_CODE: {
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    fetchLocation();
-                } else{
-                    Toast.makeText(this, "Permiso necesario para acceder a la camara", Toast.LENGTH_LONG).show();
-                }
-
+        if (requestCode == REQUEST_CODE) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                fetchLocation();
+            } else {
+                Toast.makeText(this, "Permiso necesario para acceder a la camara", Toast.LENGTH_LONG).show();
             }
-            break;
-
         }
     }
-    private void requestPermission(Activity context, String permiso, String justificacion, int idCode) {
+    private void requestPermission(Activity context) {
 
-        if (ContextCompat.checkSelfPermission(context, permiso) != PackageManager.PERMISSION_GRANTED) {
-            if (ActivityCompat.shouldShowRequestPermissionRationale(context, permiso)) {
-                Toast.makeText(context, justificacion, Toast.LENGTH_SHORT).show();
+        if (ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(context, Manifest.permission.ACCESS_FINE_LOCATION)) {
+                Toast.makeText(context, "Acceso a localizacion necesario", Toast.LENGTH_SHORT).show();
             }
-            ActivityCompat.requestPermissions(context, new String[]{permiso}, idCode);
+            ActivityCompat.requestPermissions(context, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, FiltersActivity.REQUEST_CODE);
         }
     }
 }
