@@ -4,15 +4,15 @@ import com.google.android.gms.maps.model.LatLng;
 
 public class Property {
 
-    public int price;
-    public LatLng ubication;
-    public String sellOrRent;
-    public int rooms;
-    public int area;
-    public int parking;
-    public String description;
-    public String ownerId;
-    public String imagePath;
+    private int price;
+    private LatLng location;
+    private String sellOrRent;
+    private int rooms;
+    private int area;
+    private int parking;
+    private String description;
+    private String ownerId;
+    private String imagePath;
 
     public Property() {
     }
@@ -25,12 +25,12 @@ public class Property {
         this.price = price;
     }
 
-    public LatLng getUbication() {
-        return ubication;
+    public LatLng getLocation() {
+        return location;
     }
 
-    public void setUbication(LatLng ubication) {
-        this.ubication = ubication;
+    public void setLocation(LatLng location) {
+        this.location = location;
     }
 
     public String getSellOrRent() {

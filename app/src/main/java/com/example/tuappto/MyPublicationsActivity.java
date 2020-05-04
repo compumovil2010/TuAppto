@@ -4,9 +4,10 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Toast;
 import com.example.tuappto.adapters.PropertyAdapter;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -15,6 +16,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.android.gms.maps.model.LatLng;
+
 import java.util.ArrayList;
 import java.util.Objects;
 import negocio.Property;
@@ -48,12 +51,13 @@ public class MyPublicationsActivity extends AppCompatActivity {
     private  void getPropertiesFromFirebase(){
 
         final String owner = fuser.getUid();
-        mDatabase.child("properties").addListenerForSingleValueEvent(new ValueEventListener() {
+        mDatabase.child("properties");
+        mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if(dataSnapshot.exists()){
-                    for(DataSnapshot ds: dataSnapshot.getChildren()){
-                        if(owner.equals(Objects.requireNonNull(ds.child("ownerId").getValue()).toString())){
+            public void onDataChange(@NonNull final DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                        if (owner.equals(Objects.requireNonNull(ds.child("ownerId").getValue()).toString())) {
                             int parking = Integer.parseInt(Objects.requireNonNull(ds.child("parking").getValue()).toString());
                             int area = Integer.parseInt(Objects.requireNonNull(ds.child("area").getValue()).toString());
                             int price = Integer.parseInt(Objects.requireNonNull(ds.child("price").getValue()).toString());
@@ -61,6 +65,9 @@ public class MyPublicationsActivity extends AppCompatActivity {
                             String kind = Objects.requireNonNull(ds.child("sellOrRent").getValue()).toString();
                             String imagePath = Objects.requireNonNull(ds.child("imagePath").getValue()).toString();
                             //String address = ds.child("sellOrRent").getValue().toString();
+                            double latitude = Double.parseDouble(Objects.requireNonNull(ds.child("location").child("latitude").getValue()).toString());
+                            double longitude = Double.parseDouble(Objects.requireNonNull(ds.child("location").child("longitude").getValue()).toString());
+                            LatLng latLng = new LatLng(latitude, longitude);
                             Property aux = new Property();
                             aux.setSellOrRent(kind);
                             aux.setParking(parking);
@@ -68,6 +75,7 @@ public class MyPublicationsActivity extends AppCompatActivity {
                             aux.setPrice(price);
                             aux.setRooms(rooms);
                             aux.setImagePath(imagePath);
+                            aux.setLocation(latLng);
                             mProperties.add(aux);
                         }
 
@@ -77,11 +85,23 @@ public class MyPublicationsActivity extends AppCompatActivity {
                     mAdapter.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            Toast.makeText(getApplicationContext(),"Selecciono el:" + mProperties.get(mRecyclerView.getChildAdapterPosition(v)).getImagePath(), Toast.LENGTH_LONG ).show();
+                            Bundle bundle = new Bundle();
+                            Intent i = new Intent(v.getContext(), EditActivity.class);
+                            bundle.putString("imagePath", mProperties.get(mRecyclerView.getChildAdapterPosition(v)).getImagePath());
+                            bundle.putInt("price", mProperties.get(mRecyclerView.getChildAdapterPosition(v)).getPrice());
+                            bundle.putString("sellOrRent", mProperties.get(mRecyclerView.getChildAdapterPosition(v)).getSellOrRent());
+                            bundle.putInt("rooms", mProperties.get(mRecyclerView.getChildAdapterPosition(v)).getRooms());
+                            bundle.putInt("area", mProperties.get(mRecyclerView.getChildAdapterPosition(v)).getArea());
+                            bundle.putInt("parking", mProperties.get(mRecyclerView.getChildAdapterPosition(v)).getParking());
+                            bundle.putString("description", mProperties.get(mRecyclerView.getChildAdapterPosition(v)).getDescription());
+                            bundle.putDouble("latitude", mProperties.get(mRecyclerView.getChildAdapterPosition(v)).getLocation().latitude);
+                            bundle.putDouble("longitude", mProperties.get(mRecyclerView.getChildAdapterPosition(v)).getLocation().longitude);
+                            i.putExtra("bundle", bundle);
+
+                            startActivity(i);
                         }
                     });
                     mRecyclerView.setAdapter(mAdapter);
-
                 }
             }
 

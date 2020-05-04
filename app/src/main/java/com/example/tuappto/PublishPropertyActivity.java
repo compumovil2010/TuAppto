@@ -86,7 +86,7 @@ public class PublishPropertyActivity extends FragmentActivity implements OnMapRe
     private SensorEventListener lightSensorListener;
 
     private int price;
-    public LatLng ubication;
+    public LatLng location;
     private String sellOrRent;
     private int rooms;
     private int area;
@@ -407,14 +407,14 @@ public class PublishPropertyActivity extends FragmentActivity implements OnMapRe
     private void publishProperty(){
 
         newProperty = new Property();
-        ubication = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
+        location = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
         newProperty.setArea(area);
         newProperty.setDescription(description);
         newProperty.setParking(parking);
         newProperty.setPrice(price);
         newProperty.setRooms(rooms);
         newProperty.setSellOrRent(sellOrRent);
-        newProperty.setUbication(ubication);
+        newProperty.setLocation(location);
         newProperty.setOwnerId(fuser.getUid());
 
         myRef = database.getReference(PATH_PROPERTY + key);

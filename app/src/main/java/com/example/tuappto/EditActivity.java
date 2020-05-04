@@ -15,9 +15,13 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.View;
+import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
+
+import com.google.android.gms.maps.model.LatLng;
 
 import java.io.FileNotFoundException;
 import java.io.InputStream;
@@ -31,7 +35,28 @@ public class EditActivity extends AppCompatActivity {
 
     public ImageButton imageButtonCamera;
     public ImageButton imageButtonGallery;
-    public ImageView imageViewUser;
+    public ImageView imageViewProperty;
+    public EditText editTextPrice;
+    public EditText editTextRooms;
+    public EditText editTextArea;
+    public EditText editTextParking;
+    public EditText editTextDescription;
+    public CheckBox checkBoxSell;
+    public CheckBox checkBoxRent;
+
+    public Bundle bundle;
+    public Intent intent;
+
+    public int price;
+    public int rooms;
+    public int area;
+    public int parking;
+    public String description;
+    public String sellOrRent;
+    public String imagePath;
+    public LatLng location;
+    public double latitude;
+    public  double longitude;
 
 
     @Override
@@ -41,7 +66,50 @@ public class EditActivity extends AppCompatActivity {
 
         imageButtonCamera = findViewById(R.id.imageButtonCamera);
         imageButtonGallery = findViewById(R.id.imageButtonGallery);
-        imageViewUser = findViewById(R.id.imageViewUser);
+        imageViewProperty = findViewById(R.id.imageViewProperty);
+        editTextPrice = findViewById(R.id.editTextPrice);
+        editTextRooms = findViewById(R.id.editTextRooms);
+        editTextArea = findViewById(R.id.editTextArea);
+        editTextParking = findViewById(R.id.editTextParking);
+        editTextDescription = findViewById(R.id.editTextDescription);
+        checkBoxSell = findViewById(R.id.checkBoxSell);
+        checkBoxRent = findViewById(R.id.checkBoxRent);
+
+        intent = getIntent();
+        bundle = intent.getBundleExtra("bundle");
+
+        assert bundle != null;
+        price = bundle.getInt("price");
+        rooms = bundle.getInt("rooms");
+        area = bundle.getInt("area");
+        parking = bundle.getInt("parking");
+        description = bundle.getString("description");
+        sellOrRent = bundle.getString("sellOrRent");
+        imagePath = bundle.getString("imagePath");
+        latitude = bundle.getDouble("latitude");
+        longitude = bundle.getDouble("longitude");
+        location = new LatLng(latitude,longitude);
+
+        editTextPrice.setText(price);
+        editTextArea.setText(area);
+        editTextRooms.setText(rooms);
+        editTextParking.setText(parking);
+        editTextDescription.setText(description);
+
+        if(sellOrRent.equals("rent")){
+            checkBoxSell.setChecked(true);
+        }
+        else if(sellOrRent.equals("sell")){
+            checkBoxRent.setChecked(true);
+        }
+        else{
+            checkBoxSell.setChecked(true);
+            checkBoxRent.setChecked(true);
+        }
+
+
+
+
 
         imageButtonCamera.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -97,7 +165,7 @@ public class EditActivity extends AppCompatActivity {
                         Bitmap imageBitmap;
                         if (extras != null) {
                             imageBitmap = (Bitmap) extras.get("data");
-                            imageViewUser.setImageBitmap(imageBitmap);
+                            imageViewProperty.setImageBitmap(imageBitmap);
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -114,7 +182,7 @@ public class EditActivity extends AppCompatActivity {
                         if (imageUri != null) {
                             imageStream = getContentResolver().openInputStream(imageUri);
                             final Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
-                            imageViewUser.setImageBitmap(selectedImage);
+                            imageViewProperty.setImageBitmap(selectedImage);
                         }
 
                     } catch (FileNotFoundException e) {
