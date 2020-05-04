@@ -103,7 +103,7 @@
 
             <ImageView
                 android:contentDescription="@string/user_image_description"
-                android:id="@+id/imageViewUser"
+                android:id="@+id/imageViewProperty"
                 android:layout_width="200dp"
                 android:layout_height="200dp"
                 android:layout_marginTop="32dp"
@@ -121,7 +121,7 @@
                 android:text="@string/price_text"
                 android:textSize="24sp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/imageViewUser" />
+                app:layout_constraintTop_toBottomOf="@+id/imageViewProperty" />
 
             <EditText
                 android:id="@+id/editTextPrice"
@@ -130,12 +130,11 @@
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="24dp"
                 android:layout_marginEnd="16dp"
-                android:autofillHints="provando ome"
                 android:ems="10"
                 android:inputType="number"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/textViewParking"
-                app:layout_constraintTop_toBottomOf="@+id/imageViewUser" />
+                app:layout_constraintTop_toBottomOf="@+id/imageViewProperty" />
 
             <TextView
                 android:id="@+id/textViewLocation"
@@ -173,7 +172,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/mapViewEditPublication">
 
                 <CheckBox
-                    android:id="@+id/checkBox"
+                    android:id="@+id/checkBoxSell"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="0.5"
@@ -181,7 +180,7 @@
                     android:textSize="24sp" />
 
                 <CheckBox
-                    android:id="@+id/checkBox2"
+                    android:id="@+id/checkBoxRent"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="0.5"
@@ -260,7 +259,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/editTextArea" />
 
             <EditText
-                android:id="@+id/editText8"
+                android:id="@+id/editTextParking"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
@@ -281,13 +280,15 @@
                 android:text="@string/description_text"
                 android:textSize="24sp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/editText8"/>
+                app:layout_constraintTop_toBottomOf="@+id/editTextParking"/>
 
             <EditText
                 android:id="@+id/editTextDescription"
-                android:layout_width="345dp"
+                android:layout_width="0dp"
                 android:layout_height="210dp"
+                android:layout_marginStart="16dp"
                 android:layout_marginTop="16dp"
+                android:layout_marginEnd="16dp"
                 android:ems="10"
                 android:gravity="start|top"
                 android:inputType="textMultiLine"
@@ -296,7 +297,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/textViewDescription" />
 
             <Button
-                android:id="@+id/button3"
+                android:id="@+id/buttonSave"
                 android:layout_width="300dp"
                 android:layout_height="45dp"
                 android:layout_marginTop="16dp"

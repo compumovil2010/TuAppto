@@ -43,7 +43,6 @@ public class ChooseActivity extends AppCompatActivity {
     private Uri imageUri;
     public InputStream imageStream;
     private FirebaseAuth mAuth;
-
     private StorageReference mStorage;
     private FirebaseDatabase database;
     private DatabaseReference myRef;
@@ -58,7 +57,7 @@ public class ChooseActivity extends AppCompatActivity {
         setContentView(R.layout.activity_choose);
 
         mAuth = FirebaseAuth.getInstance();
-        database= FirebaseDatabase.getInstance();
+        database = FirebaseDatabase.getInstance();
 
         bundle = getIntent().getBundleExtra("bundle");
         assert bundle != null;

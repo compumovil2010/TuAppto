@@ -66,6 +66,7 @@ public class PrincipalActivity extends AppCompatActivity {
             public void onClick(View view) {
                 signInUser(emailET.getText().toString(),passwordET.getText().toString());
                 //startActivity(new Intent(view.getContext(),SellerMenuActivity.class));
+
             }
         });
 
