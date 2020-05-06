@@ -28,12 +28,11 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
+            android:id="@+id/imageView"
             android:layout_width="250dp"
             android:layout_height="250dp"
             android:layout_marginTop="32dp"
-            android:layout_marginBottom="32dp"
             android:contentDescription="@string/principal_image_description"
-            app:layout_constraintBottom_toTopOf="@+id/editEmail"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.496"
             app:layout_constraintStart_toStartOf="parent"
@@ -44,24 +43,24 @@
             android:id="@+id/editEmail"
             android:layout_width="265dp"
             android:layout_height="35dp"
-            android:layout_marginBottom="32dp"
+            android:layout_marginTop="64dp"
             android:background="@drawable/edit_text"
             android:drawableStart="@drawable/user"
             android:drawablePadding="10dp"
             android:ems="10"
             android:hint="@string/user_text"
-            android:inputType="textPersonName"
+            android:inputType="textEmailAddress"
             android:paddingStart="10dp"
             android:paddingEnd="10dp"
-            app:layout_constraintBottom_toTopOf="@+id/editPassword"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/imageView" />
 
         <EditText
             android:id="@+id/editPassword"
             android:layout_width="265dp"
             android:layout_height="35dp"
-            android:layout_marginBottom="32dp"
+            android:layout_marginTop="24dp"
             android:background="@drawable/edit_text"
             android:drawableStart="@drawable/key"
             android:drawablePadding="10dp"
@@ -70,35 +69,35 @@
             android:inputType="textPassword"
             android:paddingStart="10dp"
             android:paddingEnd="10dp"
-            app:layout_constraintBottom_toTopOf="@+id/buttonEnter"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/editEmail" />
 
         <Button
             android:id="@+id/buttonEnter"
             android:layout_width="265dp"
             android:layout_height="35dp"
-            android:layout_marginBottom="32dp"
+            android:layout_marginTop="32dp"
             android:background="@drawable/button"
             android:text="@string/log_in_text_button"
             android:textColor="@color/colorWhite"
-            app:layout_constraintBottom_toTopOf="@+id/buttonRegister"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.498"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/editPassword" />
 
         <Button
             android:id="@+id/buttonRegister"
             android:layout_width="265dp"
             android:layout_height="35dp"
-            android:layout_marginBottom="128dp"
+            android:layout_marginTop="24dp"
             android:background="@drawable/button"
             android:text="@string/check_in_button"
             android:textColor="@color/colorWhite"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.498"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/buttonEnter" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

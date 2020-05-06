@@ -8,8 +8,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Toast;
-
 import com.example.tuappto.adapters.PropertyAdapter;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -19,7 +17,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.android.gms.maps.model.LatLng;
-
 import java.util.ArrayList;
 import java.util.Objects;
 import negocio.Property;
@@ -66,6 +63,7 @@ public class MyPublicationsActivity extends AppCompatActivity {
                             String kind = Objects.requireNonNull(ds.child("sellOrRent").getValue()).toString();
                             String imagePath = Objects.requireNonNull(ds.child("imagePath").getValue()).toString();
                             String description = Objects.requireNonNull(ds.child("description").getValue()).toString();
+                            String ownerId = Objects.requireNonNull(ds.child("ownerId").getValue()).toString();
                             //String address = ds.child("sellOrRent").getValue().toString();
                             double latitude = Double.parseDouble(Objects.requireNonNull(ds.child("location").child("latitude").getValue()).toString());
                             double longitude = Double.parseDouble(Objects.requireNonNull(ds.child("location").child("longitude").getValue()).toString());
@@ -79,6 +77,7 @@ public class MyPublicationsActivity extends AppCompatActivity {
                             aux.setImagePath(imagePath);
                             aux.setLocation(latLng);
                             aux.setDescription(description);
+                            aux.setOwnerId(ownerId);
                             mProperties.add(aux);
                         }
 
@@ -97,13 +96,13 @@ public class MyPublicationsActivity extends AppCompatActivity {
                             bundle.putInt("area", mProperties.get(mRecyclerView.getChildAdapterPosition(v)).getArea());
                             bundle.putInt("parking", mProperties.get(mRecyclerView.getChildAdapterPosition(v)).getParking());
                             bundle.putString("description", mProperties.get(mRecyclerView.getChildAdapterPosition(v)).getDescription());
-
-                            Toast.makeText(v.getContext(),String.valueOf(mProperties.get(mRecyclerView.getChildAdapterPosition(v)).getDescription()),Toast.LENGTH_LONG).show();
                             bundle.putDouble("latitude", mProperties.get(mRecyclerView.getChildAdapterPosition(v)).getLocation().latitude);
                             bundle.putDouble("longitude", mProperties.get(mRecyclerView.getChildAdapterPosition(v)).getLocation().longitude);
+                            bundle.putString("ownerId", mProperties.get(mRecyclerView.getChildAdapterPosition(v)).getOwnerId());
                             i.putExtra("bundle", bundle);
 
                             startActivity(i);
+                            finish();
                         }
                     });
                     mRecyclerView.setAdapter(mAdapter);

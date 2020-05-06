@@ -26,6 +26,8 @@ import android.widget.Toast;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreSettings;
 import com.google.firebase.storage.FirebaseStorage;
@@ -36,12 +38,15 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 
+import negocio.Property;
+
 public class EditActivity extends AppCompatActivity {
 
     private static final int PERMISSION_CAMERA_ID = 1;
     private static final int PERMISSION_GALLERY_ID = 2;
     private static final int REQUEST_IMAGE_CAPTURE = 3;
     private static final int IMAGE_PICKER_REQUEST = 4;
+    public static final String PATH_PROPERTY = "properties/";
 
     public ImageButton imageButtonCamera;
     public ImageButton imageButtonGallery;
@@ -65,6 +70,8 @@ public class EditActivity extends AppCompatActivity {
     public String sellOrRent;
     public String imagePath;
     public LatLng location;
+    public String propertyId;
+    public String ownerId;
     public double latitude;
     public  double longitude;
 
@@ -72,6 +79,8 @@ public class EditActivity extends AppCompatActivity {
     private static FirebaseFirestoreSettings settings;
     private static StorageReference mStorageRef;
     private StorageReference mStorage;
+    private FirebaseDatabase database;
+    private DatabaseReference myRef;
 
     private Uri imageUri;
 
@@ -97,6 +106,8 @@ public class EditActivity extends AppCompatActivity {
         checkBoxSell = findViewById(R.id.checkBoxSell);
         checkBoxRent = findViewById(R.id.checkBoxRent);
         buttonSave = findViewById(R.id.buttonSave);
+        database = FirebaseDatabase.getInstance();
+        myRef = database.getReference();
 
         intent = getIntent();
         bundle = intent.getBundleExtra("bundle");
@@ -111,6 +122,7 @@ public class EditActivity extends AppCompatActivity {
         imagePath = bundle.getString("imagePath");
         latitude = bundle.getDouble("latitude");
         longitude = bundle.getDouble("longitude");
+        ownerId = bundle.getString("ownerId");
         location = new LatLng(latitude,longitude);
 
         editTextPrice.setText(String.valueOf(price));
@@ -119,8 +131,7 @@ public class EditActivity extends AppCompatActivity {
         editTextParking.setText(String.valueOf(parking));
         editTextDescription.setText(description);
 
-        downloadPhoto(imagePath,imageViewProperty);
-        Toast.makeText(this,description,Toast.LENGTH_LONG).show();
+        downloadPhoto(imagePath, imageViewProperty);
 
         if(sellOrRent.equals("rent")){
             checkBoxRent.setChecked(true);
@@ -136,8 +147,14 @@ public class EditActivity extends AppCompatActivity {
         buttonSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                isChanged();
-                upLoadImage();
+                if(allFilled()){
+                    if(isChanged()){
+                        propertyId = imagePath.substring(18,(imagePath.length()-4));
+                        upLoadImage();
+                        change();
+                        finish();
+                    }
+                }
             }
         });
 
@@ -268,19 +285,12 @@ public class EditActivity extends AppCompatActivity {
     }
 
     private boolean isChanged() {
-        if (
-            editTextPrice.getText().toString().equals(String.valueOf(price))&&
-        editTextArea.getText().toString().equals(String.valueOf(area))&&
-        editTextRooms.getText().toString().equals(String.valueOf(rooms))&&
-        editTextParking.getText().toString().equals(String.valueOf(parking))&&
-        editTextDescription.getText().toString().equals(String.valueOf(description))){
-            Toast.makeText(this, "False", Toast.LENGTH_LONG).show();
-            return false;
-        }
-
-        Toast.makeText(this, "true", Toast.LENGTH_LONG).show();
-
-        return true;
+        return !editTextPrice.getText().toString().equals(String.valueOf(price)) ||
+                !editTextArea.getText().toString().equals(String.valueOf(area)) ||
+                !editTextRooms.getText().toString().equals(String.valueOf(rooms)) ||
+                !editTextParking.getText().toString().equals(String.valueOf(parking)) ||
+                !editTextDescription.getText().toString().equals(String.valueOf(description)) ||
+                (imageUri == null);
     }
 
     private void upLoadImage(){
@@ -293,5 +303,41 @@ public class EditActivity extends AppCompatActivity {
                 }
             });
         }
+    }
+
+    private void change(){
+        Property newProperty = new Property();
+        newProperty.setArea(Integer.parseInt(editTextArea.getText().toString()));
+        newProperty.setDescription(editTextDescription.getText().toString());
+        newProperty.setParking(Integer.parseInt(editTextParking.getText().toString()));
+        newProperty.setPrice(Integer.parseInt(editTextPrice.getText().toString()));
+        newProperty.setRooms(Integer.parseInt(editTextRooms.getText().toString()));
+
+        if(checkBoxSell.isChecked() && checkBoxRent.isChecked()){
+            newProperty.setSellOrRent("both");
+        }
+        else if(!checkBoxSell.isChecked() && checkBoxRent.isChecked()){
+            newProperty.setSellOrRent("rent");
+        }
+        else{
+            newProperty.setSellOrRent("sell");
+        }
+
+        newProperty.setLocation(location);
+        newProperty.setOwnerId(ownerId);
+        newProperty.setImagePath(imagePath);
+
+        myRef = database.getReference(PATH_PROPERTY + propertyId);
+        myRef.setValue(newProperty);
+
+    }
+
+    private boolean allFilled() {
+        return !editTextPrice.getText().toString().isEmpty()||
+                !editTextRooms.getText().toString().isEmpty()||
+                !editTextArea.getText().toString().isEmpty()||
+                !editTextParking.getText().toString().isEmpty()||
+                !editTextDescription.getText().toString().isEmpty()||
+                (checkBoxRent.isChecked()||checkBoxSell.isChecked());
     }
 }

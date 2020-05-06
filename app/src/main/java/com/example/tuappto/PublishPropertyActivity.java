@@ -94,6 +94,7 @@ public class PublishPropertyActivity extends FragmentActivity implements OnMapRe
     private String description;
     private String key;
 
+
     private EditText editTextprice;
     private EditText editTextrooms;
     private EditText editTextarea;
@@ -416,6 +417,7 @@ public class PublishPropertyActivity extends FragmentActivity implements OnMapRe
         newProperty.setSellOrRent(sellOrRent);
         newProperty.setLocation(location);
         newProperty.setOwnerId(fuser.getUid());
+        newProperty.setImagePath("Images/Properties/" + key + ".jpg");
 
         myRef = database.getReference(PATH_PROPERTY + key);
         myRef.setValue(newProperty);
@@ -429,8 +431,6 @@ public class PublishPropertyActivity extends FragmentActivity implements OnMapRe
                 }
             });
         }
-        newProperty.setImagePath("Images/Properties/"+key+".jpg");
-        myRef.setValue(newProperty);
 
         myRef = database.getReference(PATH_OWNERS).child(fuser.getUid());
 
