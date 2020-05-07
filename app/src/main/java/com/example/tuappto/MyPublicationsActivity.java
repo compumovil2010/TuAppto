@@ -48,7 +48,6 @@ public class MyPublicationsActivity extends AppCompatActivity {
     }
 
     private  void getPropertiesFromFirebase(){
-
         final String owner = fuser.getUid();
         mDatabase.child("properties").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
