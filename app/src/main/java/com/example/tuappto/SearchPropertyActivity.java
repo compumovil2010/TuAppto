@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageButton;
 import com.example.tuappto.adapters.PropertyAdapter;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -61,7 +62,12 @@ public class SearchPropertyActivity extends AppCompatActivity {
                         int rooms = Integer.parseInt(Objects.requireNonNull(ds.child("rooms").getValue()).toString());
                         String kind = Objects.requireNonNull(ds.child("sellOrRent").getValue()).toString();
                         String imagePath = Objects.requireNonNull(ds.child("imagePath").getValue()).toString();
+                        String description = Objects.requireNonNull(ds.child("description").getValue()).toString();
+                        String ownerId = Objects.requireNonNull(ds.child("ownerId").getValue()).toString();
                         //String address = ds.child("sellOrRent").getValue().toString();
+                        double latitude = Double.parseDouble(Objects.requireNonNull(ds.child("location").child("latitude").getValue()).toString());
+                        double longitude = Double.parseDouble(Objects.requireNonNull(ds.child("location").child("longitude").getValue()).toString());
+                        LatLng latLng = new LatLng(latitude, longitude);
                         Property aux = new Property();
                         aux.setSellOrRent(kind);
                         aux.setParking(parking);
@@ -69,10 +75,34 @@ public class SearchPropertyActivity extends AppCompatActivity {
                         aux.setPrice(price);
                         aux.setRooms(rooms);
                         aux.setImagePath(imagePath);
+                        aux.setLocation(latLng);
+                        aux.setDescription(description);
+                        aux.setOwnerId(ownerId);
                         mProperties.add(aux);
                     }
 
                     mAdapter = new PropertyAdapter(mProperties, R.layout.publication);
+
+                    mAdapter.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Bundle bundle = new Bundle();
+                            Intent i = new Intent(v.getContext(), PropertyDescriptionActivity.class);
+                            bundle.putString("imagePath", mProperties.get(mRecyclerView.getChildAdapterPosition(v)).getImagePath());
+                            bundle.putInt("price", mProperties.get(mRecyclerView.getChildAdapterPosition(v)).getPrice());
+                            bundle.putString("sellOrRent", mProperties.get(mRecyclerView.getChildAdapterPosition(v)).getSellOrRent());
+                            bundle.putInt("rooms", mProperties.get(mRecyclerView.getChildAdapterPosition(v)).getRooms());
+                            bundle.putInt("area", mProperties.get(mRecyclerView.getChildAdapterPosition(v)).getArea());
+                            bundle.putInt("parking", mProperties.get(mRecyclerView.getChildAdapterPosition(v)).getParking());
+                            bundle.putString("description", mProperties.get(mRecyclerView.getChildAdapterPosition(v)).getDescription());
+                            bundle.putDouble("latitude", mProperties.get(mRecyclerView.getChildAdapterPosition(v)).getLocation().latitude);
+                            bundle.putDouble("longitude", mProperties.get(mRecyclerView.getChildAdapterPosition(v)).getLocation().longitude);
+                            bundle.putString("ownerId", mProperties.get(mRecyclerView.getChildAdapterPosition(v)).getOwnerId());
+                            i.putExtra("bundle", bundle);
+                            startActivity(i);
+                        }
+                    });
+
                     mRecyclerView.setAdapter(mAdapter);
                 }
             }

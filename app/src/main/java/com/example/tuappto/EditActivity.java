@@ -47,6 +47,8 @@ public class EditActivity extends AppCompatActivity {
     private static final int REQUEST_IMAGE_CAPTURE = 3;
     private static final int IMAGE_PICKER_REQUEST = 4;
     public static final String PATH_PROPERTY = "properties/";
+    private static FirebaseFirestoreSettings settings;
+    private static StorageReference mStorageRef;
 
     public ImageButton imageButtonCamera;
     public ImageButton imageButtonGallery;
@@ -73,11 +75,9 @@ public class EditActivity extends AppCompatActivity {
     public String propertyId;
     public String ownerId;
     public double latitude;
-    public  double longitude;
+    public double longitude;
 
     private FirebaseFirestore db;
-    private static FirebaseFirestoreSettings settings;
-    private static StorageReference mStorageRef;
     private StorageReference mStorage;
     private FirebaseDatabase database;
     private DatabaseReference myRef;
@@ -123,7 +123,7 @@ public class EditActivity extends AppCompatActivity {
         latitude = bundle.getDouble("latitude");
         longitude = bundle.getDouble("longitude");
         ownerId = bundle.getString("ownerId");
-        location = new LatLng(latitude,longitude);
+        location = new LatLng(latitude, longitude);
 
         editTextPrice.setText(String.valueOf(price));
         editTextArea.setText(String.valueOf(area));

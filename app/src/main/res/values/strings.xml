@@ -36,12 +36,13 @@
     <string name="properties_text">PROPIEDADES</string>
 
     <string name="upload_photo_text">Cargar foto</string>
-    <string name="price_text">Precio: $ </string>
+    <string name="price_text">Precio: </string>
     <string name="location_text">Ubicación: </string>
     <string name="sale_text">Venta</string>
     <string name="rent_text">Arriendo</string>
     <string name="rooms_text">Habitaciones: </string>
     <string name="area_text">Área: </string>
+    <string name="kind_text">Tipo: </string>
     <string name="meters_text">mts</string>
     <string name="parking_lot_text">Parqueaderos: </string>
     <string name="description_text">Descripción: </string>
@@ -50,6 +51,9 @@
     <string name="name_text">Nombre</string>
     <string name="second_name_text">Apellido</string>
     <string name="phone_string">Telefono</string>
+    <string name="on_sale_text">en Venta</string>
+    <string name="on_rent_text">en Arriendo</string>
+    <string name="on_both">en Venta y Arriendo</string>
 
     <string name="make_date_button">AGENDAR CITA</string>
     <string name="temporal_button">TEMPORAL</string>
@@ -62,10 +66,15 @@
     <string name="check_in_button">REGISTRARSE</string>
     <string name="chat_button">CHAT</string>
     <string name="add_to_interest_button">AGREGAR A INTERESES</string>
+    <string name="remove_interest_button">REMOVER DE INTERESES</string>
     <string name="publish_button">PUBLICAR</string>
     <string name="continue_button">CONTINUAR</string>
 
     <string name="log_out_option">Cerrar sesión</string>
+
+    <string name="zero">0</string>
+    <string name="empty_description">No hay descripción por el momento</string>
+    <string name="empty_kind">No hay tipo</string>
 
 
     <string name="chat_1">Hola, buenos dias</string>
