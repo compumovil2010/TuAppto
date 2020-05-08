@@ -3,16 +3,18 @@ package negocio;
 public class User {
     String email;
     String password;
-    String Name;
+    String name;
     String secondname;
-    int phone;
+    String imagePath;
+    Long phone;
 
-    public User(String email, String password, String name, String secondname, int phone) {
+    public User(String email, String password, String name, String secondname, Long phone, String imagePath) {
         this.email = email;
         this.password = password;
-        Name = name;
+        this.name = name;
         this.secondname = secondname;
         this.phone = phone;
+        this.imagePath = imagePath;
     }
 
     public User() {
@@ -36,11 +38,11 @@ public class User {
     }
 
     public String getName() {
-        return Name;
+        return name;
     }
 
     public void setName(String name) {
-        Name = name;
+        this.name = name;
     }
 
     public String getSecondname() {
@@ -51,11 +53,19 @@ public class User {
         this.secondname = secondname;
     }
 
-    public int getPhone() {
+    public Long getPhone() {
         return phone;
     }
 
-    public void setPhone(int phone) {
+    public void setPhone(Long phone) {
         this.phone = phone;
+    }
+
+    public void setImagePath(String imagePath){
+        this.imagePath = imagePath;
+    }
+
+    public String getImagePath() {
+        return imagePath;
     }
 }

@@ -9,7 +9,7 @@ import android.widget.Button;
 
 public class ChatListActivity extends AppCompatActivity {
 
-    Button button;
+    public Button button;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

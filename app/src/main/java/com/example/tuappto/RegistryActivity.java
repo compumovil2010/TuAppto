@@ -4,7 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-
+import androidx.core.content.FileProvider;
 import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
@@ -20,13 +20,10 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
-
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.util.regex.Pattern;
 
 public class RegistryActivity extends AppCompatActivity {
 
@@ -34,16 +31,16 @@ public class RegistryActivity extends AppCompatActivity {
     private static final int PERMISSION_GALLERY_ID = 2;
     private static final int REQUEST_IMAGE_CAPTURE = 3;
     private static final int IMAGE_PICKER_REQUEST = 4;
-    public static final String PATH_USERS = "users/";
-
-    ImageButton imageButtonCamera;
-    ImageButton imageButtonGallery;
-    ImageView imageViewUser;
-    Button buttonContinue;
-    FirebaseDatabase database;
-    DatabaseReference myRef;
-    EditText correo, nombre, apellido, contraseña, telefono;
-    FirebaseAuth mAuth;
+    private EditText email;
+    private EditText name;
+    private EditText password;
+    private EditText phone;
+    private EditText secondName;
+    private ImageView imageViewUser;
+    private Uri imageUri;
+    public ImageButton imageButtonCamera;
+    public ImageButton imageButtonGallery;
+    public Button buttonContinue;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,23 +51,47 @@ public class RegistryActivity extends AppCompatActivity {
         imageButtonCamera = findViewById(R.id.imageButtonCamera);
         imageButtonGallery = findViewById(R.id.imageButtonGallery);
         imageViewUser = findViewById(R.id.imageViewUser);
-        correo = findViewById(R.id.editTextUser);
-        nombre = findViewById(R.id.editTextName);
-        apellido = findViewById(R.id.editTextSecondName);
-        contraseña = findViewById(R.id.editTextPassword);
-        telefono = findViewById(R.id.editTextPhone);
-        mAuth = FirebaseAuth.getInstance();
+        name = findViewById(R.id.editTextName);
+        email = findViewById(R.id.editTextUser);
+        phone = findViewById(R.id.editTextPhone);
+        password = findViewById(R.id.editTextPassword);
+        secondName = findViewById(R.id.editTextSecondName);
 
         buttonContinue.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(view.getContext(),ChooseActivity.class);
-                intent.putExtra("correo", correo.getText().toString());
-                intent.putExtra("nombre", nombre.getText().toString());
-                intent.putExtra("apellido", apellido.getText().toString());
-                intent.putExtra("telefono", telefono.getText().toString());
-                intent.putExtra("contraseña", contraseña.getText().toString());
-                startActivity(intent);
+
+                if(allFilled()){
+                    if(emailValidation(email.getText().toString())){
+                        if(password.getText().toString().length() > 5){
+                            Bundle bundle = new Bundle();
+                            Intent i = new Intent(view.getContext(),ChooseActivity.class);
+
+                            bundle.putString("name",name.getText().toString());
+                            bundle.putString("email",email.getText().toString());
+                            bundle.putLong("phone",Long.parseLong(phone.getText().toString()));
+                            bundle.putString("password",password.getText().toString());
+                            bundle.putString("secondName",secondName.getText().toString());
+
+                            i.putExtra("bundle",bundle);
+                            if(imageUri != null) {
+                                i.putExtra("uri", imageUri);
+                            }
+
+                            i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                            startActivity(i);
+                        }
+                        else{
+                            Toast.makeText(RegistryActivity.this, "la contraseña debe tener mas de 5 caracteres.", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                    else{
+                        Toast.makeText(RegistryActivity.this, "ingrese un email valido.", Toast.LENGTH_SHORT).show();
+                    }
+                }
+                else{
+                    Toast.makeText(RegistryActivity.this, "Complete todos los campos.", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
@@ -101,6 +122,19 @@ public class RegistryActivity extends AppCompatActivity {
         });
     }
 
+    private boolean emailValidation(String email) {
+        Pattern pattern = Patterns.EMAIL_ADDRESS;
+        return pattern.matcher(email).matches();
+    }
+
+    private boolean allFilled() {
+        return !name.getText().toString().isEmpty()||
+                !email.getText().toString().isEmpty()||
+                !phone.getText().toString().isEmpty()||
+                !password.getText().toString().isEmpty()||
+                !secondName.getText().toString().isEmpty();
+    }
+
     private void requestPermission(Activity context, String permiso, String justificacion, int idCode) {
 
         if (ContextCompat.checkSelfPermission(context, permiso) != PackageManager.PERMISSION_GRANTED) {
@@ -114,6 +148,10 @@ public class RegistryActivity extends AppCompatActivity {
     private void takePhoto() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+            takePictureIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            File foto = new File(getExternalFilesDir(null),"test.jpg");
+            imageUri = FileProvider.getUriForFile(this,getPackageName()+".provider",foto);
+            takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT,imageUri);
             startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
         }
     }
@@ -124,12 +162,10 @@ public class RegistryActivity extends AppCompatActivity {
             case REQUEST_IMAGE_CAPTURE:
                 if (resultCode == RESULT_OK) {
                     try {
-                        Bundle extras = data.getExtras();
-                        Bitmap imageBitmap;
-                        if (extras != null) {
-                            imageBitmap = (Bitmap) extras.get("data");
-                            imageViewUser.setImageBitmap(imageBitmap);
-                        }
+                        Bitmap bitmap = BitmapFactory.decodeFile(getExternalFilesDir(null)+"/test.jpg");
+
+                        imageViewUser.setImageBitmap(bitmap);
+
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -139,12 +175,11 @@ public class RegistryActivity extends AppCompatActivity {
             case IMAGE_PICKER_REQUEST:
                 if (resultCode == RESULT_OK) {
                     try {
-                        final Uri imageUri = data.getData();
+                        imageUri = data.getData();
                         final InputStream imageStream;
-
                         if (imageUri != null) {
                             imageStream = getContentResolver().openInputStream(imageUri);
-                            final Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
+                            Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
                             imageViewUser.setImageBitmap(selectedImage);
                         }
 
@@ -152,8 +187,8 @@ public class RegistryActivity extends AppCompatActivity {
                         e.printStackTrace();
                     }
                 }
-
         }
+
     }
 
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -161,11 +196,9 @@ public class RegistryActivity extends AppCompatActivity {
             case PERMISSION_CAMERA_ID: {
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     takePhoto();
-
                 } else{
                     Toast.makeText(this, "Permiso necesario para acceder a la camara", Toast.LENGTH_LONG).show();
                 }
-
             }
             break;
 
@@ -182,4 +215,5 @@ public class RegistryActivity extends AppCompatActivity {
             break;
         }
     }
+
 }

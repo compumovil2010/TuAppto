@@ -4,11 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Client extends User {
-    List<Integer> favoritos;
-    List<Integer> interes;
+    List<String> favoritos;
+    List<String> interes;
 
-    public Client(String email, String password, String name, String secondname, int phone) {
-        super(email, password, name, secondname, phone);
+    public Client(String email, String password, String name, String secondname, Long phone, String imagePath) {
+        super(email, password, name, secondname, phone, imagePath);
 
         favoritos = new ArrayList<>();
         interes = new ArrayList<>();
@@ -20,19 +20,19 @@ public class Client extends User {
         interes = new ArrayList<>();
     }
 
-    public List<Integer> getFavoritos() {
+    public List<String> getFavoritos() {
         return favoritos;
     }
 
-    public void setFavoritos(List<Integer> favoritos) {
+    public void setFavoritos(List<String> favoritos) {
         this.favoritos = favoritos;
     }
 
-    public List<Integer> getInteres() {
+    public List<String> getInteres() {
         return interes;
     }
 
-    public void setInteres(List<Integer> interes) {
+    public void setInteres(List<String> interes) {
         this.interes = interes;
     }
 }

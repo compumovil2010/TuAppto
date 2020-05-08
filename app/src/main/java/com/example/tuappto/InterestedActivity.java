@@ -9,7 +9,7 @@ import android.widget.Button;
 
 public class InterestedActivity extends AppCompatActivity {
 
-    Button buttonChat;
+    public Button buttonChat;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,9 +20,10 @@ public class InterestedActivity extends AppCompatActivity {
 
         buttonChat.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                startActivity(new Intent(view.getContext(),ChatActivity.class));
+            public void onClick(View v) {
+                startActivity(new Intent(v.getContext(),ChatActivity.class));
             }
         });
+
     }
 }

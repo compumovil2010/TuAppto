@@ -1,66 +1,182 @@
 package com.example.tuappto;
 
 import androidx.appcompat.app.AppCompatActivity;
-
+import negocio.Client;
+import negocio.Owner;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-
-import com.example.tuappto.data.Client;
-import com.example.tuappto.data.Owner;
-import com.example.tuappto.data.User;
+import android.widget.Toast;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ChooseActivity extends AppCompatActivity {
 
-    Button buttonUser;
-    Button buttonOwner;
-    FirebaseAuth mAuth;
-    FirebaseDatabase database;
-    DatabaseReference myRef;
-    public static final String PATH_USERS = "users/";
-    public static final String PATH_OWNERS = "owners/";
+    public Bundle bundle;
+    public Button duenio;
+    public Button cliente;
+    public Client newClient;
+    public Intent intent;
+    private Long phone;
+    public Owner newOwner;
+    private String email;
+    private String password;
+    private String name;
+    private String secondName;
+    private Uri imageUri;
+    public InputStream imageStream;
+    private FirebaseAuth mAuth;
+    private StorageReference mStorage;
+    private FirebaseDatabase database;
+    private DatabaseReference myRef;
+
+    public static final String PATH_CLIENTS="clients/";
+    public static final String PATH_OWNERS="owners/";
+    private String tipo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_choose);
-        buttonUser = findViewById(R.id.button2);
-        buttonOwner = findViewById(R.id.buttonOwner);
-        final String valorCorreo = getIntent().getStringExtra("correo");
-        final String valorNombre = getIntent().getStringExtra("nombre");
-        final String valorApellido = getIntent().getStringExtra("apellido");
-        final String valorContraseña = getIntent().getStringExtra("contraseña");
-        final String valorTelefono = getIntent().getStringExtra("telefono");
-        System.out.println(valorCorreo);
 
-        buttonUser.setOnClickListener(new View.OnClickListener() {
+        mAuth = FirebaseAuth.getInstance();
+        database = FirebaseDatabase.getInstance();
+
+        bundle = getIntent().getBundleExtra("bundle");
+        assert bundle != null;
+        email = bundle.getString("email");
+        password = bundle.getString("password");
+        name = bundle.getString("name");
+        secondName = bundle.getString("secondName");
+        phone = bundle.getLong("phone");
+
+        intent = getIntent();
+        imageUri = intent.getParcelableExtra("uri");
+        try {
+            imageStream = getContentResolver().openInputStream(imageUri);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        mStorage = FirebaseStorage.getInstance().getReference();
+        duenio = findViewById(R.id.buttonOwner);
+        cliente = findViewById(R.id.buttonClient);
+
+        duenio.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(view.getContext(),PrincipalActivity.class);
-                myRef = database.getReference(PATH_USERS+mAuth.getUid());
-                startActivity(intent);
-                Client client = new Client(valorNombre,valorApellido,valorCorreo,valorContraseña,valorTelefono);
-                myRef.setValue(client);
+                tipo = "duenio";
+                createUser();
             }
         });
-        buttonOwner.setOnClickListener(new View.OnClickListener() {
+        cliente.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(view.getContext(),PrincipalActivity.class);
-                myRef = database.getReference(PATH_OWNERS+mAuth.getUid());
-                startActivity(intent);
-                Owner owner = new Owner(valorNombre,valorApellido,valorCorreo,valorContraseña,valorTelefono);
-                myRef.setValue(owner);
+                tipo="cliente";
+                createUser();
             }
         });
+    }
 
+    private void createUser() {
+        mAuth.createUserWithEmailAndPassword(email, password)
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    private static final String TAG = "tag";
+
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            Log.d(TAG, "createUserWithEmail:success");
+                            FirebaseUser fuser = mAuth.getCurrentUser();
+                            if (tipo.equals("duenio")){
+                                assert fuser != null;
+                                createOwner(fuser);
+                            }
+                            else{
+                                assert fuser != null;
+                                createClient(fuser);
+                            }
+
+                        } else {
+                            Log.w(TAG, "createUserWithEmail:failure", task.getException());
+                            Toast.makeText(ChooseActivity.this, "Authentication failed."+ email +password,
+                                    Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+    }
+
+    private void createClient(FirebaseUser fuser) {
+        newClient = new Client();
+        newClient.setEmail(email);
+        newClient.setPassword(password);
+        newClient.setName(name);
+        newClient.setSecondname(secondName);
+        newClient.setPhone(phone);
+
+        myRef = database.getReference(PATH_CLIENTS + fuser.getUid());
+        myRef.setValue(newClient);
+
+        if(imageUri != null) {
+            StorageReference folder = mStorage.child("Images").child("Clients").child(fuser.getUid());
+            folder.putFile(imageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    Log.i("FBApp", "Succesfully upload image");
+                }
+            });
+        }
+
+        Intent intent = new Intent(getBaseContext(), BuyerMenuActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.putExtra("email", newClient.getEmail());
+        startActivity(intent);
+        finish();
 
     }
 
+    private void createOwner(FirebaseUser fuser) {
+        newOwner = new Owner();
+        List<String> aux = new ArrayList<>();
+        aux.add("null");
+        newOwner.setEmail(email);
+        newOwner.setPassword(password);
+        newOwner.setName(name);
+        newOwner.setSecondname(secondName);
+        newOwner.setPhone(phone);
+        newOwner.setProperties(aux);
 
+        myRef = database.getReference(PATH_OWNERS + fuser.getUid());
+        myRef.setValue(newOwner);
+
+        if(imageUri != null) {
+            StorageReference folder = mStorage.child("Images").child("Owners").child(fuser.getUid());
+            folder.putFile(imageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    Log.i("FBApp", "Succesfully upload image");
+                }
+            });
+        }
+
+        Intent intent = new Intent(getBaseContext(), SellerMenuActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.putExtra("email", newOwner.getEmail());
+        startActivity(intent);
+        finish();
+    }
 
 }
