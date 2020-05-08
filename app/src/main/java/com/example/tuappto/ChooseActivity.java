@@ -128,14 +128,15 @@ public class ChooseActivity extends AppCompatActivity {
         newClient.setEmail(email);
         newClient.setPassword(password);
         newClient.setName(name);
-        newClient.setSecondname(secondName);
+        newClient.setSecondName(secondName);
         newClient.setPhone(phone);
+        newClient.setImagePath("Images/Clients/" + fuser.getUid() + ".jpg");
 
         myRef = database.getReference(PATH_CLIENTS + fuser.getUid());
         myRef.setValue(newClient);
 
         if(imageUri != null) {
-            StorageReference folder = mStorage.child("Images").child("Clients").child(fuser.getUid());
+            StorageReference folder = mStorage.child("Images").child("Clients").child(fuser.getUid()+".jpg");
             folder.putFile(imageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
@@ -159,15 +160,16 @@ public class ChooseActivity extends AppCompatActivity {
         newOwner.setEmail(email);
         newOwner.setPassword(password);
         newOwner.setName(name);
-        newOwner.setSecondname(secondName);
+        newOwner.setSecondName(secondName);
         newOwner.setPhone(phone);
         newOwner.setProperties(aux);
+        newOwner.setImagePath("Images/Owners/" + fuser.getUid() + ".jpg");
 
         myRef = database.getReference(PATH_OWNERS + fuser.getUid());
         myRef.setValue(newOwner);
 
         if(imageUri != null) {
-            StorageReference folder = mStorage.child("Images").child("Owners").child(fuser.getUid());
+            StorageReference folder = mStorage.child("Images").child("Owners").child(fuser.getUid()+".jpg");
             folder.putFile(imageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {

@@ -33,6 +33,7 @@ public class PropertyDescriptionActivity extends AppCompatActivity {
     private static FirebaseFirestoreSettings settings;
     private static StorageReference mStorageRef;
     public static final String PATH_INTEREST = "interest/";
+    private DatabaseReference mDatabase;
 
     public Button buttonAdd;
     public Button buttonRemove;
@@ -78,6 +79,7 @@ public class PropertyDescriptionActivity extends AppCompatActivity {
         setContentView(R.layout.activity_property_description);
 
         db = FirebaseFirestore.getInstance();
+        mDatabase = FirebaseDatabase.getInstance().getReference();
         settings = new FirebaseFirestoreSettings.Builder().build();
         mStorageRef = FirebaseStorage.getInstance().getReference();
         database = FirebaseDatabase.getInstance();
@@ -162,7 +164,7 @@ public class PropertyDescriptionActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot ds : dataSnapshot.getChildren()) {
-                    if(fuser.getUid().equals(Objects.requireNonNull(ds.child("client").getValue()).toString())&&
+                    if(fuser.getUid().equals(Objects.requireNonNull(ds.child("clientId").getValue()).toString())&&
                             (ownerId.equals(Objects.requireNonNull(ds.child("owner").getValue()).toString()))&&
                             (propertyId.equals(Objects.requireNonNull(ds.child("property").getValue()).toString()))){
                         buttonAdd.setClickable(false);
@@ -201,15 +203,40 @@ public class PropertyDescriptionActivity extends AppCompatActivity {
 
     private void createInterest(){
         newInterest = new Interest();
-        String client = fuser.getUid();
+        final String clientId = fuser.getUid();
 
-        newInterest.setClient(client);
+        newInterest.setClientId(clientId);
         newInterest.setOwner(ownerId);
         newInterest.setId(key);
         newInterest.setProperty(propertyId);
 
-        myRef = database.getReference(PATH_INTEREST + key);
-        myRef.setValue(newInterest);
+        mDatabase.child("clients").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull final DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                        if (clientId.equals(Objects.requireNonNull(Objects.requireNonNull(ds.getKey())))) {
+                            newInterest.setClientName(Objects.requireNonNull(ds.child("name").getValue()).toString());
+                            newInterest.setClientSecondName(Objects.requireNonNull(ds.child("secondName").getValue()).toString());
+                            newInterest.setClientEmail(Objects.requireNonNull(ds.child("email").getValue()).toString());
+                            newInterest.setClientPhone(Long.parseLong(Objects.requireNonNull(ds.child("phone").getValue()).toString()));
+                            newInterest.setClientImagePath(Objects.requireNonNull(ds.child("imagePath").getValue()).toString());
+
+                        }
+                    }
+                }
+
+                myRef = database.getReference(PATH_INTEREST + key);
+                myRef.setValue(newInterest);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+
     }
 
     private void removeInterest(){

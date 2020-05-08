@@ -56,7 +56,7 @@ public class InterestListActivity extends AppCompatActivity {
                 if (dataSnapshot.exists()) {
                     for (DataSnapshot ds : dataSnapshot.getChildren()) {
 
-                        if (client.equals(Objects.requireNonNull(Objects.requireNonNull(ds.child("client").getValue()).toString()))) {
+                        if (client.equals(Objects.requireNonNull(Objects.requireNonNull(ds.child("clientId").getValue()).toString()))) {
                             mInterest.add(Objects.requireNonNull(ds.child("property").getValue()).toString());
                         }
                     }
