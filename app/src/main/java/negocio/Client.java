@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Client extends User {
-    List<String> favoritos;
-    List<String> interes;
+    private List<String> favoritos;
+    private List<String> interes;
 
     public Client(String email, String password, String name, String secondname, Long phone, String imagePath) {
         super(email, password, name, secondname, phone, imagePath);

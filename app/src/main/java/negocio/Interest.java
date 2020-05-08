@@ -1,13 +1,13 @@
 package negocio;
 
 public class Interest {
-    public String owner;
-    public String clientId;
-    public String clientName;
-    public String clientSecondName;
-    public Long clientPhone;
-    public String clientEmail;
-    public String clientImagePath;
+    private String owner;
+    private String clientId;
+    private String clientName;
+    private String clientSecondName;
+    private Long clientPhone;
+    private String clientEmail;
+    private String clientImagePath;
     public String id;
     public String property;
 
