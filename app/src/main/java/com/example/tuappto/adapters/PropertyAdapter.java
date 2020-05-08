@@ -62,7 +62,9 @@ public class PropertyAdapter extends RecyclerView.Adapter<PropertyAdapter.ViewHo
         holder.textViewParking.setText(String.format("Parqueaderos: %s", String.valueOf(property.getParking())));
         holder.textViewRooms.setText(String.format("Habitaciones: %s", String.valueOf(property.getRooms())));
         holder.textViewPrice.setText(String.format("Precio: %s", String.valueOf(property.getPrice())));
-        holder.textViewAddress.setText("Esto falta");
+
+        //poner String.format("Direccion: %s", String.valueOf(property. ACA EL METODO QUE LLAMA A LA DIRECCION DESDE PROPIEDAD ()))
+        holder.textViewAddress.setText("ACA VA EL COMENTARIO DE ARRIBA");
         downloadPhoto(property.getImagePath(),holder.imageViewProperty);
 
     }

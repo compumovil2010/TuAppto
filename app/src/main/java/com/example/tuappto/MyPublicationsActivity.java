@@ -62,6 +62,8 @@ public class MyPublicationsActivity extends AppCompatActivity {
                             String imagePath = Objects.requireNonNull(ds.child("imagePath").getValue()).toString();
                             String description = Objects.requireNonNull(ds.child("description").getValue()).toString();
                             String ownerId = Objects.requireNonNull(ds.child("ownerId").getValue()).toString();
+
+                            //Aca si guardo la direccion poner donde dice "sellOrRent" el nombre del atributo de como la guardo
                             //String address = ds.child("sellOrRent").getValue().toString();
                             double latitude = Double.parseDouble(Objects.requireNonNull(ds.child("location").child("latitude").getValue()).toString());
                             double longitude = Double.parseDouble(Objects.requireNonNull(ds.child("location").child("longitude").getValue()).toString());
@@ -71,6 +73,8 @@ public class MyPublicationsActivity extends AppCompatActivity {
                             aux.setParking(parking);
                             aux.setArea(area);
                             aux.setPrice(price);
+
+                            //Poner set de la direccion en el aux
                             aux.setRooms(rooms);
                             aux.setImagePath(imagePath);
                             aux.setLocation(latLng);
@@ -92,6 +96,10 @@ public class MyPublicationsActivity extends AppCompatActivity {
                             bundle.putString("sellOrRent", mProperties.get(mRecyclerView.getChildAdapterPosition(v)).getSellOrRent());
                             bundle.putInt("rooms", mProperties.get(mRecyclerView.getChildAdapterPosition(v)).getRooms());
                             bundle.putInt("area", mProperties.get(mRecyclerView.getChildAdapterPosition(v)).getArea());
+
+                            //Mandar la direccion en el bundle
+
+
                             bundle.putInt("parking", mProperties.get(mRecyclerView.getChildAdapterPosition(v)).getParking());
                             bundle.putString("description", mProperties.get(mRecyclerView.getChildAdapterPosition(v)).getDescription());
                             bundle.putDouble("latitude", mProperties.get(mRecyclerView.getChildAdapterPosition(v)).getLocation().latitude);

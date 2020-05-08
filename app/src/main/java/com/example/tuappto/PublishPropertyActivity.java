@@ -180,6 +180,8 @@ public class PublishPropertyActivity extends FragmentActivity implements OnMapRe
         });
 
         buttonPublish.setOnClickListener(new View.OnClickListener() {
+
+            //ACA VERIFICAR QUE SI SE TENGA UNA UBICACION, SINO DECIRLE
             @Override
             public void onClick(View view) {
 
@@ -408,6 +410,8 @@ public class PublishPropertyActivity extends FragmentActivity implements OnMapRe
     private void publishProperty(){
 
         newProperty = new Property();
+
+        //Aca se pone la ubicacion
         location = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
         newProperty.setArea(area);
         newProperty.setDescription(description);
@@ -415,6 +419,8 @@ public class PublishPropertyActivity extends FragmentActivity implements OnMapRe
         newProperty.setPrice(price);
         newProperty.setRooms(rooms);
         newProperty.setSellOrRent(sellOrRent);
+
+        //Aca se guarda la ubicacion
         newProperty.setLocation(location);
         newProperty.setOwnerId(fuser.getUid());
         newProperty.setImagePath("Images/Properties/" + key + ".jpg");

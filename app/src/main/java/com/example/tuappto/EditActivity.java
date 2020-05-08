@@ -120,8 +120,12 @@ public class EditActivity extends AppCompatActivity {
         description = bundle.getString("description");
         sellOrRent = bundle.getString("sellOrRent");
         imagePath = bundle.getString("imagePath");
+
+        //esto es lo que le llego de lat y lon
         latitude = bundle.getDouble("latitude");
         longitude = bundle.getDouble("longitude");
+
+
         ownerId = bundle.getString("ownerId");
         location = new LatLng(latitude, longitude);
 
@@ -130,6 +134,8 @@ public class EditActivity extends AppCompatActivity {
         editTextRooms.setText(String.valueOf(rooms));
         editTextParking.setText(String.valueOf(parking));
         editTextDescription.setText(description);
+
+        //Poner el mapa con la latitud y longitud que le llego arriba
 
         downloadPhoto(imagePath, imageViewProperty);
 
@@ -285,6 +291,8 @@ public class EditActivity extends AppCompatActivity {
     }
 
     private boolean isChanged() {
+
+        //Aca verificar que se cambio
         return !editTextPrice.getText().toString().equals(String.valueOf(price)) ||
                 !editTextArea.getText().toString().equals(String.valueOf(area)) ||
                 !editTextRooms.getText().toString().equals(String.valueOf(rooms)) ||
@@ -307,6 +315,8 @@ public class EditActivity extends AppCompatActivity {
 
     private void change(){
         Property newProperty = new Property();
+
+        //Aca poner la nueva ubicacion
         newProperty.setArea(Integer.parseInt(editTextArea.getText().toString()));
         newProperty.setDescription(editTextDescription.getText().toString());
         newProperty.setParking(Integer.parseInt(editTextParking.getText().toString()));
