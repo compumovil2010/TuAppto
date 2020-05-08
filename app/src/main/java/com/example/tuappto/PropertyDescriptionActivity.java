@@ -87,7 +87,7 @@ public class PropertyDescriptionActivity extends AppCompatActivity {
         buttonRemove = findViewById(R.id.buttonRemove);
         imageViewProperty = findViewById(R.id.imageViewProperty);
 
-        textViewKind = findViewById(R.id.textViewKind);
+        textViewKind = findViewById(R.id.textViewKindInformation);
         textViewPrice = findViewById(R.id.textViewPriceInformation);
         textViewArea = findViewById(R.id.textViewAreaInformation);
         textViewParking = findViewById(R.id.textViewParkingInformation);
