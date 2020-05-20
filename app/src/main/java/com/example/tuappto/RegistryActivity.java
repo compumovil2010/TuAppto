@@ -14,16 +14,36 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.util.Patterns;
+import android.view.MotionEvent;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.Toast;
+
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 import java.util.regex.Pattern;
 
 public class RegistryActivity extends AppCompatActivity {
@@ -32,6 +52,7 @@ public class RegistryActivity extends AppCompatActivity {
     private static final int PERMISSION_GALLERY_ID = 2;
     private static final int REQUEST_IMAGE_CAPTURE = 3;
     private static final int IMAGE_PICKER_REQUEST = 4;
+    private static final int PERMISSION_INTERNET = 5;
     private EditText email;
     private EditText name;
     private EditText password;
@@ -42,6 +63,7 @@ public class RegistryActivity extends AppCompatActivity {
     public ImageButton imageButtonCamera;
     public ImageButton imageButtonGallery;
     public Button buttonContinue;
+    Spinner sItems;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +79,9 @@ public class RegistryActivity extends AppCompatActivity {
         phone = findViewById(R.id.editTextPhone);
         password = findViewById(R.id.editTextPassword);
         secondName = findViewById(R.id.editTextSecondName);
+        sItems = (Spinner) findViewById(R.id.spinner);
+
+
 
         buttonContinue.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -121,6 +146,71 @@ public class RegistryActivity extends AppCompatActivity {
                 }
             }
         });
+        sItems.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                if (ContextCompat.checkSelfPermission(view.getContext(), Manifest.permission.INTERNET) == PackageManager.PERMISSION_GRANTED) {
+                    Log.i("permiso","permiso internet otorgado");
+                    fillSpiner();
+                }
+                else {
+                    requestPermission(RegistryActivity.this, Manifest.permission.INTERNET, "Acceso a internet necesario", PERMISSION_INTERNET);
+                }
+                return false;
+            }
+        });
+    }
+
+    private void fillSpiner() {
+        consultarPaisesRest();
+        }
+
+    private String consultarPaisesRest() {
+        RequestQueue queue = Volley.newRequestQueue(this);
+
+        String url = "https://restcountries.eu/rest/v2";
+        String query = "?fields=name;";
+        StringRequest req = new StringRequest(Request.Method.GET, url+query,
+                new Response.Listener() {
+                    @Override
+                    public void onResponse(Object response) {
+                        List<String> paises = new ArrayList<>();
+                        paises.add("Seleccione su pais de procedencia");
+                        String data = (String) response;
+                        JsonParser parser  = new JsonParser();
+                        JsonElement notes  = parser.parse(data);
+                        JsonArray notesArr = notes.getAsJsonArray();
+                        for (int i = 0; i < notesArr.size(); i++) {
+                            // get your jsonobject
+                            JsonObject obj = notesArr.get(i).getAsJsonObject();
+
+                            // do the same for the rest of the elements like date , author ,authorId
+                            String name;
+
+                            // fetch data from object
+                            name   = obj.get("name").getAsString();
+                            // Store these values in list or objects you want
+                            paises.add(name);
+                            Log.i("datos",name);
+
+                        }
+                        ArrayAdapter<String> adapter = new ArrayAdapter<String>(RegistryActivity.this, android.R.layout.simple_spinner_item, paises);
+
+                        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                        sItems.setAdapter(adapter);
+
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.i("TAG", "Error handling rest invocation"+error.getCause());
+                    }
+                }
+        );
+        queue.add(req);
+        return "";
+
     }
 
     private boolean emailValidation(String email) {
@@ -197,7 +287,7 @@ public class RegistryActivity extends AppCompatActivity {
             case PERMISSION_CAMERA_ID: {
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     takePhoto();
-                } else{
+                } else {
                     Toast.makeText(this, "Permiso necesario para acceder a la camara", Toast.LENGTH_LONG).show();
                 }
             }
@@ -209,12 +299,19 @@ public class RegistryActivity extends AppCompatActivity {
                     pickImage.setType("image/*");
                     startActivityForResult(pickImage, IMAGE_PICKER_REQUEST);
 
-                } else{
+                } else {
                     Toast.makeText(this, "Permiso necesario para acceder a la galeria", Toast.LENGTH_LONG).show();
                 }
             }
             break;
+
+            case PERMISSION_INTERNET: {
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    fillSpiner();
+                } else {
+                    Toast.makeText(this, "Permiso necesario para registrar su perfil", Toast.LENGTH_LONG).show();
+                }
+            }
         }
     }
-
 }
