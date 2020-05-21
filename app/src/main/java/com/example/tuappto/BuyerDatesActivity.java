@@ -16,13 +16,6 @@ public class BuyerDatesActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_buyer_dates);
 
-        button = findViewById(R.id.buttonTemporal);
-
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(view.getContext(),DateInformationActivity.class));
-            }
-        });
+        // TEMPORAL A DateInformationActivity
     }
 }
