@@ -40,6 +40,7 @@ public class ChooseActivity extends AppCompatActivity {
     private String password;
     private String name;
     private String secondName;
+    private String country;
     private Uri imageUri;
     public InputStream imageStream;
     private FirebaseAuth mAuth;
@@ -66,6 +67,7 @@ public class ChooseActivity extends AppCompatActivity {
         name = bundle.getString("name");
         secondName = bundle.getString("secondName");
         phone = bundle.getLong("phone");
+        country = bundle.getString("country");
 
         intent = getIntent();
         imageUri = intent.getParcelableExtra("uri");
@@ -125,6 +127,7 @@ public class ChooseActivity extends AppCompatActivity {
 
     private void createClient(FirebaseUser fuser) {
         newClient = new Client();
+        newClient.setCountry(country);
         newClient.setEmail(email);
         newClient.setPassword(password);
         newClient.setName(name);
@@ -157,6 +160,7 @@ public class ChooseActivity extends AppCompatActivity {
         newOwner = new Owner();
         List<String> aux = new ArrayList<>();
         aux.add("null");
+        newOwner.setCountry(country);
         newOwner.setEmail(email);
         newOwner.setPassword(password);
         newOwner.setName(name);

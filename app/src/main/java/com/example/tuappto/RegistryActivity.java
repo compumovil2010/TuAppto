@@ -98,6 +98,7 @@ public class RegistryActivity extends AppCompatActivity {
                             bundle.putLong("phone",Long.parseLong(phone.getText().toString()));
                             bundle.putString("password",password.getText().toString());
                             bundle.putString("secondName",secondName.getText().toString());
+                            bundle.putString("country",sItems.getSelectedItem().toString());
 
                             i.putExtra("bundle",bundle);
                             if(imageUri != null) {
@@ -223,7 +224,9 @@ public class RegistryActivity extends AppCompatActivity {
                 !email.getText().toString().isEmpty()||
                 !phone.getText().toString().isEmpty()||
                 !password.getText().toString().isEmpty()||
-                !secondName.getText().toString().isEmpty();
+                !secondName.getText().toString().isEmpty()||
+                sItems.getSelectedItem().toString()!="Seleccione su pais de procedencia"||
+                sItems.getSelectedItem()!=null;
     }
 
     private void requestPermission(Activity context, String permiso, String justificacion, int idCode) {
