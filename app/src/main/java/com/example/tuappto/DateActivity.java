@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.fragment.app.FragmentActivity;
 
 import android.Manifest;
 import android.app.Activity;
@@ -25,17 +26,17 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.firebase.auth.FirebaseAuth;
 
-public class DateActivity extends AppCompatActivity implements OnMapReadyCallback {
+public class DateActivity extends FragmentActivity implements OnMapReadyCallback {
 
     EditText etPlannedDate;
     int dayA;
@@ -43,13 +44,13 @@ public class DateActivity extends AppCompatActivity implements OnMapReadyCallbac
     int yearA;
     private GoogleMap mMap;
     private Location currentLocation;
-    private FusedLocationProviderClient fusedLocationProviderClient;
     public Geocoder mGeocoder;
 
     private SensorManager sensorManager;
     private Sensor lightSensor;
     private SensorEventListener lightSensorListener;
 
+    Marker marcador;
 
     private static final int REQUEST_CODE = 101;
 
@@ -57,12 +58,10 @@ public class DateActivity extends AppCompatActivity implements OnMapReadyCallbac
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_date);
+
         SupportMapFragment supportMapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         assert supportMapFragment != null;
         supportMapFragment.getMapAsync(DateActivity.this);
-        mGeocoder = new Geocoder(getBaseContext());
-
-        fetchLocation();
 
         mGeocoder = new Geocoder(getBaseContext());
 
@@ -131,12 +130,13 @@ public class DateActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
     }
     private void agregarMarcador(double lat, double lng){
-        Toast.makeText(getApplicationContext(), lat+ " " + lng, Toast.LENGTH_SHORT).show();
         LatLng latLng = new LatLng(lat, lng);
-        MarkerOptions markerOptions = new MarkerOptions().position(latLng).title("veanmee");
-        mMap.animateCamera(CameraUpdateFactory.newLatLng(latLng));
-        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15));
-        mMap.addMarker(markerOptions);
+        CameraUpdate miUbicacion = CameraUpdateFactory.newLatLngZoom(latLng, 15);
+        MarkerOptions markerOptions = new MarkerOptions().position(latLng).title(latLng + " ");
+        if(marcador!=null)marcador.remove();
+        marcador=mMap.addMarker(new MarkerOptions().position(latLng)
+                .title("aquitoy"));
+        mMap.animateCamera(miUbicacion);
     }
     private void fetchLocation() {
         if (ActivityCompat.checkSelfPermission(
@@ -161,13 +161,11 @@ public class DateActivity extends AppCompatActivity implements OnMapReadyCallbac
     protected void onResume() {
         super.onResume();
         sensorManager.registerListener(lightSensorListener, lightSensor, SensorManager.SENSOR_DELAY_NORMAL);
-        fetchLocation();
     }
     @Override
     protected void onPause() {
         super.onPause();
         sensorManager.unregisterListener(lightSensorListener);
-        fetchLocation();
     }
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         if (requestCode == REQUEST_CODE) {

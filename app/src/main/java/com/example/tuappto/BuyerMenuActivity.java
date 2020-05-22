@@ -56,8 +56,6 @@ public class BuyerMenuActivity extends AppCompatActivity implements OnMapReadyCa
     public Button buttonChats;
     public Button buttonDates;
     private FirebaseAuth mAuth;
-    private double lat = 0.0;
-    private double lng = 0.0;
     private Marker marcador;
     private static final int REQUEST_CODE = 101;
     ArrayList<LatLng> ofertas = new ArrayList<>();
@@ -80,7 +78,6 @@ public class BuyerMenuActivity extends AppCompatActivity implements OnMapReadyCa
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
 
         mGeocoder = new Geocoder(getBaseContext());
 
@@ -120,10 +117,8 @@ public class BuyerMenuActivity extends AppCompatActivity implements OnMapReadyCa
             public void onSensorChanged(SensorEvent event) {
                 if (mMap != null) {
                     if (event.values[0] < 1000) {
-                        Log.i("MAPS", "DARK MAP " + event.values[0]);
                         mMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(BuyerMenuActivity.this,R.raw.style_json_night));
                     } else {
-                        Log.i("MAPS", "LIGHT MAP " + event.values[0]);
                         mMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(BuyerMenuActivity.this,R.raw.style_json_day));
                     }
                 }
