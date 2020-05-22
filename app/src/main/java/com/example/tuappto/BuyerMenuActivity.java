@@ -27,17 +27,17 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.auth.FirebaseAuth;
 
-import com.google.firebase.auth.FirebaseUser;
 
 import java.util.ArrayList;
 
@@ -45,7 +45,6 @@ public class BuyerMenuActivity extends AppCompatActivity implements OnMapReadyCa
 
     private GoogleMap mMap;
     private Location currentLocation;
-    private FusedLocationProviderClient fusedLocationProviderClient;
     public Geocoder mGeocoder;
 
     private SensorManager sensorManager;
@@ -57,6 +56,9 @@ public class BuyerMenuActivity extends AppCompatActivity implements OnMapReadyCa
     public Button buttonChats;
     public Button buttonDates;
     private FirebaseAuth mAuth;
+    private double lat = 0.0;
+    private double lng = 0.0;
+    private Marker marcador;
     private static final int REQUEST_CODE = 101;
     ArrayList<LatLng> ofertas = new ArrayList<>();
 
@@ -65,7 +67,7 @@ public class BuyerMenuActivity extends AppCompatActivity implements OnMapReadyCa
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_buyer_menu);
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
+            fetchLocation();
         }
         else {
             requestPermission(BuyerMenuActivity.this);
@@ -85,7 +87,6 @@ public class BuyerMenuActivity extends AppCompatActivity implements OnMapReadyCa
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        fetchLocation();
 
         mGeocoder = new Geocoder(getBaseContext());
 
@@ -168,16 +169,17 @@ public class BuyerMenuActivity extends AppCompatActivity implements OnMapReadyCa
     private void actualizarUbicacion(Location location){
         if(location != null){
             currentLocation = location;
-            agregarMarcador(location.getLatitude(), location.getLongitude());
+            agregarMarcador(currentLocation.getLatitude(), currentLocation.getLongitude());
         }
     }
     private void agregarMarcador(double lat, double lng){
-        Toast.makeText(getApplicationContext(), lat+ " " + lng, Toast.LENGTH_SHORT).show();
         LatLng latLng = new LatLng(lat, lng);
-        MarkerOptions markerOptions = new MarkerOptions().position(latLng).title(mAuth.getCurrentUser().getEmail());
-        mMap.animateCamera(CameraUpdateFactory.newLatLng(latLng));
-        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15));
-        mMap.addMarker(markerOptions);
+        CameraUpdate miUbicacion = CameraUpdateFactory.newLatLngZoom(latLng, 15);
+        MarkerOptions markerOptions = new MarkerOptions().position(latLng).title(latLng + " ");
+        if(marcador!=null)marcador.remove();
+        marcador=mMap.addMarker(new MarkerOptions().position(latLng)
+                .title(mAuth.getCurrentUser().getEmail()));
+        mMap.animateCamera(miUbicacion);
     }
 
     LocationListener locationListener = new LocationListener() {
