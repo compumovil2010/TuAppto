@@ -66,12 +66,6 @@ public class BuyerMenuActivity extends AppCompatActivity implements OnMapReadyCa
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_buyer_menu);
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            fetchLocation();
-        }
-        else {
-            requestPermission(BuyerMenuActivity.this);
-        }
         SupportMapFragment supportMapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         assert supportMapFragment != null;
         supportMapFragment.getMapAsync(BuyerMenuActivity.this);
@@ -164,7 +158,6 @@ public class BuyerMenuActivity extends AppCompatActivity implements OnMapReadyCa
         mMap.getUiSettings().setZoomGesturesEnabled(true);
         mMap.getUiSettings().setZoomControlsEnabled(true);
         fetchLocation();
-
     }
     private void actualizarUbicacion(Location location){
         if(location != null){
@@ -178,7 +171,7 @@ public class BuyerMenuActivity extends AppCompatActivity implements OnMapReadyCa
         MarkerOptions markerOptions = new MarkerOptions().position(latLng).title(latLng + " ");
         if(marcador!=null)marcador.remove();
         marcador=mMap.addMarker(new MarkerOptions().position(latLng)
-                .title(mAuth.getCurrentUser().getEmail()));
+                .title("aquitoy"));
         mMap.animateCamera(miUbicacion);
     }
 
@@ -193,13 +186,11 @@ public class BuyerMenuActivity extends AppCompatActivity implements OnMapReadyCa
     protected void onResume() {
         super.onResume();
         sensorManager.registerListener(lightSensorListener, lightSensor, SensorManager.SENSOR_DELAY_NORMAL);
-        fetchLocation();
     }
     @Override
     protected void onPause() {
         super.onPause();
         sensorManager.unregisterListener(lightSensorListener);
-        fetchLocation();
     }
     private void fetchLocation() {
         if (ActivityCompat.checkSelfPermission(
