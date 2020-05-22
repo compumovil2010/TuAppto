@@ -129,4 +129,6 @@
     </string-array>
     <string name="title_activity_publish_property">Map</string>
     <string name="title_activity_buyer_menu">BuyerMenuActivity</string>
+    <string name="chat_date">Cita</string>
+    <string name="report_planned_date">IngresarFecha</string>
 </resources>
