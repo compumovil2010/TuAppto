@@ -101,7 +101,7 @@ public class BuyerMenuActivity extends AppCompatActivity implements OnMapReadyCa
         buttonChats.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(view.getContext(),ChatListActivity.class));
+                startActivity(new Intent(view.getContext(),Chat2Activity.class));
             }
         });
 
