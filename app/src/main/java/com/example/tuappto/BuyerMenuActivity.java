@@ -77,7 +77,6 @@ public class BuyerMenuActivity extends AppCompatActivity implements OnMapReadyCa
         mGeocoder = new Geocoder(getBaseContext());
         mAuth = FirebaseAuth.getInstance();
 
-
         buttonViewProperties = findViewById(R.id.buttonViewProperties);
         buttonMyFavourites = findViewById(R.id.buttonMyFavourites);
         buttonChats = findViewById(R.id.buttonChats);
@@ -86,12 +85,9 @@ public class BuyerMenuActivity extends AppCompatActivity implements OnMapReadyCa
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        putPubs();
         fetchLocation();
 
         mGeocoder = new Geocoder(getBaseContext());
-
-
 
         buttonViewProperties.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -120,6 +116,7 @@ public class BuyerMenuActivity extends AppCompatActivity implements OnMapReadyCa
                 startActivity(new Intent(view.getContext(),SellerDatesActivity.class));
             }
         });
+
         sensorManager= (SensorManager) getSystemService(SENSOR_SERVICE);
         assert sensorManager != null;
         lightSensor = sensorManager.getDefaultSensor(Sensor.TYPE_LIGHT);
@@ -140,7 +137,6 @@ public class BuyerMenuActivity extends AppCompatActivity implements OnMapReadyCa
             @Override
             public void onAccuracyChanged(Sensor sensor, int accuracy) {}
         };
-
     }
 
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -152,6 +148,7 @@ public class BuyerMenuActivity extends AppCompatActivity implements OnMapReadyCa
         }
         return false;
     }
+
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.example_menu, menu);
@@ -167,9 +164,6 @@ public class BuyerMenuActivity extends AppCompatActivity implements OnMapReadyCa
         mMap.getUiSettings().setZoomControlsEnabled(true);
         fetchLocation();
 
-        for(int i = 0; i < ofertas.size(); i++){
-            mMap.addMarker(new MarkerOptions().position(ofertas.get(i)).title(""));
-        }
     }
     private void actualizarUbicacion(Location location){
         if(location != null){
@@ -193,13 +187,6 @@ public class BuyerMenuActivity extends AppCompatActivity implements OnMapReadyCa
         @Override public void onProviderDisabled(String provider) {}
     };
 
-    private void putPubs(){
-        if(currentLocation != null){
-            this.ofertas.add(new LatLng(currentLocation.getLatitude() +0.001, currentLocation.getLongitude() + 0.002));
-            this.ofertas.add(new LatLng(currentLocation.getLatitude() -0.001, currentLocation.getLongitude() + -0.003));
-            this.ofertas.add(new LatLng(currentLocation.getLatitude() + 0.003, currentLocation.getLongitude() + 0.002));
-        }
-    }
     @Override
     protected void onResume() {
         super.onResume();
