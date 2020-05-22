@@ -38,7 +38,6 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.auth.FirebaseAuth;
 
 import com.google.firebase.auth.FirebaseUser;
-;
 
 import java.util.ArrayList;
 
@@ -244,4 +243,6 @@ public class BuyerMenuActivity extends AppCompatActivity implements OnMapReadyCa
             ActivityCompat.requestPermissions(context, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, BuyerMenuActivity.REQUEST_CODE);
         }
     }
+
+
 }
