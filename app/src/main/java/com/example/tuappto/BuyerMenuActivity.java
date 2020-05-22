@@ -12,15 +12,15 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.location.Geocoder;
 import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -39,12 +39,9 @@ import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-
-import java.io.IOException;
+;
 import java.util.ArrayList;
 
 public class BuyerMenuActivity extends AppCompatActivity implements OnMapReadyCallback {
@@ -76,6 +73,9 @@ public class BuyerMenuActivity extends AppCompatActivity implements OnMapReadyCa
         else {
             requestPermission(BuyerMenuActivity.this, Manifest.permission.ACCESS_FINE_LOCATION, "Acceso a localizacion necesario", REQUEST_CODE);
         }
+        SupportMapFragment supportMapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
+        assert supportMapFragment != null;
+        supportMapFragment.getMapAsync(BuyerMenuActivity.this);
 
         mGeocoder = new Geocoder(getBaseContext());
         mAuth = FirebaseAuth.getInstance();
@@ -89,6 +89,7 @@ public class BuyerMenuActivity extends AppCompatActivity implements OnMapReadyCa
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        putPubs();
         fetchLocation();
 
         mGeocoder = new Geocoder(getBaseContext());
@@ -168,20 +169,40 @@ public class BuyerMenuActivity extends AppCompatActivity implements OnMapReadyCa
         mMap.getUiSettings().setCompassEnabled(true);
         mMap.getUiSettings().setZoomGesturesEnabled(true);
         mMap.getUiSettings().setZoomControlsEnabled(true);
-        LatLng latLng = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
-        MarkerOptions markerOptions = new MarkerOptions().position(latLng).title("");
-        googleMap.animateCamera(CameraUpdateFactory.newLatLng(latLng));
-        googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15));
-        googleMap.addMarker(markerOptions);
-        if(currentLocation != null){
-            ofertas.add(new LatLng(currentLocation.getLatitude() +0.001, currentLocation.getLongitude() + 0.002));
-            ofertas.add(new LatLng(currentLocation.getLatitude() -0.001, currentLocation.getLongitude() + -0.003));
-            ofertas.add(new LatLng(currentLocation.getLatitude() + 0.003, currentLocation.getLongitude() + 0.002));
-            for(int i = 0; i < ofertas.size(); i++){
-                mMap.addMarker(new MarkerOptions().position(ofertas.get(i)).title(""));
-            }
-        }
+        fetchLocation();
 
+        for(int i = 0; i < ofertas.size(); i++){
+            mMap.addMarker(new MarkerOptions().position(ofertas.get(i)).title(""));
+        }
+    }
+    private void actualizarUbicacion(Location location){
+        if(location != null){
+            currentLocation = location;
+            agregarMarcador(location.getLatitude(), location.getLongitude());
+        }
+    }
+    private void agregarMarcador(double lat, double lng){
+        Toast.makeText(getApplicationContext(), lat+ " " + lng, Toast.LENGTH_SHORT).show();
+        LatLng latLng = new LatLng(lat, lng);
+        MarkerOptions markerOptions = new MarkerOptions().position(latLng).title(mAuth.getCurrentUser().getEmail());
+        mMap.animateCamera(CameraUpdateFactory.newLatLng(latLng));
+        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15));
+        mMap.addMarker(markerOptions);
+    }
+
+    LocationListener locationListener = new LocationListener() {
+        @Override public void onLocationChanged(Location location) {actualizarUbicacion(location);}
+        @Override public void onStatusChanged(String provider, int status, Bundle extras) {}
+        @Override public void onProviderEnabled(String provider) {}
+        @Override public void onProviderDisabled(String provider) {}
+    };
+
+    private void putPubs(){
+        if(currentLocation != null){
+            this.ofertas.add(new LatLng(currentLocation.getLatitude() +0.001, currentLocation.getLongitude() + 0.002));
+            this.ofertas.add(new LatLng(currentLocation.getLatitude() -0.001, currentLocation.getLongitude() + -0.003));
+            this.ofertas.add(new LatLng(currentLocation.getLatitude() + 0.003, currentLocation.getLongitude() + 0.002));
+        }
     }
     @Override
     protected void onResume() {
@@ -202,21 +223,11 @@ public class BuyerMenuActivity extends AppCompatActivity implements OnMapReadyCa
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_CODE);
             return;
         }
-        Task<Location> task = fusedLocationProviderClient.getLastLocation();
-        task.addOnSuccessListener(new OnSuccessListener<Location>() {
-            @Override
-            public void onSuccess(Location location) {
-                if (location != null) {
-                    currentLocation = location;
-                    Toast.makeText(getApplicationContext(), currentLocation.getLatitude() + "" + currentLocation.getLongitude(), Toast.LENGTH_SHORT).show();
-                    SupportMapFragment supportMapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
-                    assert supportMapFragment != null;
-                    supportMapFragment.getMapAsync(BuyerMenuActivity.this);
-                }
-            }
-        });
+        LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        currentLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+        actualizarUbicacion(currentLocation);
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 150000, 0, locationListener );
     }
-
 
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode) {

@@ -22,7 +22,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
-
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 
@@ -71,7 +70,7 @@ public class ChooseActivity extends AppCompatActivity {
         try {
             imageStream = getContentResolver().openInputStream(imageUri);
         } catch (FileNotFoundException e) {
-                e.printStackTrace();
+            e.printStackTrace();
         }
 
         mStorage = FirebaseStorage.getInstance().getReference();

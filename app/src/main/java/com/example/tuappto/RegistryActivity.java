@@ -11,7 +11,6 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -22,7 +21,6 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
@@ -34,7 +32,6 @@ public class RegistryActivity extends AppCompatActivity {
     private static final int PERMISSION_GALLERY_ID = 2;
     private static final int REQUEST_IMAGE_CAPTURE = 3;
     private static final int IMAGE_PICKER_REQUEST = 4;
-    private Bitmap bitmap;
     private EditText email;
     private EditText name;
     private EditText password;
@@ -68,7 +65,6 @@ public class RegistryActivity extends AppCompatActivity {
                 if(allFilled()){
                     if(emailValidation(email.getText().toString())){
                         if(password.getText().toString().length() > 5){
-                            bitmap = ((BitmapDrawable)imageViewUser.getDrawable()).getBitmap();
                             Bundle bundle = new Bundle();
                             Intent i = new Intent(view.getContext(),ChooseActivity.class);
 
@@ -82,9 +78,7 @@ public class RegistryActivity extends AppCompatActivity {
                             if(imageUri != null) {
                                 i.putExtra("uri", imageUri);
                             }
-                            else{
-                                i.putExtra("bitMap", bitmap);
-                            }
+
                             i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                             startActivity(i);
                         }
@@ -171,7 +165,7 @@ public class RegistryActivity extends AppCompatActivity {
                     try {
                         Bitmap bitmap = BitmapFactory.decodeFile(getExternalFilesDir(null)+"/test.jpg");
 
-                            imageViewUser.setImageBitmap(bitmap);
+                        imageViewUser.setImageBitmap(bitmap);
 
                     } catch (Exception e) {
                         e.printStackTrace();
