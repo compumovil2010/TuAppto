@@ -22,13 +22,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -94,8 +92,6 @@ public class BuyerMenuActivity extends AppCompatActivity implements OnMapReadyCa
 
         mGeocoder = new Geocoder(getBaseContext());
 
-
-
         buttonViewProperties.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -124,6 +120,7 @@ public class BuyerMenuActivity extends AppCompatActivity implements OnMapReadyCa
             }
         });
         sensorManager= (SensorManager) getSystemService(SENSOR_SERVICE);
+        assert sensorManager != null;
         lightSensor = sensorManager.getDefaultSensor(Sensor.TYPE_LIGHT);
         lightSensorListener = new SensorEventListener() {
             @Override
@@ -146,13 +143,11 @@ public class BuyerMenuActivity extends AppCompatActivity implements OnMapReadyCa
     }
 
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.logOut:
-                mAuth.signOut();
-                startActivity(new Intent(BuyerMenuActivity.this,PrincipalActivity.class));
-                finish();
-                return true;
-
+        if (item.getItemId() == R.id.logOut) {
+            mAuth.signOut();
+            startActivity(new Intent(BuyerMenuActivity.this, PrincipalActivity.class));
+            finish();
+            return true;
         }
         return false;
     }
@@ -230,17 +225,12 @@ public class BuyerMenuActivity extends AppCompatActivity implements OnMapReadyCa
     }
 
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        switch (requestCode) {
-            case REQUEST_CODE: {
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    fetchLocation();
-                } else{
-                    Toast.makeText(this, "Permiso necesario para acceder a la camara", Toast.LENGTH_LONG).show();
-                }
-
+        if (requestCode == REQUEST_CODE) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                fetchLocation();
+            } else {
+                Toast.makeText(this, "Permiso necesario para acceder a la camara", Toast.LENGTH_LONG).show();
             }
-            break;
-
         }
     }
     private void requestPermission(Activity context, String permiso, String justificacion, int idCode) {
@@ -252,4 +242,6 @@ public class BuyerMenuActivity extends AppCompatActivity implements OnMapReadyCa
             ActivityCompat.requestPermissions(context, new String[]{permiso}, idCode);
         }
     }
+
+
 }
