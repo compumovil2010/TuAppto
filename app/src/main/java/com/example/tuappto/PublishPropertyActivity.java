@@ -210,7 +210,10 @@ public class PublishPropertyActivity extends FragmentActivity implements OnMapRe
                     finish();
                 }
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> origin/pablo-cliente
                 else{
                     Toast.makeText(PublishPropertyActivity.this, "Complete todos los campos.", Toast.LENGTH_SHORT).show();
                 }
