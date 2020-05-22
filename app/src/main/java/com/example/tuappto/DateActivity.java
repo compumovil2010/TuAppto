@@ -32,8 +32,6 @@ public class DateActivity extends AppCompatActivity {
                 }
             }
         });
-
-
     }
 
     private void showDatePickerDialog() {
