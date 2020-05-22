@@ -25,7 +25,6 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
-<<<<<<< HEAD
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -39,8 +38,6 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
-=======
->>>>>>> origin/pablo-cliente
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
@@ -55,10 +52,7 @@ public class RegistryActivity extends AppCompatActivity {
     private static final int PERMISSION_GALLERY_ID = 2;
     private static final int REQUEST_IMAGE_CAPTURE = 3;
     private static final int IMAGE_PICKER_REQUEST = 4;
-<<<<<<< HEAD
     private static final int PERMISSION_INTERNET = 5;
-=======
->>>>>>> origin/pablo-cliente
     private EditText email;
     private EditText name;
     private EditText password;
@@ -323,9 +317,6 @@ public class RegistryActivity extends AppCompatActivity {
             }
         }
     }
-<<<<<<< HEAD
 }
-=======
 
-}
->>>>>>> origin/pablo-cliente
+

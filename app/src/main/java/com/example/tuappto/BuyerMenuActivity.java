@@ -2,6 +2,7 @@ package com.example.tuappto;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.hardware.Sensor;
@@ -35,12 +36,10 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.auth.FirebaseAuth;
-<<<<<<< HEAD
 
-=======
 import com.google.firebase.auth.FirebaseUser;
 ;
->>>>>>> origin/pablo-cliente
+
 import java.util.ArrayList;
 
 public class BuyerMenuActivity extends AppCompatActivity implements OnMapReadyCallback {
@@ -226,10 +225,7 @@ public class BuyerMenuActivity extends AppCompatActivity implements OnMapReadyCa
         actualizarUbicacion(currentLocation);
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 150000, 0, locationListener );
     }
-<<<<<<< HEAD
-=======
 
->>>>>>> origin/pablo-cliente
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         if (requestCode == REQUEST_CODE) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
