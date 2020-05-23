@@ -37,6 +37,8 @@ import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.io.IOException;
+
 public class DateActivity extends FragmentActivity implements OnMapReadyCallback {
 
     EditText etPlannedDate;
@@ -123,6 +125,19 @@ public class DateActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.getUiSettings().setZoomGesturesEnabled(true);
         mMap.getUiSettings().setZoomControlsEnabled(true);
         fetchLocation();
+
+        mMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
+            @Override
+            public void onMapLongClick(LatLng latLng) {
+                try {
+                    mMap.clear();
+                    mMap.addMarker(new MarkerOptions().position(latLng)
+                            .title(mGeocoder.getFromLocation(latLng.latitude, latLng.longitude, 1).get(0).getAddressLine(0)));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
 
     }
     private void actualizarUbicacion(Location location){

@@ -37,9 +37,16 @@ import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 
 import java.util.ArrayList;
+
+import negocio.Property;
 
 public class BuyerMenuActivity extends AppCompatActivity implements OnMapReadyCallback {
 
@@ -57,8 +64,11 @@ public class BuyerMenuActivity extends AppCompatActivity implements OnMapReadyCa
     public Button buttonDates;
     private FirebaseAuth mAuth;
     private Marker marcador;
+    private FirebaseDatabase database;
+    private DatabaseReference myRef;
+    public static final String PATH_PROPERTY = "properties/";
     private static final int REQUEST_CODE = 101;
-    ArrayList<LatLng> ofertas = new ArrayList<>();
+    ArrayList<Property> ofertas = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,6 +79,8 @@ public class BuyerMenuActivity extends AppCompatActivity implements OnMapReadyCa
         supportMapFragment.getMapAsync(BuyerMenuActivity.this);
 
         mGeocoder = new Geocoder(getBaseContext());
+        database = FirebaseDatabase.getInstance();
+        myRef = database.getReference();
         mAuth = FirebaseAuth.getInstance();
 
         buttonViewProperties = findViewById(R.id.buttonViewProperties);
@@ -153,6 +165,7 @@ public class BuyerMenuActivity extends AppCompatActivity implements OnMapReadyCa
         mMap.getUiSettings().setZoomGesturesEnabled(true);
         mMap.getUiSettings().setZoomControlsEnabled(true);
         fetchLocation();
+        //loadProperties();
     }
     private void actualizarUbicacion(Location location){
         if(location != null){
@@ -169,6 +182,15 @@ public class BuyerMenuActivity extends AppCompatActivity implements OnMapReadyCa
                 .title("aquitoy"));
         mMap.animateCamera(miUbicacion);
     }
+    private void actualizarPropiedades(){
+        LatLng latLng;
+        MarkerOptions markerOptions;
+        for (Property propiedad: ofertas) {
+            latLng = new LatLng(propiedad.getLocation().latitude, propiedad.getLocation().longitude);
+            markerOptions = new MarkerOptions().position(latLng).title(propiedad.getPrice() + "");
+            mMap.addMarker(markerOptions);
+        }
+    }
 
     LocationListener locationListener = new LocationListener() {
         @Override public void onLocationChanged(Location location) {actualizarUbicacion(location);}
@@ -176,6 +198,27 @@ public class BuyerMenuActivity extends AppCompatActivity implements OnMapReadyCa
         @Override public void onProviderEnabled(String provider) {}
         @Override public void onProviderDisabled(String provider) {}
     };
+
+
+    public void loadProperties() {
+        myRef = database.getReference(PATH_PROPERTY);
+        myRef. addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot singleSnapshot : dataSnapshot.getChildren()) {
+                    Property propiedad = singleSnapshot.getValue(Property.class);
+                    Log.i("PROP", "Encontró propiedad en: " + propiedad.getLocation().latitude + " " + propiedad.getLocation().longitude);
+                    ofertas.add(propiedad);
+                }
+                agregarMarcador(currentLocation.getLatitude(), currentLocation.getLongitude());
+                actualizarPropiedades();
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.w("PROP", "error en la consulta", databaseError.toException());
+            }
+        });
+    }
 
     @Override
     protected void onResume() {
