@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
+import negocio.Appointment;
 
 import android.Manifest;
 import android.app.Activity;
@@ -23,8 +24,10 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdate;
@@ -36,11 +39,16 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.io.IOException;
 
 public class DateActivity extends FragmentActivity implements OnMapReadyCallback {
 
+    private static final String PATH_APPOINMENTS = "appoinments/" ;
     EditText etPlannedDate;
     int dayA;
     int monthA;
@@ -49,11 +57,19 @@ public class DateActivity extends FragmentActivity implements OnMapReadyCallback
     private Location currentLocation;
     public Geocoder mGeocoder;
 
+    private FirebaseAuth mAuth;
+    private FirebaseDatabase database;
+    private DatabaseReference myRef;
+    FirebaseUser currentUser;
+
     private SensorManager sensorManager;
     private Sensor lightSensor;
     private SensorEventListener lightSensorListener;
     private LatLng latLng;
     Marker marcador;
+
+    private Button buttonContinue;
+    private TimePicker timePicker1;
 
     private static final int REQUEST_CODE = 101;
 
@@ -61,6 +77,12 @@ public class DateActivity extends FragmentActivity implements OnMapReadyCallback
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_date);
+
+        database= FirebaseDatabase.getInstance();
+        mAuth = FirebaseAuth.getInstance();
+        currentUser = mAuth.getCurrentUser();
+
+        timePicker1 = (TimePicker) findViewById(R.id.timePicker1);
 
         SupportMapFragment supportMapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         assert supportMapFragment != null;
@@ -99,6 +121,33 @@ public class DateActivity extends FragmentActivity implements OnMapReadyCallback
             @Override
             public void onAccuracyChanged(Sensor sensor, int accuracy) {}
         };
+
+        buttonContinue = findViewById(R.id.buttonContinueDate);
+        buttonContinue.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                crearCita();
+            }
+        });
+
+    }
+
+    private void crearCita() {
+        int hour = timePicker1.getCurrentHour();
+        int min = timePicker1.getCurrentMinute();
+
+        Appointment appointment = new Appointment();
+
+        appointment.setDay(dayA);
+        appointment.setMonth(monthA);
+        appointment.setYear(yearA);
+        appointment.setMin(min);
+        appointment.setHour(hour);
+        appointment.setLocation(latLng);
+        appointment.setUser(currentUser.getUid());
+
+        myRef = database.getReference(PATH_APPOINMENTS + database.getReference().push().getKey() );
+        myRef.setValue(appointment);
     }
 
     private void showDatePickerDialog() {
