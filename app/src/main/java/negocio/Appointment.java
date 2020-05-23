@@ -1,14 +1,13 @@
 package negocio;
 
-import com.google.android.gms.maps.model.LatLng;
+import android.location.Location;
 
-import java.util.Calendar;
-import java.util.Date;
+import com.google.android.gms.maps.model.LatLng;
 
 public class Appointment {
     String owner;
     String user;
-    LatLng location;
+    Location location;
     int year;
     int month;
     int day;
@@ -18,7 +17,7 @@ public class Appointment {
     public Appointment() {
     }
 
-    public Appointment(String owner, String user, LatLng location, int year, int month, int day, int hour, int min) {
+    public Appointment(String owner, String user, Location location, int year, int month, int day, int hour, int min) {
         this.owner = owner;
         this.user = user;
         this.location = location;
@@ -45,11 +44,11 @@ public class Appointment {
         this.user = user;
     }
 
-    public LatLng getLocation() {
+    public Location getLocation() {
         return location;
     }
 
-    public void setLocation(LatLng location) {
+    public void setLocation(Location location) {
         this.location = location;
     }
 

@@ -135,7 +135,9 @@ public class DateActivity extends FragmentActivity implements OnMapReadyCallback
     private void crearCita() {
         int hour = timePicker1.getCurrentHour();
         int min = timePicker1.getCurrentMinute();
-
+        Location l = new Location("");
+        l.setLatitude(latLng.latitude);
+        l.setLongitude(latLng.longitude);
         Appointment appointment = new Appointment();
 
         appointment.setDay(dayA);
@@ -143,7 +145,7 @@ public class DateActivity extends FragmentActivity implements OnMapReadyCallback
         appointment.setYear(yearA);
         appointment.setMin(min);
         appointment.setHour(hour);
-        appointment.setLocation(latLng);
+        appointment.setLocation(l);
         appointment.setUser(currentUser.getUid());
 
         myRef = database.getReference(PATH_APPOINMENTS + database.getReference().push().getKey() );
