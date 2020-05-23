@@ -52,7 +52,7 @@ public class DateActivity extends FragmentActivity implements OnMapReadyCallback
     private SensorManager sensorManager;
     private Sensor lightSensor;
     private SensorEventListener lightSensorListener;
-
+    private LatLng latLng;
     Marker marcador;
 
     private static final int REQUEST_CODE = 101;
@@ -128,7 +128,8 @@ public class DateActivity extends FragmentActivity implements OnMapReadyCallback
 
         mMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
             @Override
-            public void onMapLongClick(LatLng latLng) {
+            public void onMapLongClick(LatLng latLng1) {
+                latLng = latLng1;
                 try {
                     mMap.clear();
                     mMap.addMarker(new MarkerOptions().position(latLng)
