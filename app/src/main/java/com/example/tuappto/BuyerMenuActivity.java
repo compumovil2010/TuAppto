@@ -21,11 +21,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -57,7 +59,7 @@ public class BuyerMenuActivity extends AppCompatActivity implements OnMapReadyCa
     private SensorManager sensorManager;
     private Sensor lightSensor;
     private SensorEventListener lightSensorListener;
-
+    private LocationManager locationManager;
     public Button buttonViewProperties;
     public Button buttonMyFavourites;
     public Button buttonChats;
@@ -93,35 +95,36 @@ public class BuyerMenuActivity extends AppCompatActivity implements OnMapReadyCa
 
         mGeocoder = new Geocoder(getBaseContext());
 
+
         buttonViewProperties.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(view.getContext(),SearchPropertyActivity.class));
+                startActivity(new Intent(view.getContext(), SearchPropertyActivity.class));
             }
         });
 
         buttonMyFavourites.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(view.getContext(),InterestListActivity.class));
+                startActivity(new Intent(view.getContext(), InterestListActivity.class));
             }
         });
 
         buttonChats.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(view.getContext(),Chat2Activity.class));
+                startActivity(new Intent(view.getContext(), Chat2Activity.class));
             }
         });
 
         buttonDates.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(view.getContext(),SellerDatesActivity.class));
+                startActivity(new Intent(view.getContext(), SellerDatesActivity.class));
             }
         });
 
-        sensorManager= (SensorManager) getSystemService(SENSOR_SERVICE);
+        sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
         assert sensorManager != null;
         lightSensor = sensorManager.getDefaultSensor(Sensor.TYPE_LIGHT);
         lightSensorListener = new SensorEventListener() {
@@ -129,15 +132,16 @@ public class BuyerMenuActivity extends AppCompatActivity implements OnMapReadyCa
             public void onSensorChanged(SensorEvent event) {
                 if (mMap != null) {
                     if (event.values[0] < 1000) {
-                        mMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(BuyerMenuActivity.this,R.raw.style_json_night));
+                        mMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(BuyerMenuActivity.this, R.raw.style_json_night));
                     } else {
-                        mMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(BuyerMenuActivity.this,R.raw.style_json_day));
+                        mMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(BuyerMenuActivity.this, R.raw.style_json_day));
                     }
                 }
             }
 
             @Override
-            public void onAccuracyChanged(Sensor sensor, int accuracy) {}
+            public void onAccuracyChanged(Sensor sensor, int accuracy) {
+            }
         };
     }
 
@@ -167,25 +171,28 @@ public class BuyerMenuActivity extends AppCompatActivity implements OnMapReadyCa
         fetchLocation();
         //loadProperties();
     }
-    private void actualizarUbicacion(Location location){
-        if(location != null){
+
+    private void actualizarUbicacion(Location location) {
+        if (location != null) {
             currentLocation = location;
             agregarMarcador(currentLocation.getLatitude(), currentLocation.getLongitude());
         }
     }
-    private void agregarMarcador(double lat, double lng){
+
+    private void agregarMarcador(double lat, double lng) {
         LatLng latLng = new LatLng(lat, lng);
         CameraUpdate miUbicacion = CameraUpdateFactory.newLatLngZoom(latLng, 15);
         MarkerOptions markerOptions = new MarkerOptions().position(latLng).title(latLng + " ");
-        if(marcador!=null)marcador.remove();
-        marcador=mMap.addMarker(new MarkerOptions().position(latLng)
+        if (marcador != null) marcador.remove();
+        marcador = mMap.addMarker(new MarkerOptions().position(latLng)
                 .title("aquitoy"));
         mMap.animateCamera(miUbicacion);
     }
-    private void actualizarPropiedades(){
+
+    private void actualizarPropiedades() {
         LatLng latLng;
         MarkerOptions markerOptions;
-        for (Property propiedad: ofertas) {
+        for (Property propiedad : ofertas) {
             latLng = new LatLng(propiedad.getLocation().latitude, propiedad.getLocation().longitude);
             markerOptions = new MarkerOptions().position(latLng).title(propiedad.getPrice() + "");
             mMap.addMarker(markerOptions);
@@ -193,16 +200,28 @@ public class BuyerMenuActivity extends AppCompatActivity implements OnMapReadyCa
     }
 
     LocationListener locationListener = new LocationListener() {
-        @Override public void onLocationChanged(Location location) {actualizarUbicacion(location);}
-        @Override public void onStatusChanged(String provider, int status, Bundle extras) {}
-        @Override public void onProviderEnabled(String provider) {}
-        @Override public void onProviderDisabled(String provider) {}
+        @Override
+        public void onLocationChanged(Location location) {
+            actualizarUbicacion(location);
+        }
+
+        @Override
+        public void onStatusChanged(String provider, int status, Bundle extras) {
+        }
+
+        @Override
+        public void onProviderEnabled(String provider) {
+        }
+
+        @Override
+        public void onProviderDisabled(String provider) {
+        }
     };
 
 
     public void loadProperties() {
         myRef = database.getReference(PATH_PROPERTY);
-        myRef. addValueEventListener(new ValueEventListener() {
+        myRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot singleSnapshot : dataSnapshot.getChildren()) {
@@ -213,6 +232,7 @@ public class BuyerMenuActivity extends AppCompatActivity implements OnMapReadyCa
                 agregarMarcador(currentLocation.getLatitude(), currentLocation.getLongitude());
                 actualizarPropiedades();
             }
+
             @Override
             public void onCancelled(DatabaseError databaseError) {
                 Log.w("PROP", "error en la consulta", databaseError.toException());
@@ -225,11 +245,13 @@ public class BuyerMenuActivity extends AppCompatActivity implements OnMapReadyCa
         super.onResume();
         sensorManager.registerListener(lightSensorListener, lightSensor, SensorManager.SENSOR_DELAY_NORMAL);
     }
+
     @Override
     protected void onPause() {
         super.onPause();
         sensorManager.unregisterListener(lightSensorListener);
     }
+
     private void fetchLocation() {
         if (ActivityCompat.checkSelfPermission(
                 this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
@@ -237,10 +259,33 @@ public class BuyerMenuActivity extends AppCompatActivity implements OnMapReadyCa
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_CODE);
             return;
         }
-        LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        currentLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        currentLocation = getLastBestLocation();
         actualizarUbicacion(currentLocation);
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 150000, 0, locationListener );
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1100, 0, locationListener);
+    }
+
+    private Location getLastBestLocation() {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        }
+        Location locationGPS = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+        Location locationNet = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+
+        long GPSLocationTime = 0;
+        if (null != locationGPS) { GPSLocationTime = locationGPS.getTime(); }
+
+        long NetLocationTime = 0;
+
+        if (null != locationNet) {
+            NetLocationTime = locationNet.getTime();
+        }
+
+        if ( 0 < GPSLocationTime - NetLocationTime ) {
+            return locationGPS;
+        }
+        else {
+            return locationNet;
+        }
     }
 
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
