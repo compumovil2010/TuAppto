@@ -15,7 +15,7 @@
         app:srcCompat="@drawable/inicial"
         android:alpha="0.2"/>
 
-    
+
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
