@@ -7,6 +7,7 @@ public class User {
     private String secondName;
     private String imagePath;
     private Long phone;
+    private String country;
 
     public User(String email, String password, String name, String secondName, Long phone, String imagePath) {
         this.email = email;
@@ -67,5 +68,13 @@ public class User {
 
     public String getImagePath() {
         return imagePath;
+    }
+
+    public String getCountry() {
+        return country;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
     }
 }

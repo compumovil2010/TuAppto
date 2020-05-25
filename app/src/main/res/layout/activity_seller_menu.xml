@@ -14,29 +14,32 @@
         android:layout_height="match_parent"
         app:srcCompat="@drawable/inicial"
         android:alpha="0.2"/>
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/toolbar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_gravity="center">
-
-        <include
-            android:id="@+id/toolbar"
-            layout="@layout/toolbar"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+        android:layout_height="match_parent">
 
         <ImageView
             android:id="@+id/imageViewMenu"
             android:layout_width="250dp"
             android:layout_height="250dp"
-            android:layout_marginTop="32dp"
+            android:layout_marginTop="100dp"
             android:contentDescription="@string/principal_image_description"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.496"
+
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/toolbar"
+            app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/principal" />
 
         <Button
@@ -104,6 +107,9 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/buttonInterested" />
+
+
     </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
 
 </FrameLayout>

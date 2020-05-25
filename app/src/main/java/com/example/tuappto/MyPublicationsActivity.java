@@ -36,6 +36,7 @@ public class MyPublicationsActivity extends AppCompatActivity {
 
         mRecyclerView = findViewById(R.id.recyclerViewProperties);
 
+
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mDatabase = FirebaseDatabase.getInstance().getReference();
 

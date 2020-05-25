@@ -7,5 +7,12 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
     </style>
+    <style name="MyTimePickerWidgetStyle" parent="@android:style/Widget.Material.TimePicker">
+        <item name="android:headerBackground">@color/colorPrimary</item>
+        <item name="android:numbersTextColor">@color/colorBlack</item>
+        <item name="android:numbersSelectorColor">@color/colorWhite</item>
+        <item name="android:numbersBackgroundColor">@color/colorPrimary</item>
+        <item name="android:amPmTextColor">#FFFFFF</item>
 
+         </style>
 </resources>

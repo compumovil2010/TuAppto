@@ -412,7 +412,7 @@ public class PublishPropertyActivity extends FragmentActivity implements OnMapRe
         newProperty = new Property();
 
         //Aca se pone la ubicacion
-        location = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
+        location = new LatLng(destiny.getLatitude(), destiny.getLongitude());
         newProperty.setArea(area);
         newProperty.setDescription(description);
         newProperty.setParking(parking);
