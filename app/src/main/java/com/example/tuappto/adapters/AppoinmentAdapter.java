@@ -1,5 +1,6 @@
 package com.example.tuappto.adapters;
 
+import android.annotation.SuppressLint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,9 +31,7 @@ public class AppoinmentAdapter extends RecyclerView.Adapter<AppoinmentAdapter.Vi
         this.publication = publication;
     }
 
-    private FirebaseFirestore db = FirebaseFirestore.getInstance();
-    private static FirebaseFirestoreSettings settings = new FirebaseFirestoreSettings.Builder().build();
-    private static StorageReference mStorageRef = FirebaseStorage.getInstance().getReference();
+
 
 
     @Override
@@ -45,11 +44,12 @@ public class AppoinmentAdapter extends RecyclerView.Adapter<AppoinmentAdapter.Vi
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(publication,parent,false);
-        view.setOnClickListener(this);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.publication,parent,false);
+        view.setOnClickListener(AppoinmentAdapter.this);
         return new AppoinmentAdapter.ViewHolder(view);
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Appointment appointment = appoinments.get(position);
@@ -81,7 +81,7 @@ public class AppoinmentAdapter extends RecyclerView.Adapter<AppoinmentAdapter.Vi
         private TextView textViewRooms;
         private TextView textViewPrice;
         private TextView textViewKind;
-        private ImageView imageViewProperty;
+
 
         public View view;
 
