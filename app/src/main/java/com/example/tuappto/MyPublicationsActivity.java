@@ -5,6 +5,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import android.content.Intent;
+import android.location.Address;
+import android.location.Geocoder;
 import android.os.Bundle;
 import android.view.View;
 import com.example.tuappto.adapters.PropertyAdapter;
@@ -16,7 +18,11 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.android.gms.maps.model.LatLng;
+
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 import negocio.Property;
 
@@ -28,6 +34,8 @@ public class MyPublicationsActivity extends AppCompatActivity {
     private ArrayList<Property> mProperties = new ArrayList<>();
     private FirebaseUser fuser;
     public FirebaseAuth mAuth;
+    Geocoder geocoder;
+    List<Address> addresses;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +44,7 @@ public class MyPublicationsActivity extends AppCompatActivity {
 
         mRecyclerView = findViewById(R.id.recyclerViewProperties);
 
+        geocoder = new Geocoder(this, Locale.getDefault());
 
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mDatabase = FirebaseDatabase.getInstance().getReference();
@@ -69,6 +78,14 @@ public class MyPublicationsActivity extends AppCompatActivity {
                             double latitude = Double.parseDouble(Objects.requireNonNull(ds.child("location").child("latitude").getValue()).toString());
                             double longitude = Double.parseDouble(Objects.requireNonNull(ds.child("location").child("longitude").getValue()).toString());
                             LatLng latLng = new LatLng(latitude, longitude);
+
+                            try {
+                                addresses = geocoder.getFromLocation(latitude, longitude, 1);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                            String address = addresses.get(0).getAddressLine(0);
+
                             Property aux = new Property();
                             aux.setSellOrRent(kind);
                             aux.setParking(parking);
@@ -81,6 +98,8 @@ public class MyPublicationsActivity extends AppCompatActivity {
                             aux.setLocation(latLng);
                             aux.setDescription(description);
                             aux.setOwnerId(ownerId);
+
+                            aux.setAddress(address);
                             mProperties.add(aux);
                         }
 
