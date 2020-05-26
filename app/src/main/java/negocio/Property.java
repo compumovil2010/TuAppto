@@ -13,8 +13,17 @@ public class Property {
     private String description;
     private String ownerId;
     private String imagePath;
+    private String address;
 
     public Property() {
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
     }
 
     public int getPrice() {

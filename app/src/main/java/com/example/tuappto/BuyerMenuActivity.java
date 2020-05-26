@@ -120,7 +120,7 @@ public class BuyerMenuActivity extends AppCompatActivity implements OnMapReadyCa
         buttonDates.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(view.getContext(), SellerDatesActivity.class));
+                startActivity(new Intent(view.getContext(), BuyerDatesActivity.class));
             }
         });
 
