@@ -61,7 +61,7 @@ public class AppoinmentAdapter extends RecyclerView.Adapter<AppoinmentAdapter.Vi
         holder.textViewKind.setText("Minutos:" + String.valueOf(appointment.getMin()));
         //poner String.format("Direccion: %s", String.valueOf(property. ACA EL METODO QUE LLAMA A LA DIRECCION DESDE PROPIEDAD ()))
 
-        holder.textViewAddress.setText("aqui va la direccion");
+        holder.textViewAddress.setText("Direccion: " + appointment.getAddress());
 
     }
     public void setOnClickListener(View.OnClickListener listener){
