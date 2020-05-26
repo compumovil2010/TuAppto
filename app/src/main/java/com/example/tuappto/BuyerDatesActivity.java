@@ -7,6 +7,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import negocio.Appointment;
 
 import android.content.Intent;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.os.Bundle;
 import android.view.View;
@@ -23,7 +25,10 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 
 public class BuyerDatesActivity extends AppCompatActivity {
@@ -35,11 +40,15 @@ public class BuyerDatesActivity extends AppCompatActivity {
     private ArrayList<Appointment> mAppoinment = new ArrayList<>();
     private FirebaseUser fuser;
     public FirebaseAuth mAuth;
+    Geocoder geocoder;
+    List<Address> addresses;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_buyer_dates);
 
+        geocoder = new Geocoder(this, Locale.getDefault());
 
         mRecyclerView = findViewById(R.id.recyclerViewDatesB);
         mRecyclerView.setHasFixedSize(true);
@@ -79,6 +88,13 @@ public class BuyerDatesActivity extends AppCompatActivity {
                         location.setLongitude(longitude);
                         location.setLatitude(latitude);
 
+                        try {
+                            addresses = geocoder.getFromLocation(latitude, longitude, 1);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+
+                        String address = addresses.get(0).getAddressLine(0);
                         Appointment aux2 = new Appointment();
 
                         aux2.setUser(user);
@@ -88,6 +104,7 @@ public class BuyerDatesActivity extends AppCompatActivity {
                         aux2.setHour(hour);
                         aux2.setMin(min);
                         aux2.setLocation(location);
+                        aux2.setAddress(address);
 
                         //aux.setOwner(owner);
 
@@ -106,6 +123,7 @@ public class BuyerDatesActivity extends AppCompatActivity {
                         bundle.putInt("Day", mAppoinment.get(mRecyclerView.getChildAdapterPosition(v)).getDay());
                         bundle.putInt("Hour", mAppoinment.get(mRecyclerView.getChildAdapterPosition(v)).getHour());
                         bundle.putInt("Min", mAppoinment.get(mRecyclerView.getChildAdapterPosition(v)).getMin());
+                        bundle.putString("Address", mAppoinment.get(mRecyclerView.getChildAdapterPosition(v)).getAddress());
                         //bundle.putDouble("Longitud", mAppoinment.get(mRecyclerView.getChildAdapterPosition(v)).getLocation().getLongitude());
                         //bundle.putDouble("Latitud", mAppoinment.get(mRecyclerView.getChildAdapterPosition(v)).getLocation().getLatitude());
 

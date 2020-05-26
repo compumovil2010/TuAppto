@@ -13,6 +13,7 @@ public class Appointment {
     int day;
     int hour;
     int min;
+    String address;
 
     public Appointment() {
     }
@@ -26,6 +27,14 @@ public class Appointment {
         this.day = day;
         this.hour = hour;
         this.min = min;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
     }
 
     public String getOwner() {
