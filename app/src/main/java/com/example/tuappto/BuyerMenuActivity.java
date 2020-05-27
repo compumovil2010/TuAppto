@@ -2,7 +2,9 @@ package com.example.tuappto;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.hardware.Sensor;
@@ -28,7 +30,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
-import com.google.android.gms.location.FusedLocationProviderClient;
+import com.example.tuappto.listeners.onMarkerLongClickListener;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -45,8 +47,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-
 import java.util.ArrayList;
+import java.util.Objects;
 
 import negocio.Property;
 
@@ -71,6 +73,7 @@ public class BuyerMenuActivity extends AppCompatActivity implements OnMapReadyCa
     public static final String PATH_PROPERTY = "properties/";
     private static final int REQUEST_CODE = 101;
     ArrayList<Property> ofertas = new ArrayList<>();
+    ArrayList<Marker> markers = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,7 +82,7 @@ public class BuyerMenuActivity extends AppCompatActivity implements OnMapReadyCa
         SupportMapFragment supportMapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         assert supportMapFragment != null;
         supportMapFragment.getMapAsync(BuyerMenuActivity.this);
-
+        BuyerMenuActivity context = this;
         mGeocoder = new Geocoder(getBaseContext());
         database = FirebaseDatabase.getInstance();
         myRef = database.getReference();
@@ -94,7 +97,6 @@ public class BuyerMenuActivity extends AppCompatActivity implements OnMapReadyCa
         setSupportActionBar(toolbar);
 
         mGeocoder = new Geocoder(getBaseContext());
-
 
         buttonViewProperties.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -169,7 +171,13 @@ public class BuyerMenuActivity extends AppCompatActivity implements OnMapReadyCa
         mMap.getUiSettings().setZoomGesturesEnabled(true);
         mMap.getUiSettings().setZoomControlsEnabled(true);
         fetchLocation();
-        //loadProperties();
+        getPropertiesFromFirebase();
+        mMap.setOnMarkerDragListener(new onMarkerLongClickListener(markers) {
+            @Override
+            public void onLongClickListener(Marker marker) {
+
+            }
+        });
     }
 
     private void actualizarUbicacion(Location location) {
@@ -192,11 +200,45 @@ public class BuyerMenuActivity extends AppCompatActivity implements OnMapReadyCa
     private void actualizarPropiedades() {
         LatLng latLng;
         MarkerOptions markerOptions;
+        Marker mark;
         for (Property propiedad : ofertas) {
             latLng = new LatLng(propiedad.getLocation().latitude, propiedad.getLocation().longitude);
-            markerOptions = new MarkerOptions().position(latLng).title(propiedad.getPrice() + "");
-            mMap.addMarker(markerOptions);
+            markerOptions = new MarkerOptions()
+                    .position(latLng)
+                    .title(propiedad.getSellOrRent() + ": " + propiedad.getPrice() + "$")
+                    .draggable(true);
+            mark = mMap.addMarker(markerOptions);
+            markers.add(mark);
         }
+        mMap.setOnMarkerDragListener(new onMarkerLongClickListener(markers) {
+            @Override
+            public void onLongClickListener(Marker marker) {
+                showAlertDialogButtonClicked();
+            }
+        });
+    }
+
+    public void showAlertDialogButtonClicked() {
+
+        // setup the alert builder
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("What do you want to do?");
+
+        // add a list
+        String[] opciones = {"Go There!", "Show me the property!"};
+        builder.setItems(opciones, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                switch (which) {
+                    case 0: //TODO go there
+                    case 1: //TODO show property
+                }
+            }
+        });
+
+        // create and show the alert dialog
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 
     LocationListener locationListener = new LocationListener() {
@@ -204,7 +246,6 @@ public class BuyerMenuActivity extends AppCompatActivity implements OnMapReadyCa
         public void onLocationChanged(Location location) {
             actualizarUbicacion(location);
         }
-
         @Override
         public void onStatusChanged(String provider, int status, Bundle extras) {
         }
@@ -219,27 +260,49 @@ public class BuyerMenuActivity extends AppCompatActivity implements OnMapReadyCa
     };
 
 
-    public void loadProperties() {
-        myRef = database.getReference(PATH_PROPERTY);
-        myRef.addValueEventListener(new ValueEventListener() {
+    private  void getPropertiesFromFirebase(){
+        myRef.child("properties").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot singleSnapshot : dataSnapshot.getChildren()) {
-                    Property propiedad = singleSnapshot.getValue(Property.class);
-                    Log.i("PROP", "Encontró propiedad en: " + propiedad.getLocation().latitude + " " + propiedad.getLocation().longitude);
-                    ofertas.add(propiedad);
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(dataSnapshot.exists()){
+                    for(DataSnapshot ds: dataSnapshot.getChildren()){
+                        int parking = Integer.parseInt(Objects.requireNonNull(ds.child("parking").getValue()).toString());
+                        int area = Integer.parseInt(Objects.requireNonNull(ds.child("area").getValue()).toString());
+                        int price = Integer.parseInt(Objects.requireNonNull(ds.child("price").getValue()).toString());
+                        int rooms = Integer.parseInt(Objects.requireNonNull(ds.child("rooms").getValue()).toString());
+                        String kind = Objects.requireNonNull(ds.child("sellOrRent").getValue()).toString();
+                        String imagePath = Objects.requireNonNull(ds.child("imagePath").getValue()).toString();
+                        String description = Objects.requireNonNull(ds.child("description").getValue()).toString();
+                        String ownerId = Objects.requireNonNull(ds.child("ownerId").getValue()).toString();
+                        double latitude = Double.parseDouble(Objects.requireNonNull(ds.child("location").child("latitude").getValue()).toString());
+                        double longitude = Double.parseDouble(Objects.requireNonNull(ds.child("location").child("longitude").getValue()).toString());
+                        LatLng latLng = new LatLng(latitude, longitude);
+                        String address = "";
+
+                        Property aux = new Property();
+                        aux.setSellOrRent(kind);
+                        aux.setParking(parking);
+                        aux.setArea(area);
+                        aux.setPrice(price);
+                        aux.setRooms(rooms);
+                        aux.setImagePath(imagePath);
+                        aux.setLocation(latLng);
+                        aux.setDescription(description);
+                        aux.setOwnerId(ownerId);
+                        aux.setAddress(address);
+                        ofertas.add(aux);
+                    }
+                    actualizarPropiedades();
+
                 }
-                agregarMarcador(currentLocation.getLatitude(), currentLocation.getLongitude());
-                actualizarPropiedades();
             }
 
             @Override
-            public void onCancelled(DatabaseError databaseError) {
-                Log.w("PROP", "error en la consulta", databaseError.toException());
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
             }
         });
     }
-
     @Override
     protected void onResume() {
         super.onResume();
