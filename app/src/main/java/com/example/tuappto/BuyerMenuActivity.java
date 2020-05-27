@@ -47,7 +47,11 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import org.json.JSONObject;
+
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Objects;
 
 import negocio.Property;
@@ -74,7 +78,7 @@ public class BuyerMenuActivity extends AppCompatActivity implements OnMapReadyCa
     private static final int REQUEST_CODE = 101;
     ArrayList<Property> ofertas = new ArrayList<>();
     ArrayList<Marker> markers = new ArrayList<>();
-
+    private Marker selectedmarker;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -213,6 +217,7 @@ public class BuyerMenuActivity extends AppCompatActivity implements OnMapReadyCa
         mMap.setOnMarkerDragListener(new onMarkerLongClickListener(markers) {
             @Override
             public void onLongClickListener(Marker marker) {
+                selectedmarker = marker;
                 showAlertDialogButtonClicked();
             }
         });
@@ -231,7 +236,11 @@ public class BuyerMenuActivity extends AppCompatActivity implements OnMapReadyCa
             public void onClick(DialogInterface dialog, int which) {
                 switch (which) {
                     case 0: //TODO go there
-                    case 1: //TODO show property
+                    case 1:
+                        Intent intent = new Intent(BuyerMenuActivity.this, Street_view.class );
+                        intent.putExtra("latitud", selectedmarker.getPosition().latitude);
+                        intent.putExtra("longitud", selectedmarker.getPosition().longitude);
+                        startActivity(intent);
                 }
             }
         });
@@ -240,6 +249,7 @@ public class BuyerMenuActivity extends AppCompatActivity implements OnMapReadyCa
         AlertDialog dialog = builder.create();
         dialog.show();
     }
+
 
     LocationListener locationListener = new LocationListener() {
         @Override

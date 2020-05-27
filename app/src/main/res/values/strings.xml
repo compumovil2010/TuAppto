@@ -131,4 +131,5 @@
     <string name="title_activity_buyer_menu">BuyerMenuActivity</string>
     <string name="chat_date">Cita</string>
     <string name="report_planned_date">IngresarFecha</string>
+    <string name="title_activity_street_view">Map</string>
 </resources>
