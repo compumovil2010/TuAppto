@@ -64,7 +64,7 @@ public class AppoinmentAdapter extends RecyclerView.Adapter<AppoinmentAdapter.Vi
         }
 
         holder.textViewEmail.setText(String.format("Direccion: %s", String.valueOf(appointment.getAddress())));
-        holder.textViewPhone.setText("Fecha: "+ appointment.getDay() + ":" + appointment.getMonth()+ ":"+appointment.getYear());
+        holder.textViewPhone.setText("Fecha: "+ appointment.getDay() + "/" + appointment.getMonth()+ "/"+appointment.getYear());
         holder.textViewProperty.setText("Hora: "+ appointment.getHour() + ":" + appointment.getMin());
 
     }

@@ -138,6 +138,9 @@ public class SellerDatesActivity extends AppCompatActivity {
                             bundle.putInt("hour", mAppoinment.get(mRecyclerView.getChildAdapterPosition(v)).getHour());
                             bundle.putInt("min", mAppoinment.get(mRecyclerView.getChildAdapterPosition(v)).getMin());
                             bundle.putString("address", mAppoinment.get(mRecyclerView.getChildAdapterPosition(v)).getAddress());
+                            bundle.putString("imagePath", mAppoinment.get(mRecyclerView.getChildAdapterPosition(v)).getClientImagePath());
+                            bundle.putString("name",mAppoinment.get(mRecyclerView.getChildAdapterPosition(v)).getClientName());
+                            bundle.putString("secondName",mAppoinment.get(mRecyclerView.getChildAdapterPosition(v)).getClientSecondName());
 
                             i.putExtra("bundle", bundle);
 

@@ -15,7 +15,6 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.net.Uri;
@@ -109,7 +108,6 @@ public class PublishPropertyActivity extends FragmentActivity implements OnMapRe
     private FirebaseUser fuser;
     public FirebaseAuth mAuth;
     public Owner aux;
-    public List<Address> addresses;
 
     private static final int REQUEST_CODE = 101;
     @Override
