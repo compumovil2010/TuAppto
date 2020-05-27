@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -30,6 +31,12 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
 import com.example.tuappto.listeners.onMarkerLongClickListener;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -40,6 +47,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -47,6 +55,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -55,6 +65,7 @@ import java.util.List;
 import java.util.Objects;
 
 import negocio.Property;
+import negocio.Utilidades;
 
 public class BuyerMenuActivity extends AppCompatActivity implements OnMapReadyCallback {
 
@@ -79,6 +90,9 @@ public class BuyerMenuActivity extends AppCompatActivity implements OnMapReadyCa
     ArrayList<Property> ofertas = new ArrayList<>();
     ArrayList<Marker> markers = new ArrayList<>();
     private Marker selectedmarker;
+    JsonObjectRequest jsonObjectRequest;
+    RequestQueue request;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -99,7 +113,7 @@ public class BuyerMenuActivity extends AppCompatActivity implements OnMapReadyCa
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
+        request= Volley.newRequestQueue(getApplicationContext());
         mGeocoder = new Geocoder(getBaseContext());
 
         buttonViewProperties.setOnClickListener(new View.OnClickListener() {
@@ -235,7 +249,17 @@ public class BuyerMenuActivity extends AppCompatActivity implements OnMapReadyCa
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 switch (which) {
-                    case 0: //TODO go there
+                    case 0:
+                        Utilidades.coordenadas.setLatitudInicial(currentLocation.getLatitude());
+                        Utilidades.coordenadas.setLongitudInicial(currentLocation.getLatitude());
+                        Utilidades.coordenadas.setLatitudFinal(selectedmarker.getPosition().latitude);
+                        Utilidades.coordenadas.setLongitudFinal(selectedmarker.getPosition().longitude);
+/*
+                        webServiceObtenerRuta(String.valueOf(currentLocation.getLatitude()),String.valueOf(currentLocation.getLatitude()),
+                                String.valueOf(selectedmarker.getPosition().latitude),String.valueOf(selectedmarker.getPosition().longitude));
+
+                        createRoutes();
+*/
                     case 1:
                         Intent intent = new Intent(BuyerMenuActivity.this, Street_view.class );
                         intent.putExtra("latitud", selectedmarker.getPosition().latitude);
@@ -250,26 +274,16 @@ public class BuyerMenuActivity extends AppCompatActivity implements OnMapReadyCa
         dialog.show();
     }
 
-
     LocationListener locationListener = new LocationListener() {
         @Override
-        public void onLocationChanged(Location location) {
-            actualizarUbicacion(location);
-        }
+        public void onLocationChanged(Location location) {actualizarUbicacion(location);}
         @Override
-        public void onStatusChanged(String provider, int status, Bundle extras) {
-        }
-
+        public void onStatusChanged(String provider, int status, Bundle extras) {}
         @Override
-        public void onProviderEnabled(String provider) {
-        }
-
+        public void onProviderEnabled(String provider) {}
         @Override
-        public void onProviderDisabled(String provider) {
-        }
+        public void onProviderDisabled(String provider) {}
     };
-
-
     private  void getPropertiesFromFirebase(){
         myRef.child("properties").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -306,7 +320,6 @@ public class BuyerMenuActivity extends AppCompatActivity implements OnMapReadyCa
 
                 }
             }
-
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
 
@@ -318,13 +331,11 @@ public class BuyerMenuActivity extends AppCompatActivity implements OnMapReadyCa
         super.onResume();
         sensorManager.registerListener(lightSensorListener, lightSensor, SensorManager.SENSOR_DELAY_NORMAL);
     }
-
     @Override
     protected void onPause() {
         super.onPause();
         sensorManager.unregisterListener(lightSensorListener);
     }
-
     private void fetchLocation() {
         if (ActivityCompat.checkSelfPermission(
                 this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
@@ -337,7 +348,6 @@ public class BuyerMenuActivity extends AppCompatActivity implements OnMapReadyCa
         actualizarUbicacion(currentLocation);
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1100, 0, locationListener);
     }
-
     private Location getLastBestLocation() {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
         }
@@ -360,7 +370,6 @@ public class BuyerMenuActivity extends AppCompatActivity implements OnMapReadyCa
             return locationNet;
         }
     }
-
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         if (requestCode == REQUEST_CODE) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
@@ -370,15 +379,4 @@ public class BuyerMenuActivity extends AppCompatActivity implements OnMapReadyCa
             }
         }
     }
-    private void requestPermission(Activity context) {
-
-        if (ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            if (ActivityCompat.shouldShowRequestPermissionRationale(context, Manifest.permission.ACCESS_FINE_LOCATION)) {
-                Toast.makeText(context, "Acceso a localizacion necesario", Toast.LENGTH_SHORT).show();
-            }
-            ActivityCompat.requestPermissions(context, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, BuyerMenuActivity.REQUEST_CODE);
-        }
-    }
-
-
 }
