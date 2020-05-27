@@ -54,6 +54,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
+import java.util.Locale;
 
 import negocio.Owner;
 import negocio.Property;
@@ -241,7 +242,7 @@ public class PublishPropertyActivity extends FragmentActivity implements OnMapRe
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
         fetchLocation();
         destiny = new Location("");
-        mGeocoder = new Geocoder(getBaseContext());
+        mGeocoder = new Geocoder(getBaseContext(), Locale.getDefault());
 
 
     }
