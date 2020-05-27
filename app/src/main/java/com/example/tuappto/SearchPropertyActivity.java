@@ -5,6 +5,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import android.content.Intent;
+import android.location.Address;
+import android.location.Geocoder;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageButton;
@@ -15,7 +17,11 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 
 import negocio.Property;
@@ -27,11 +33,15 @@ public class SearchPropertyActivity extends AppCompatActivity {
     private PropertyAdapter mAdapter;
     private RecyclerView mRecyclerView;
     private ArrayList<Property> mProperties = new ArrayList<>();
+    Geocoder geocoder;
+    List<Address> addresses;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search_property);
+
+        geocoder = new Geocoder(this, Locale.getDefault());
 
         imageButtonFilters = findViewById(R.id.imageButtonFilters);
         mRecyclerView = findViewById(R.id.recyclerViewProperties);
@@ -68,6 +78,20 @@ public class SearchPropertyActivity extends AppCompatActivity {
                         double latitude = Double.parseDouble(Objects.requireNonNull(ds.child("location").child("latitude").getValue()).toString());
                         double longitude = Double.parseDouble(Objects.requireNonNull(ds.child("location").child("longitude").getValue()).toString());
                         LatLng latLng = new LatLng(latitude, longitude);
+                        String address = "";
+                        try {
+                            addresses = geocoder.getFromLocation(latitude, longitude, 1);
+
+                            if(addresses.get(0).getAddressLine(0).isEmpty()){
+                                address = "direccion desconocida";
+                            }else{
+                                address=addresses.get(0).getAddressLine(0);
+                            }
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+
+
                         Property aux = new Property();
                         aux.setSellOrRent(kind);
                         aux.setParking(parking);
@@ -78,6 +102,7 @@ public class SearchPropertyActivity extends AppCompatActivity {
                         aux.setLocation(latLng);
                         aux.setDescription(description);
                         aux.setOwnerId(ownerId);
+                        aux.setAddress(address);
                         mProperties.add(aux);
                     }
 

@@ -2,6 +2,8 @@ package com.example.tuappto.adapters;
 
 import android.annotation.SuppressLint;
 import android.graphics.BitmapFactory;
+import android.location.Address;
+import android.location.Geocoder;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +19,8 @@ import com.google.firebase.firestore.FirebaseFirestoreSettings;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import java.util.ArrayList;
+import java.util.List;
+
 import negocio.Property;
 
 public class PropertyAdapter extends RecyclerView.Adapter<PropertyAdapter.ViewHolder> implements View.OnClickListener {
@@ -24,9 +28,12 @@ public class PropertyAdapter extends RecyclerView.Adapter<PropertyAdapter.ViewHo
     private int resources;
     private ArrayList<Property> properties;
     private View.OnClickListener listener;
+
+
     public PropertyAdapter(ArrayList<Property>properties,int resources){
         this.properties = properties;
         this.resources = resources;
+
     }
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private static FirebaseFirestoreSettings settings = new FirebaseFirestoreSettings.Builder().build();
@@ -35,9 +42,11 @@ public class PropertyAdapter extends RecyclerView.Adapter<PropertyAdapter.ViewHo
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+
         View view = LayoutInflater.from(parent.getContext()).inflate(resources,parent,false);
         view.setOnClickListener(this);
         return new ViewHolder(view);
+
     }
 
     @SuppressLint("SetTextI18n")
@@ -63,8 +72,8 @@ public class PropertyAdapter extends RecyclerView.Adapter<PropertyAdapter.ViewHo
         holder.textViewRooms.setText(String.format("Habitaciones: %s", String.valueOf(property.getRooms())));
         holder.textViewPrice.setText(String.format("Precio: %s", String.valueOf(property.getPrice())));
 
-        //poner String.format("Direccion: %s", String.valueOf(property. ACA EL METODO QUE LLAMA A LA DIRECCION DESDE PROPIEDAD ()))
-        holder.textViewAddress.setText("ACA VA EL COMENTARIO DE ARRIBA");
+
+        holder.textViewAddress.setText(String.format("Direccion: %s", String.valueOf(property.getAddress())));
         downloadPhoto(property.getImagePath(),holder.imageViewProperty);
 
     }
