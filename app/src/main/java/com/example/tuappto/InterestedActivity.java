@@ -60,8 +60,10 @@ public class InterestedActivity extends AppCompatActivity {
                             String property = Objects.requireNonNull(ds.child("property").getValue()).toString();
                             String clientImagePath = Objects.requireNonNull(ds.child("clientImagePath").getValue()).toString();
                             long clientPhone = Long.parseLong(Objects.requireNonNull(ds.child("clientPhone").getValue()).toString());
+                            String clientId = Objects.requireNonNull(ds.child("clientId").getValue()).toString();
 
                             Interest aux = new Interest();
+                            aux.setClientId(clientId);
                             aux.setClientImagePath(clientImagePath);
                             aux.setClientName(clientName);
                             aux.setClientSecondName(clientSecondName);
@@ -79,6 +81,16 @@ public class InterestedActivity extends AppCompatActivity {
                         @Override
                         public void onClick(View v) {
                             Intent i = new Intent(v.getContext(), ChatActivity.class);
+
+                            Bundle bundle = new Bundle();
+                            bundle.putString("clientId",mInterested.get(mRecyclerView.getChildAdapterPosition(v)).getClientId());
+                            bundle.putString("clientImagePath", mInterested.get(mRecyclerView.getChildAdapterPosition(v)).getClientImagePath());
+                            bundle.putString("clientName", mInterested.get(mRecyclerView.getChildAdapterPosition(v)).getClientName());
+                            bundle.putString("clientSecondName", mInterested.get(mRecyclerView.getChildAdapterPosition(v)).getClientSecondName());
+                            bundle.putString("clientEmail", mInterested.get(mRecyclerView.getChildAdapterPosition(v)).getClientEmail());
+                            bundle.putLong("clientPhone", mInterested.get(mRecyclerView.getChildAdapterPosition(v)).getClientPhone());
+                            bundle.putString("property", mInterested.get(mRecyclerView.getChildAdapterPosition(v)).getProperty());
+                            i.putExtra("bundle", bundle);
 
                             startActivity(i);
                             finish();

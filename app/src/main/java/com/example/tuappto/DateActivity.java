@@ -1,17 +1,15 @@
 package com.example.tuappto;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
 import negocio.Appointment;
-
 import android.Manifest;
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -29,7 +27,6 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TimePicker;
 import android.widget.Toast;
-
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -41,10 +38,14 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.io.IOException;
+import java.util.Objects;
 
 public class DateActivity extends FragmentActivity implements OnMapReadyCallback {
 
@@ -56,10 +57,11 @@ public class DateActivity extends FragmentActivity implements OnMapReadyCallback
     private GoogleMap mMap;
     private Location currentLocation;
     public Geocoder mGeocoder;
+    private DatabaseReference mDatabase;
 
-    private FirebaseAuth mAuth;
+    public FirebaseAuth mAuth;
     private FirebaseDatabase database;
-    private DatabaseReference myRef;
+    public DatabaseReference myRef;
     FirebaseUser currentUser;
 
     private SensorManager sensorManager;
@@ -68,8 +70,24 @@ public class DateActivity extends FragmentActivity implements OnMapReadyCallback
     private LatLng latLng;
     Marker marcador;
 
-    private Button buttonContinue;
+    public Button buttonContinue;
     private TimePicker timePicker1;
+
+    public Intent intent;
+    public Bundle bundle;
+
+    public String clientImagePath;
+    public String clientId;
+    public String clientName;
+    public String clientSecondName;
+    public String property;
+    public long clientPhone;
+
+    public String ownerImagePath;
+    public String ownerName;
+    public String ownerSecondName;
+    public long ownerPhone;
+
 
     private static final int REQUEST_CODE = 101;
 
@@ -78,11 +96,12 @@ public class DateActivity extends FragmentActivity implements OnMapReadyCallback
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_date);
 
-        database= FirebaseDatabase.getInstance();
+        database = FirebaseDatabase.getInstance();
         mAuth = FirebaseAuth.getInstance();
         currentUser = mAuth.getCurrentUser();
+        mDatabase = FirebaseDatabase.getInstance().getReference();
 
-        timePicker1 = (TimePicker) findViewById(R.id.timePicker1);
+        timePicker1 = findViewById(R.id.timePicker1);
 
         SupportMapFragment supportMapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         assert supportMapFragment != null;
@@ -90,14 +109,12 @@ public class DateActivity extends FragmentActivity implements OnMapReadyCallback
 
         mGeocoder = new Geocoder(getBaseContext());
 
-        etPlannedDate = (EditText) findViewById(R.id.etPlannedDate);
+        etPlannedDate = findViewById(R.id.etPlannedDate);
         etPlannedDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                switch (view.getId()) {
-                    case R.id.etPlannedDate:
-                        showDatePickerDialog();
-                        break;
+                if (view.getId() == R.id.etPlannedDate) {
+                    showDatePickerDialog();
                 }
             }
         });
@@ -127,29 +144,74 @@ public class DateActivity extends FragmentActivity implements OnMapReadyCallback
             @Override
             public void onClick(View view) {
                 crearCita();
+                finish();
             }
         });
+
+        intent = getIntent();
+        bundle = intent.getBundleExtra("bundle");
+
+        assert bundle != null;
+        clientSecondName = bundle.getString("clientSecondName");
+        clientName = bundle.getString("clientName");
+        clientImagePath = bundle.getString("clientImagePath");
+        clientId = bundle.getString("clientId");
+        clientPhone = bundle.getLong("clientPhone");
 
     }
 
     private void crearCita() {
         int hour = timePicker1.getCurrentHour();
         int min = timePicker1.getCurrentMinute();
-        Location l = new Location("");
-        l.setLatitude(latLng.latitude);
-        l.setLongitude(latLng.longitude);
-        Appointment appointment = new Appointment();
+        LatLng location = new LatLng(74.78,74.45);
+        final Appointment appointment = new Appointment();
 
         appointment.setDay(dayA);
         appointment.setMonth(monthA);
         appointment.setYear(yearA);
         appointment.setMin(min);
         appointment.setHour(hour);
-        appointment.setLocation(l);
-        appointment.setUser(currentUser.getUid());
+        appointment.setLocation(location);
+        appointment.setOwner(currentUser.getUid());
+        appointment.setClient(clientId);
+        appointment.setClientImagePath(clientImagePath);
+        appointment.setClientName(clientName);
+        appointment.setClientSecondName(clientSecondName);
+        appointment.setClientPhone(clientPhone);
 
-        myRef = database.getReference(PATH_APPOINMENTS + database.getReference().push().getKey() );
-        myRef.setValue(appointment);
+        final String aux = currentUser.getUid();
+
+        mDatabase.child("owners").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull final DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                        if (aux.equals(Objects.requireNonNull(ds.getKey()))) {
+                            ownerName = Objects.requireNonNull(ds.child("name").getValue()).toString();
+                            ownerSecondName = Objects.requireNonNull(ds.child("secondName").getValue()).toString();
+                            ownerPhone = Long.parseLong(Objects.requireNonNull(ds.child("phone").getValue()).toString());
+                            ownerImagePath = Objects.requireNonNull(ds.child("imagePath").getValue()).toString();
+
+                        }
+                    }
+                }
+
+                appointment.setOwnerImagePath(ownerImagePath);
+                appointment.setOwnerName(ownerName);
+                appointment.setOwnerSecondName(ownerSecondName);
+                appointment.setOwnerPhone(ownerPhone);
+
+                myRef = database.getReference(PATH_APPOINMENTS + database.getReference().push().getKey() );
+                myRef.setValue(appointment);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+
     }
 
     private void showDatePickerDialog() {
@@ -158,9 +220,9 @@ public class DateActivity extends FragmentActivity implements OnMapReadyCallback
             @Override
             public void onDateSet(DatePicker datePicker, int year, int month, int day) {
                 // +1 because January is zero
-                dayA= day;
-                monthA = month+1;
-                yearA= year;
+                dayA = day;
+                monthA = month + 1;
+                yearA = year;
                 final String selectedDate = day + " / " + (month+1) + " / " + year;
                 etPlannedDate.setText(selectedDate);
             }

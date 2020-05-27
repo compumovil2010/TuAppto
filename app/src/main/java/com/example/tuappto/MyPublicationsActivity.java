@@ -65,7 +65,7 @@ public class MyPublicationsActivity extends AppCompatActivity {
                             String ownerId = Objects.requireNonNull(ds.child("ownerId").getValue()).toString();
 
                             //Aca si guardo la direccion poner donde dice "sellOrRent" el nombre del atributo de como la guardo
-                            //String address = ds.child("sellOrRent").getValue().toString();
+                            String address = ds.child("address").getValue().toString();
                             double latitude = Double.parseDouble(Objects.requireNonNull(ds.child("location").child("latitude").getValue()).toString());
                             double longitude = Double.parseDouble(Objects.requireNonNull(ds.child("location").child("longitude").getValue()).toString());
                             LatLng latLng = new LatLng(latitude, longitude);
@@ -76,6 +76,7 @@ public class MyPublicationsActivity extends AppCompatActivity {
                             aux.setPrice(price);
 
                             //Poner set de la direccion en el aux
+                            aux.setAddress(address);
                             aux.setRooms(rooms);
                             aux.setImagePath(imagePath);
                             aux.setLocation(latLng);

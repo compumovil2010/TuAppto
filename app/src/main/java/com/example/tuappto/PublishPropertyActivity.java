@@ -15,6 +15,7 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.net.Uri;
@@ -54,6 +55,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
+import java.util.Locale;
 
 import negocio.Owner;
 import negocio.Property;
@@ -107,6 +109,7 @@ public class PublishPropertyActivity extends FragmentActivity implements OnMapRe
     private FirebaseUser fuser;
     public FirebaseAuth mAuth;
     public Owner aux;
+    public List<Address> addresses;
 
     private static final int REQUEST_CODE = 101;
     @Override
@@ -241,7 +244,7 @@ public class PublishPropertyActivity extends FragmentActivity implements OnMapRe
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
         fetchLocation();
         destiny = new Location("");
-        mGeocoder = new Geocoder(getBaseContext());
+        mGeocoder = new Geocoder(getBaseContext(), Locale.getDefault());
 
 
     }

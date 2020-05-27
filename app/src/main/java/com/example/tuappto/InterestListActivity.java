@@ -146,8 +146,6 @@ public class InterestListActivity extends AppCompatActivity {
         mProperties.clear();
         getInterestFromFirebase();
         getPropertiesFromFirebase();
-
-
     }
 
     @Override
